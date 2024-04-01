@@ -1,0 +1,44 @@
+.sidebar {
+    height: 100%;
+    width: 270px;
+    left: 0;
+    top: 82px;
+    z-index: 1;
+    overflow: visible;
+    bottom: 0;
+    position: fixed;
+    background: lightgrey;
+}
+
+.card-header {
+    align-items: center;
+}
+
+.card-title {
+    text-wrap: none;
+    text-align: center;
+}
+
+.add-menu {
+    margin-bottom: 100px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding: 8px;
+    gap: 8px;
+}
+
+.dndnode {
+    width: 60px;
+    height: 60px;
+    border: #007bff 2px solid;
+    border-radius: 8px;
+    background: #fff;
+
+}
+
+.dndnode img{
+    width: 48px;
+    height: 48px;
+    padding: 4px;
+}

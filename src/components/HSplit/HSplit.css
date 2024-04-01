@@ -1,0 +1,15 @@
+.hsplit {
+    height: -webkit-fill-available;
+    width: 12px;
+    z-index: 1;
+    touch-action: none;
+    top: 82px;
+    left: 270px;
+    position: absolute;
+}
+
+.hsplit:hover, .hsplit:active, .hsplit:focus, .hsplit:active:hover {
+    background: gray;
+    opacity: 0.3;
+    cursor: col-resize;
+}
