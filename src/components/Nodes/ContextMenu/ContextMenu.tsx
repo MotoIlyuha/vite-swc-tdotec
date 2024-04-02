@@ -1,5 +1,4 @@
-import React, {useCallback} from 'react';
-import {useReactFlow} from 'reactflow';
+import React from 'react';
 import './ContextMenu.css';
 
 interface ContextMenuProps {
@@ -8,7 +7,8 @@ interface ContextMenuProps {
     left?: number,
     right?: number,
     bottom?: number,
-    onClick: () => void
+    onClick: () => void,
+    onNodeDelete: (arg0: string) => void
 }
 
 const ContextMenu: React.FC<ContextMenuProps> = ({
@@ -17,32 +17,15 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
      left,
      right,
      bottom,
+     onClick,
+     onNodeDelete,
      ...props
      }) => {
-    const {getNode, setNodes, addNodes, setEdges} = useReactFlow();
 
-    const duplicateNode = useCallback(() => {
-        const node = getNode(id);
-        if (!node) return; // Добавлено условие для обработки случая, когда node не найден
-
-        const position = {
-            x: node.position.x + 50,
-            y: node.position.y + 50,
-        };
-
-        addNodes({
-            ...node,
-            selected: false,
-            dragging: false,
-            id: `${node.id}-copy`,
-            position,
-        });
-    }, [id, getNode, addNodes]);
-
-    const deleteNode = useCallback(() => {
-        setNodes((nodes) => nodes.filter((node) => node.id !== id));
-        setEdges((edges) => edges.filter((edge) => edge.source !== id));
-    }, [id, setNodes, setEdges]);
+     const handleDeleteClick = () => {
+        onClick(); // Закрыть контекстное меню
+        onNodeDelete(id); // Удалить узел
+    };
 
     return (
         <div
@@ -53,8 +36,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
             <p style={{margin: '0.5em'}}>
                 <small>node: {id}</small>
             </p>
-            <button onClick={duplicateNode}>duplicate</button>
-            <button onClick={deleteNode}>delete</button>
+            <button onClick={handleDeleteClick}>delete</button>
         </div>
     );
 }

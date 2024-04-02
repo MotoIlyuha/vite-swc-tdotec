@@ -4,10 +4,11 @@ import ReactFlow, {
     applyEdgeChanges,
     applyNodeChanges,
     Background,
+    Controls,
+    Panel,
     BackgroundVariant,
     ConnectionLineType,
     ConnectionMode,
-    Controls,
     DefaultEdgeOptions,
     Edge,
     EdgeTypes,
@@ -25,13 +26,26 @@ import 'reactflow/dist/style.css';
 import {BatteryNode, LambNode, ResistorNode, SwitchNode} from '../Nodes/NodeTypes.tsx';
 import DeletableEdge from '../Nodes/DeletableEdge';
 import ContextMenu from "../Nodes/ContextMenu/ContextMenu.tsx";
+import resistor_img from "./Icons/resistor_icon.svg";
+import lamb_img from "./Icons/lamb_icon.svg";
+import switcher_img from "./Icons/switcher_icon.svg";
+import battery_img from "./Icons/battery_icon.svg";
+import AddElementMenu from "./AddElementMenu.tsx";
+import ElementsManager from "./ElementsManager.tsx";
 
 const initialNodes: Node[] = [
     {id: '1', data: {orientation: 'hor'}, position: {x: 0, y: 0}, type: 'switcher'},
     {id: '2', data: {orientation: 'hor'}, position: {x: 0, y: 100}, type: 'resistor'},
     {id: '3', data: {orientation: 'hor'}, position: {x: 0, y: 200}, type: 'battery'},
-    {id: '3', data: {orientation: 'hor'}, position: {x: 0, y: 300}, type: 'lamb'},
+    {id: '4', data: {orientation: 'hor'}, position: {x: 0, y: 300}, type: 'lamb'},
 ];
+
+const elements: Record<string, Record<string, string>> = {
+    'resistor': {'name': 'Резистор', 'icon': resistor_img},
+    'lamb': {'name': 'Лампа', 'icon': lamb_img},
+    'switcher': {'name': 'Переключатель', 'icon': switcher_img},
+    'battery': {'name': 'Аккумулятор', 'icon': battery_img},
+}
 
 const initialEdges: Edge[] = [{id: 'e1-2', source: '1', target: '2', type: 'default'}];
 
@@ -83,6 +97,14 @@ function Flow() {
         [setEdges],
     );
 
+    const onNodeDelete = useCallback(
+        (nodeId: string) => {
+            setNodes((nds) => nds.filter((node) => node.id !== nodeId));
+            setEdges((eds) => eds.filter((edge) => edge.source !== nodeId && edge.target !== nodeId));
+        },
+        [setNodes, setEdges],
+    );
+
     const onDragOver = useCallback((event: React.DragEvent) => {
         event.preventDefault();
         event.dataTransfer.dropEffect = 'move';
@@ -128,10 +150,10 @@ function Flow() {
 
             setMenu({
                 id: node.id,
-                top: event.clientY < pane.height - 200 ? event.clientY : undefined,
-                left: event.clientX < pane.width - 200 ? event.clientX : undefined,
-                right: event.clientX >= pane.width - 200 ? pane.width - event.clientX : undefined,
-                bottom: event.clientY >= pane.height - 200 ? pane.height - event.clientY : undefined,
+                top: event.clientY < pane.height - 50 ? event.clientY : undefined,
+                left: event.clientX < pane.width - 50 ? event.clientX : undefined,
+                right: event.clientX >= pane.width - 50 ? pane.width - event.clientX : undefined,
+                bottom: event.clientY >= pane.height - 50 ? pane.height - event.clientY : undefined,
             });
         },
         [setMenu],
@@ -161,22 +183,28 @@ function Flow() {
             onDragOver={onDragOver}
             snapToGrid={true}
             snapGrid={[20, 20]}
-            style={{
-                position: 'absolute',
-            }}
         >
-            {menu && <ContextMenu onClick={onPaneClick} {...menu} />}
-            <Controls/>
+            {menu && <ContextMenu onClick={onPaneClick} onNodeDelete={onNodeDelete} {...menu} />}
+
+            <Panel position='top-left'>
+                <ElementsManager nodes={nodes} elements={elements} onNodeDelete={onNodeDelete}/>
+            </Panel>
+
+            <Panel position='bottom-left'>
+                <AddElementMenu elements={elements}/>
+            </Panel>
+
+            <Controls position='top-right' />
             <Background
                 id="1"
                 gap={20}
-                color="#ccc"
+                color="#ddd"
                 variant={BackgroundVariant.Lines}
             />
             <Background
                 id="2"
                 gap={100}
-                color="#777"
+                color="#aaa"
                 variant={BackgroundVariant.Lines}
             />
         </ReactFlow>

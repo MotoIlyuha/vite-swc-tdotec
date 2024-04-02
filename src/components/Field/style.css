@@ -20,7 +20,6 @@
 }
 
 .add-menu {
-    margin-bottom: 100px;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -29,16 +28,29 @@
 }
 
 .dndnode {
-    width: 60px;
-    height: 60px;
+    width: 72px;
+    height: 56px;
     border: #007bff 2px solid;
     border-radius: 8px;
     background: #fff;
 
 }
 
-.dndnode img{
-    width: 48px;
-    height: 48px;
+.add-element-menu {
+    background: aliceblue;
+    padding: 8px;
+    margin: 8px;
+    border-radius: 16px;
+    box-shadow: 0 0 36px 6px rgba(34, 60, 80, 0.25);
+}
+
+.dndnode img {
+    width: 60px;
+    height: 60px;
     padding: 4px;
+}
+
+.description {
+    text-align: left;
+    margin: 2px 24px 8px;
 }

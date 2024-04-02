@@ -3,7 +3,6 @@ import {
     useStore,
     EdgeLabelRenderer,
     EdgeProps,
-    getSmoothStepPath,
     useReactFlow
 } from 'reactflow';
 
@@ -34,7 +33,6 @@ export default function DeletableStepEdge({id, source, target, markerEnd, style}
             <path
                 id={id}
                 className="react-flow__edge-path"
-                d={edge_path}
                 strokeWidth={5}
                 markerEnd={markerEnd}
                 style={style}
@@ -43,7 +41,6 @@ export default function DeletableStepEdge({id, source, target, markerEnd, style}
                 <div
                     style={{
                         position: 'absolute',
-                        transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
                         fontSize: 12,
                         pointerEvents: 'all',
                     }}
