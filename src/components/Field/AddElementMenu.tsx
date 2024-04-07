@@ -15,7 +15,7 @@ export default function AddElementMenu({elements}: {elements: Record<string, Rec
             <div className="description">Перетащите элемент, чтобы <br/> добавить его на рабочую область</div>
             <div className="add-menu">
                 {Object.keys(elements).map((key) => (
-                    <div className={"dndnode " + key} onDragStart={(event) => onDragStart(event, key)}
+                    <div key={key} className={"dndnode " + key} onDragStart={(event) => onDragStart(event, key)}
                          draggable>
                         <Image src={elements[key]['icon']}/>
                     </div>

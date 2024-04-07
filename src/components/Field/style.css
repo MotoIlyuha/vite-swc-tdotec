@@ -27,15 +27,6 @@
     gap: 8px;
 }
 
-.dndnode {
-    width: 72px;
-    height: 56px;
-    border: #007bff 2px solid;
-    border-radius: 8px;
-    background: #fff;
-
-}
-
 .add-element-menu {
     background: aliceblue;
     padding: 8px;
@@ -44,13 +35,31 @@
     box-shadow: 0 0 36px 6px rgba(34, 60, 80, 0.25);
 }
 
-.dndnode img {
-    width: 60px;
-    height: 60px;
-    padding: 4px;
-}
-
 .description {
     text-align: left;
     margin: 2px 24px 8px;
 }
+
+.elements-manager {
+    display: flex;
+    flex-direction: column;
+    background: aliceblue;
+    padding: 8px;
+    border-radius: 16px;
+    user-select: none;
+    box-shadow: 0 0 36px 6px rgba(34, 60, 80, 0.25);
+}
+
+.element {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    border-radius: 4px;
+    padding: 0 8px;
+}
+
+/*.element.selected {*/
+/*    background: rgba(34, 178, 230, 0.29);*/
+/*}*/

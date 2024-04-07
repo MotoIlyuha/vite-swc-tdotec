@@ -1,0 +1,24 @@
+<svg width="40" height="40" xmlns="http://www.w3.org/2000/svg">
+ <!-- Created with SVG Editor - http://github.com/mzalive/SVG Editor/ -->
+ <defs>
+  <filter height="200%" width="200%" y="-50%" x="-50%" id="svg_15_blur">
+   <feGaussianBlur stdDeviation="0" in="SourceGraphic"/>
+  </filter>
+ </defs>
+ <g>
+  <title>background</title>
+  <rect x="-1" y="-1" width="13.235953" height="13.235953" id="canvas_background" fill="none"/>
+  <g id="canvasGrid" display="none">
+   <rect id="svg_1" width="100%" height="100%" x="0" y="0" stroke-width="0" fill="url(#gridpattern)"/>
+  </g>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <ellipse filter="url(#svg_15_blur)" fill="#FFFF91" stroke="#000" stroke-width="1.5" stroke-opacity="null" cx="19.999999" cy="20" id="svg_15" rx="7.606906" ry="7.606906"/>
+  <line fill="none" stroke-width="1.5" x1="13.127506" y1="20" x2="26.872493" y2="20" id="svg_7" stroke-linejoin="undefined" stroke-linecap="undefined" stroke="#000" transform="rotate(-45 19.999999999999996,19.999999999999996) "/>
+  <line fill="none" stroke="#000" stroke-opacity="null" fill-opacity="null" x1="52.533107" y1="3.551322" x2="53.029796" y2="3.551322" id="svg_12" stroke-linejoin="null" stroke-linecap="null"/>
+  <line fill="none" stroke-width="1.5" x1="29.370145" y1="20" x2="39.249999" y2="20" id="svg_17" stroke-linejoin="undefined" stroke-linecap="undefined" stroke="#000"/>
+  <line transform="rotate(45 20.000000000000007,19.999999999999996) " fill="none" stroke-width="1.5" x1="13.127507" y1="20" x2="26.872494" y2="20" id="svg_18" stroke-linejoin="undefined" stroke-linecap="undefined" stroke="#000"/>
+  <line fill="none" stroke-width="1.5" x1="0.749999" y1="20" x2="10.629854" y2="20" id="svg_19" stroke-linejoin="undefined" stroke-linecap="undefined" stroke="#000"/>
+ </g>
+</svg>

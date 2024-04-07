@@ -1,0 +1,18 @@
+<svg width="40" height="40" xmlns="http://www.w3.org/2000/svg">
+ <!-- Created with SVG Editor - http://github.com/mzalive/SVG Editor/ -->
+
+ <g>
+  <title>background</title>
+  <rect x="-1" y="-1" width="5.891051" height="5.891051" id="canvas_background" fill="none"/>
+  <g id="canvasGrid" display="none">
+   <rect id="svg_1" width="100%" height="100%" x="0" y="0" stroke-width="0" fill="url(#gridpattern)"/>
+  </g>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <line fill="none" stroke-width="1.5" x1="13.391484" y1="19.233822" x2="27.136471" y2="19.233822" id="svg_7" stroke-linejoin="undefined" stroke-linecap="undefined" stroke="#000" transform="rotate(-6 20.263977050781186,19.233821868896477) "/>
+  <line fill="none" stroke="#000" stroke-opacity="null" fill-opacity="null" x1="52.533107" y1="3.551322" x2="53.029796" y2="3.551322" id="svg_12" stroke-linejoin="null" stroke-linecap="null"/>
+  <line fill="none" stroke-width="1.5" x1="27.067514" y1="20" x2="39.249999" y2="20" id="svg_17" stroke-linejoin="undefined" stroke-linecap="undefined" stroke="#000"/>
+  <line fill="none" stroke-width="1.5" x1="0.749999" y1="20" x2="13.508142" y2="20" id="svg_19" stroke-linejoin="undefined" stroke-linecap="undefined" stroke="#000"/>
+ </g>
+</svg>

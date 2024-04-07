@@ -3,6 +3,7 @@ import ReactFlow, {
     addEdge,
     applyEdgeChanges,
     applyNodeChanges,
+    useOnSelectionChange,
     Background,
     Controls,
     Panel,
@@ -26,28 +27,9 @@ import 'reactflow/dist/style.css';
 import {BatteryNode, LambNode, ResistorNode, SwitchNode} from '../Nodes/NodeTypes.tsx';
 import DeletableEdge from '../Nodes/DeletableEdge';
 import ContextMenu from "../Nodes/ContextMenu/ContextMenu.tsx";
-import resistor_img from "./Icons/resistor_icon.svg";
-import lamb_img from "./Icons/lamb_icon.svg";
-import switcher_img from "./Icons/switcher_icon.svg";
-import battery_img from "./Icons/battery_icon.svg";
 import AddElementMenu from "./AddElementMenu.tsx";
 import ElementsManager from "./ElementsManager.tsx";
-
-const initialNodes: Node[] = [
-    {id: '1', data: {orientation: 'hor'}, position: {x: 0, y: 0}, type: 'switcher'},
-    {id: '2', data: {orientation: 'hor'}, position: {x: 0, y: 100}, type: 'resistor'},
-    {id: '3', data: {orientation: 'hor'}, position: {x: 0, y: 200}, type: 'battery'},
-    {id: '4', data: {orientation: 'hor'}, position: {x: 0, y: 300}, type: 'lamb'},
-];
-
-const elements: Record<string, Record<string, string>> = {
-    'resistor': {'name': 'Резистор', 'icon': resistor_img},
-    'lamb': {'name': 'Лампа', 'icon': lamb_img},
-    'switcher': {'name': 'Переключатель', 'icon': switcher_img},
-    'battery': {'name': 'Аккумулятор', 'icon': battery_img},
-}
-
-const initialEdges: Edge[] = [{id: 'e1-2', source: '1', target: '2', type: 'default'}];
+import Button from "react-bootstrap/Button";
 
 const fitViewOptions: FitViewOptions = {
     padding: 0.2,
@@ -71,9 +53,17 @@ const edgeTypes: EdgeTypes = {
 let id = 0;
 const getId = () => `dndnode_${id++}`;
 
-function Flow() {
-    const [nodes, setNodes] = useState<Node[]>(initialNodes);
-    const [edges, setEdges] = useState<Edge[]>(initialEdges);
+interface FlowProps {
+    nodes: Node[];
+    edges: Edge[];
+    selectedNodes: Node[];
+    elements: Record<string, Record<string, string>>;
+    setNodes: (nodes: (nds: Node[]) => Node[]) => void;
+    setEdges: (edges: (eds: Edge[]) => Edge[]) => void;
+    setSelectedNodes: (selectedNodes: Node[]) => void;
+}
+
+function Flow({nodes, edges, selectedNodes, elements, setNodes, setEdges, setSelectedNodes}: FlowProps) {
     const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
     const [menu, setMenu] = useState<{
         id: string;
@@ -99,11 +89,29 @@ function Flow() {
 
     const onNodeDelete = useCallback(
         (nodeId: string) => {
-            setNodes((nds) => nds.filter((node) => node.id !== nodeId));
-            setEdges((eds) => eds.filter((edge) => edge.source !== nodeId && edge.target !== nodeId));
+            setNodes((nds) => nds.filter((node: Node) => node.id !== nodeId));
+            setEdges((eds) => eds.filter((edge: Edge) => edge.source !== nodeId && edge.target !== nodeId));
         },
         [setNodes, setEdges],
     );
+
+    const onNodeClick = useCallback((_event: React.MouseEvent, node: Node) => {// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
+        setSelectedNodes((prevSelected: Node[]) => {
+        const alreadySelected = prevSelected.some(selectedNode => selectedNode.id === node.id);
+        if (alreadySelected) {
+            return prevSelected.filter((selectedNode) => selectedNode.id !== node.id);
+        } else {
+            return [...prevSelected, node];
+        }
+    });
+}, [setSelectedNodes]);
+
+    useOnSelectionChange({
+        onChange: ({nodes}) => {
+            setSelectedNodes(nodes);
+        },
+    });
 
     const onDragOver = useCallback((event: React.DragEvent) => {
         event.preventDefault();
@@ -159,7 +167,10 @@ function Flow() {
         [setMenu],
     );
 
-    const onPaneClick = useCallback(() => setMenu(null), [setMenu]);
+    const onPaneClick = useCallback(() => {
+        setMenu(null);
+        setSelectedNodes([]);
+    }, [setMenu, setSelectedNodes]);
 
     return (
         <ReactFlow
@@ -169,6 +180,7 @@ function Flow() {
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
+            onNodeClick={onNodeClick}
             fitView
             fitViewOptions={fitViewOptions}
             defaultEdgeOptions={defaultEdgeOptions}
@@ -187,14 +199,19 @@ function Flow() {
             {menu && <ContextMenu onClick={onPaneClick} onNodeDelete={onNodeDelete} {...menu} />}
 
             <Panel position='top-left'>
-                <ElementsManager nodes={nodes} elements={elements} onNodeDelete={onNodeDelete}/>
+                <ElementsManager nodes={nodes} elements={elements} selectedNodes={selectedNodes}
+                                 setSelectedNodes={setSelectedNodes} onNodeDelete={onNodeDelete}/>
             </Panel>
 
             <Panel position='bottom-left'>
                 <AddElementMenu elements={elements}/>
             </Panel>
 
-            <Controls position='top-right' />
+            <Panel position='bottom-right'>
+                <Button onClick={() => console.log(reactFlowInstance)}>Запустить</Button>
+            </Panel>
+
+            <Controls position='top-right'/>
             <Background
                 id="1"
                 gap={20}
