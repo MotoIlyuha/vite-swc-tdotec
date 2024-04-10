@@ -4,7 +4,7 @@ import './NodeStyles.css';
 
 import resistor_img from '../../../assets/Images/resistor.svg';
 import battery_img from '../../../assets/Images/battery.svg';
-import bulb_on_img from '../../../assets/Images/bulb_on.svg';
+import bulb_off_img from '../../../assets/Images/bulb_off.svg';
 import switch_off_img from '../../../assets/Images/switch_off.svg';
 import switch_on_img from '../../../assets/Images/switch_on.svg';
 import rotate_icon from '../../../assets/Icons/rotate_icon.png';
@@ -46,7 +46,7 @@ export type NodeProps = ResistorNodeProps | PowerSourceNodeProps | BulbNodeProps
 const circuit_icons = {
     'resistor': resistor_img,
     'battery': battery_img,
-    'bulb': bulb_on_img,
+    'bulb': bulb_off_img,
     'switcher_on': switch_on_img,
     'switcher_off': switch_off_img
 };
@@ -60,13 +60,17 @@ function ResistorFrame({resistance}: ResistorNodeProps) {
 }
 
 function BulbFrame({brightness}: BulbNodeProps) {
+
+    function handleClick() {
+        console.log(brightness);
+    }
+
     return (
-        <div>
+        <div style={{position: 'relative'}}>
             <div style={{
                 position: 'absolute',
-                top: 0,
-                left: 0,
-                transform: 'translate(-50%, -50%)',
+                top: 10,
+                left: 30,
                 borderRadius: '50%',
                 width: '20px',
                 height: '20px',
@@ -74,7 +78,11 @@ function BulbFrame({brightness}: BulbNodeProps) {
                 boxShadow: `0 0 16px ${(brightness ?? 0) / 4}px rgba(${2 * (brightness ?? 0)}, ${2 * (brightness ?? 0)}, ${0.5 * (brightness ?? 0)}, 0.75)`
             }}>
             </div>
-            <img src={circuit_icons['bulb']} alt='Лампочка' style={{position: 'absolute'}}/>
+            <img src={circuit_icons['bulb']} alt='Лампочка' onClick={handleClick} style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+            }}/>
         </div>
     );
 }
@@ -114,34 +122,32 @@ function PowerSourceFrame({power}: PowerSourceNodeProps) {
 }
 
 export const CircuitElementNode = memo(({
-        id, type, selected, data,
+        id, data, type, selected, orientation
     }: BaseNodeData<NodeProps>) => {
 
-    const [orientation, setOrientation] = useState('hor');
+    const [orient, setOrient] = useState(orientation ?? 'hor');
     const updateNodeInternals = useUpdateNodeInternals();
 
     const rotateNode = useCallback(() => {
-        setOrientation(orientation === 'hor' ? 'ver' : 'hor');
+        setOrient(orient === 'hor' ? 'ver' : 'hor');
         updateNodeInternals(id);
-    },[id, orientation, updateNodeInternals])
+    },[id, orient, updateNodeInternals])
 
     return (
-        <div id={id} className={`node ${type} ${orientation} ${selected ? 'selected' : ''}`}
-            style={{
-                transform: `rotate(${orientation === 'hor' ? 0 : 90}deg)`,
-            }}>
-            <Handle type="source" position={Position.Left}/>
+        <div id={id} className={`node ${type} ${orient} ${selected ? 'selected' : ''}`}
+            style={{'width': `${orient === 'hor' ? 80 : 40}px`, 'height': `${orient === 'hor' ? 40 : 80}px`}}>
+            <Handle type="source" position={orient === 'hor' ? Position.Left : Position.Top}/>
+            <div style={{transform: `rotate(${orient === 'hor' ? 0 : 90}deg)`}}>
             {type === 'resistor' && <ResistorFrame resistance={"resistance" in data ? data.resistance ?? 10 : 10}/>}
-            {type === 'bulb' && <BulbFrame brightness={"brightness" in data ? data.brightness ?? 0 : 0}/>}
+            {type === 'bulb' && <BulbFrame brightness={"brightness" in data ? data.brightness ?? 40 : 40}/>}
             {type === 'powerSource' && <PowerSourceFrame power={"power" in data ? data.power ?? 5 : 5}/>}
             {type === 'switch' && <SwitchFrame switchState={"switchState" in data ? data.switchState ?? false : false}/>}
+            </div>
             <button className='rotate-button' onClick={rotateNode}
-                    style={{
-                        transform: `rotate(${orientation === 'hor' ? 0 : 90}deg)`,
-                    }}>
+                    style={{ transform: `rotate(${orient === 'hor' ? 0 : 90}deg)`}}>
                 <img src={rotate_icon} alt='перевернуть'/>
             </button>
-            <Handle type="target" position={Position.Right}/>
+            <Handle type="target" position={orient === 'hor' ? Position.Right : Position.Bottom}/>
         </div>
     );
 });
@@ -150,20 +156,14 @@ export const ResistorNode = memo(({ id, data: { resistance = 10 }, position }: B
     return <CircuitElementNode id={`resistor_${id}`} selected={false} data={{ resistance }} position={position} type={'resistor'} />;
 });
 
-export const SwitchNode = memo(({id, data: {switchState = false}, position, orientation }: BaseNodeData<SwitchNodeProps>) => {
-    return <CircuitElementNode id={`switch_${id}`} selected={false} data={{
-        switchState: switchState,
-    }} position={position} orientation={orientation} type={'switch'} />;
-});
+export const SwitchNode = memo(({id, data: {switchState = false}, position}: BaseNodeData<SwitchNodeProps>) => {
+    return <CircuitElementNode id={`switch_${id}`} selected={false} data={{ switchState }} position={position} type={'switch'} />;
+})
 
 export const PowerSourceNode = memo(({id, data: {power = 5}, position}: BaseNodeData<PowerSourceNodeProps>) => {
-    return <CircuitElementNode id={`powerSource_${id}`} selected={false} data={{
-        power: power,
-    }} position={position} type={'powerSource'} />;
+    return <CircuitElementNode id={`powerSource_${id}`} selected={false} data={{ power }} position={position} type={'powerSource'} />;
 })
 
 export const BulbNode = memo(({id, data: {brightness = 0}, position}: BaseNodeData<BulbNodeProps>) => {
-    return <CircuitElementNode id={`bulb_${id}`} selected={false} data={{
-        brightness: brightness,
-    }} position={position} type={'bulb'} />;
+    return <CircuitElementNode id={`bulb_${id}`} selected={false} data={{ brightness }} position={position} type={'bulb'} />;
 })

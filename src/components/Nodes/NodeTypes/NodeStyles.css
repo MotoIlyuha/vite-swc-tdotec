@@ -1,13 +1,5 @@
-.node {
-
-}
-
 .selected {
     background: rgba(34, 178, 230, 0.29);
-}
-
-.node-ver {
-    transform: rotate(90deg);
 }
 
 .react-flow__handle {
