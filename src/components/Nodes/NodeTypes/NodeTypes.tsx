@@ -19,7 +19,7 @@ export interface BaseNodeData<T> extends ReactFlowNode {
         x: number;
         y: number;
     }
-    orientation?: "hor" | "ver";
+    orientation: "hor" | "ver";
     type: NodeType;
     selected?: boolean;
 }
@@ -67,22 +67,13 @@ function BulbFrame({brightness}: BulbNodeProps) {
 
     return (
         <div style={{position: 'relative'}}>
-            <div style={{
-                position: 'absolute',
-                top: 10,
-                left: 30,
-                borderRadius: '50%',
-                width: '20px',
-                height: '20px',
-                backgroundColor: `rgb(${2 * (brightness ?? 0)}, ${2 * (brightness ?? 0)}, ${0.5 * (brightness ?? 0)})`,
-                boxShadow: `0 0 16px ${(brightness ?? 0) / 4}px rgba(${2 * (brightness ?? 0)}, ${2 * (brightness ?? 0)}, ${0.5 * (brightness ?? 0)}, 0.75)`
+            <div className='bulb_glow' style={{
+                opacity: `${brightness === 0 ? 0 : 1}`,
+                backgroundColor: `rgba(${155 + brightness}, ${155 + brightness}, 5, 1)`,
+                boxShadow: `0 0 16px ${brightness / 6}px rgba(${155 + brightness}, ${155 + brightness}, 5, 0.5)`
             }}>
             </div>
-            <img src={circuit_icons['bulb']} alt='Лампочка' onClick={handleClick} style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-            }}/>
+            <img className='bulb_img' src={circuit_icons['bulb']} alt='Лампочка' onClick={handleClick}/>
         </div>
     );
 }
@@ -96,19 +87,7 @@ function SwitchFrame({switchState}: SwitchNodeProps) {
     return (
         <div>
             <img src={circuit_icons[switchState ? 'switcher_on' : 'switcher_off']} alt={'Переключатель'}/>
-            <div
-                style={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    width: '40px',
-                    height: '20px',
-                    marginTop: '-10px', // Сдвигаем вверх на половину высоты, чтобы центрировать
-                    marginLeft: '-20px', // Сдвигаем влево на половину ширины, чтобы центрировать
-                    backgroundColor: 'rgba(0, 0, 255, 0.2)', // Прозрачный синий фон для визуализации
-                }}
-                onClick={handleClick}
-            />
+            <div className='switch_click_aria' onClick={handleClick}/>
         </div>
     );
 }
@@ -125,23 +104,35 @@ export const CircuitElementNode = memo(({
         id, data, type, selected, orientation
     }: BaseNodeData<NodeProps>) => {
 
-    const [orient, setOrient] = useState(orientation ?? 'hor');
+    const [orient, setOrient] = useState(orientation);
     const updateNodeInternals = useUpdateNodeInternals();
 
     const rotateNode = useCallback(() => {
+        console.log(id, orient);
         setOrient(orient === 'hor' ? 'ver' : 'hor');
         updateNodeInternals(id);
     },[id, orient, updateNodeInternals])
 
     return (
         <div id={id} className={`node ${type} ${orient} ${selected ? 'selected' : ''}`}
-            style={{'width': `${orient === 'hor' ? 80 : 40}px`, 'height': `${orient === 'hor' ? 40 : 80}px`}}>
+            style={{
+                'width': `${orient === 'hor' ? 80 : 40}px`,
+                'height': `${orient === 'hor' ? 40 : 80}px`,
+                'position': 'relative'
+        }}>
             <Handle type="source" position={orient === 'hor' ? Position.Left : Position.Top}/>
-            <div style={{transform: `rotate(${orient === 'hor' ? 0 : 90}deg)`}}>
-            {type === 'resistor' && <ResistorFrame resistance={"resistance" in data ? data.resistance ?? 10 : 10}/>}
-            {type === 'bulb' && <BulbFrame brightness={"brightness" in data ? data.brightness ?? 40 : 40}/>}
-            {type === 'powerSource' && <PowerSourceFrame power={"power" in data ? data.power ?? 5 : 5}/>}
-            {type === 'switch' && <SwitchFrame switchState={"switchState" in data ? data.switchState ?? false : false}/>}
+            <div style={{
+                transform: `rotate(${orient === 'hor' ? 0 : 90}deg)`,
+                width: `${orient === 'hor' ? 40 : 80}px`,
+                height: `${orient === 'hor' ? 80 : 40}px`,
+                position: 'absolute',
+                top: `${orient === 'hor' ? 0 : 20}px`,
+                left: `${orient === 'hor' ? 0 : -20}px`,
+                }}>
+            {type === 'resistor' && <ResistorFrame resistance={"resistance" in data ? data.resistance : 10}/>}
+            {type === 'bulb' && <BulbFrame brightness={"brightness" in data ? data.brightness : 0}/>}
+            {type === 'powerSource' && <PowerSourceFrame power={"power" in data ? data.power : 5}/>}
+            {type === 'switch' && <SwitchFrame switchState={"switchState" in data ? data.switchState : false}/>}
             </div>
             <button className='rotate-button' onClick={rotateNode}
                     style={{ transform: `rotate(${orient === 'hor' ? 0 : 90}deg)`}}>
@@ -152,18 +143,31 @@ export const CircuitElementNode = memo(({
     );
 });
 
-export const ResistorNode = memo(({ id, data: { resistance = 10 }, position }: BaseNodeData<ResistorNodeProps>) => {
-    return <CircuitElementNode id={`resistor_${id}`} selected={false} data={{ resistance }} position={position} type={'resistor'} />;
+export const ResistorNode = memo(
+    ({ id, data: { resistance = 10 }, position, orientation }: BaseNodeData<ResistorNodeProps>) => {
+
+    return <CircuitElementNode
+        id={`resistor_${id}`} selected={false} data={{ resistance }} position={position} orientation={orientation} type={'resistor'}
+    />;
 });
 
-export const SwitchNode = memo(({id, data: {switchState = false}, position}: BaseNodeData<SwitchNodeProps>) => {
-    return <CircuitElementNode id={`switch_${id}`} selected={false} data={{ switchState }} position={position} type={'switch'} />;
+export const SwitchNode = memo(
+    ({id, data: {switchState = false}, position, orientation}: BaseNodeData<SwitchNodeProps>) => {
+    return <CircuitElementNode
+        id={`switch_${id}`} selected={false} data={{ switchState }} position={position} orientation={orientation} type={'switch'}
+    />;
 })
 
-export const PowerSourceNode = memo(({id, data: {power = 5}, position}: BaseNodeData<PowerSourceNodeProps>) => {
-    return <CircuitElementNode id={`powerSource_${id}`} selected={false} data={{ power }} position={position} type={'powerSource'} />;
+export const PowerSourceNode = memo(
+    ({id, data: {power = 5}, position, orientation}: BaseNodeData<PowerSourceNodeProps>) => {
+    return <CircuitElementNode
+        id={`powerSource_${id}`} selected={false} data={{ power }} position={position} orientation={orientation} type={'powerSource'}
+    />;
 })
 
-export const BulbNode = memo(({id, data: {brightness = 0}, position}: BaseNodeData<BulbNodeProps>) => {
-    return <CircuitElementNode id={`bulb_${id}`} selected={false} data={{ brightness }} position={position} type={'bulb'} />;
+export const BulbNode = memo(
+    ({id, data: {brightness = 0}, position, orientation}: BaseNodeData<BulbNodeProps>) => {
+    return <CircuitElementNode
+        id={`bulb_${id}`} selected={false} data={{ brightness }} position={position} orientation={orientation} type={'bulb'}
+    />;
 })

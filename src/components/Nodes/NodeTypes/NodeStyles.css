@@ -1,3 +1,31 @@
+.bulb_glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    margin: 10px 30px;
+}
+
+.bulb_img {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.switch_click_aria:hover {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 40px;
+    height: 20px;
+    margin-top: 0;
+    margin-left: -20px;
+    background-color: rgba(125, 125, 255, 0.2);
+}
+
 .selected {
     background: rgba(34, 178, 230, 0.29);
 }

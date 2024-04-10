@@ -16,17 +16,23 @@ import ReactFlow, {
     FitViewOptions,
     Node,
     NodeTypes,
-    OnConnect,
     OnEdgesChange,
     OnNodesChange,
     ReactFlowInstance,
+    Connection,
 } from 'reactflow';
 
 import 'reactflow/dist/style.css';
 
-import {ResistorNode, PowerSourceNode, BulbNode, SwitchNode} from '../Nodes/NodeTypes/NodeTypes';
-
-import DeletableEdge from '../Nodes/DeletableEdge';
+import {
+    ResistorNode,
+    PowerSourceNode,
+    BulbNode,
+    SwitchNode,
+    BaseNodeData,
+    NodeProps
+} from '../Nodes/NodeTypes/NodeTypes';
+import WireEdge from '../Nodes/EdgeTypes/WireEdge.tsx';
 import ContextMenu from "../Nodes/ContextMenu/ContextMenu.tsx";
 import AddElementMenu from "./AddElementMenu.tsx";
 import ElementsManager from "./ElementsManager.tsx";
@@ -56,18 +62,18 @@ const nodeTypes: NodeTypes = {
 };
 
 const edgeTypes: EdgeTypes = {
-    deletable: DeletableEdge,
+    wire: WireEdge,
 };
 
 let id = 0;
 const getId = () => `dndnode_${id++}`;
 
 interface FlowProps {
-    nodes: Node[];
+    nodes: BaseNodeData<NodeProps>[];
     edges: Edge[];
-    selectedNodes: Node[];
+    selectedNodes: BaseNodeData<NodeProps>[];
     elements: Record<string, Record<string, string>>;
-    setNodes: (nodes: (nds: Node[]) => Node[]) => void;
+    setNodes: (nodes: (nds: BaseNodeData<NodeProps>[]) => BaseNodeData<NodeProps>[]) => void;
     setEdges: (edges: (eds: Edge[]) => Edge[]) => void;
     setSelectedNodes: (selectedNodes: Node[]) => void;
 }
@@ -91,9 +97,13 @@ function Flow({nodes, edges, selectedNodes, elements, setNodes, setEdges, setSel
         (changes) => setEdges((eds) => applyEdgeChanges(changes, eds)),
         [setEdges],
     );
-    const onConnect: OnConnect = useCallback(
-        (connection) => setEdges((eds) => addEdge(connection, eds)),
-        [setEdges],
+
+    const onConnect = useCallback(
+        (params: Connection) =>
+            setEdges((eds) =>
+                addEdge({...params, type: 'wire'}, eds)
+            ),
+        [setEdges]
     );
 
     const onNodeDelete = useCallback(
@@ -107,9 +117,9 @@ function Flow({nodes, edges, selectedNodes, elements, setNodes, setEdges, setSel
     const selectNodes = (nodes: Node[]) => {
         setSelectedNodes(nodes);
         nodes.map(node => {
-            node.selected = selectedNodes.includes(node);
-            node.className = selectedNodes.includes(node) ? 'selected' : 'notselected';
-        }
+                node.selected = selectedNodes.includes(node);
+                node.className = selectedNodes.includes(node) ? 'selected' : 'notselected';
+            }
         );
     }
 
