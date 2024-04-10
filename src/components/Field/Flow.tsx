@@ -24,7 +24,11 @@ import ReactFlow, {
 
 import 'reactflow/dist/style.css';
 
-import {BatteryNode, LambNode, ResistorNode, SwitchNode} from '../Nodes/NodeTypes.tsx';
+import {PowerSourceNode} from '../Nodes/NodeTypes/PowerSourceNode';
+import {BulbNode} from "../Nodes/NodeTypes/BulbNode";
+import {ResistorNode} from "../Nodes/NodeTypes/ResistorNode";
+import {SwitchNode} from "../Nodes/NodeTypes/SwitchNode";
+
 import DeletableEdge from '../Nodes/DeletableEdge';
 import ContextMenu from "../Nodes/ContextMenu/ContextMenu.tsx";
 import AddElementMenu from "./AddElementMenu.tsx";
@@ -41,9 +45,9 @@ const defaultEdgeOptions: DefaultEdgeOptions = {
 
 const nodeTypes: NodeTypes = {
     resistor: ResistorNode,
-    battery: BatteryNode,
-    lamb: LambNode,
-    switcher: SwitchNode,
+    powerSource: PowerSourceNode,
+    bulb: BulbNode,
+    switch: SwitchNode
 };
 
 const edgeTypes: EdgeTypes = {
@@ -95,21 +99,22 @@ function Flow({nodes, edges, selectedNodes, elements, setNodes, setEdges, setSel
         [setNodes, setEdges],
     );
 
-    const onNodeClick = useCallback((_event: React.MouseEvent, node: Node) => {// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-expect-error
-        setSelectedNodes((prevSelected: Node[]) => {
-        const alreadySelected = prevSelected.some(selectedNode => selectedNode.id === node.id);
-        if (alreadySelected) {
-            return prevSelected.filter((selectedNode) => selectedNode.id !== node.id);
-        } else {
-            return [...prevSelected, node];
+    const selectNodes = (nodes: Node[]) => {
+        setSelectedNodes(nodes);
+        nodes.map(node => {
+            node.selected = selectedNodes.includes(node);
+            node.className = selectedNodes.includes(node) ? 'selected' : 'notselected';
         }
-    });
-}, [setSelectedNodes]);
+        );
+    }
+
+    const onNodeClick = (_event: React.MouseEvent, node: Node) => {
+        selectNodes([node]);
+    }
 
     useOnSelectionChange({
         onChange: ({nodes}) => {
-            setSelectedNodes(nodes);
+            selectNodes(nodes);
         },
     });
 
@@ -199,8 +204,8 @@ function Flow({nodes, edges, selectedNodes, elements, setNodes, setEdges, setSel
             {menu && <ContextMenu onClick={onPaneClick} onNodeDelete={onNodeDelete} {...menu} />}
 
             <Panel position='top-left'>
-                <ElementsManager nodes={nodes} elements={elements} selectedNodes={selectedNodes}
-                                 setSelectedNodes={setSelectedNodes} onNodeDelete={onNodeDelete}/>
+                <ElementsManager nodes={nodes} elements={elements} selectNodes={selectNodes}
+                                 onNodeDelete={onNodeDelete}/>
             </Panel>
 
             <Panel position='bottom-left'>

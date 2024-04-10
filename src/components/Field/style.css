@@ -60,6 +60,6 @@
     padding: 0 8px;
 }
 
-/*.element.selected {*/
-/*    background: rgba(34, 178, 230, 0.29);*/
-/*}*/
+.element.selected {
+    background: rgba(34, 178, 230, 0.29);
+}

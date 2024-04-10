@@ -4,25 +4,22 @@ import delete_icon from "../../assets/Icons/delete_icon.png";
 
 interface ElementsManagerProps {
     nodes: Node[];
-    selectedNodes: Node[];
-    setSelectedNodes: (nodes: Node[]) => void;
+    selectNodes: (nodes: Node[]) => void;
     elements: Record<string, Record<string, string>>;
     onNodeDelete: (arg0: string) => void;
 }
 
-export default function ElementsManager({nodes, selectedNodes, setSelectedNodes,elements, onNodeDelete}:
+export default function ElementsManager({nodes, selectNodes, elements, onNodeDelete}:
     ElementsManagerProps) {
 
     const handleElementClick = (node: Node) => {
-        setSelectedNodes([node]);
-        console.log(selectedNodes);
+        selectNodes([node]);
+        node.selected = true;
+        node.className = 'selected';
     }
 
     return (
-        <div className="elements-manager"
-            style={{
-
-        }}>
+        <div className="elements-manager">
             {nodes.map((node) => (
                 <div className={'element ' + (node.selected ? 'selected' : '')} key={node.id}
                      onClick={() => handleElementClick(node)}>
@@ -44,6 +41,7 @@ export default function ElementsManager({nodes, selectedNodes, setSelectedNodes,
                     </button>
                 </div>
             ))}
+            <p>{nodes.map((node) => node.selected ? node.id : '')}</p>
         </div>
     );
 }

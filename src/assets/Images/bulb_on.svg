@@ -4,8 +4,8 @@
   <title>Layer 1</title>
   <line stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_3" y2="20" x2="79.249999" y1="20" x1="51.501757" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" stroke="#000" fill="none"/>
   <line stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_4" y2="20" x2="28.654284" y1="20" x1="0.906043" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" stroke="#000" fill="none"/>
-  <ellipse ry="10.313631" rx="10.313631" id="svg_9" cy="19.999999" cx="40" stroke-opacity="null" stroke-width="1.5" stroke="#000" fill="#FFF093"/>
-  <line transform="rotate(-45 39.999999999999986,19.999999999999993) " stroke-linecap="null" stroke-linejoin="null" id="svg_12" y2="19.999999" x2="50.675682" y1="19.999999" x1="29.324317" stroke-opacity="null" stroke-width="1.5" stroke="#000" fill="none"/>
+  <ellipse ry="10.313631" rx="10.313631" cy="20" cx="40" stroke-opacity="null" stroke-width="1.5" stroke="#000" fill="rgb(200, 200, 50)"/>
+  <line transform="rotate(-45 40,20) " stroke-linecap="null" stroke-linejoin="null" id="svg_12" y2="19.999999" x2="50.675682" y1="19.999999" x1="29.324317" stroke-opacity="null" stroke-width="1.5" stroke="#000" fill="none"/>
   <line transform="rotate(45 40,20) " stroke-linecap="null" stroke-linejoin="null" id="svg_13" y2="20" x2="50.675682" y1="20" x1="29.324317" stroke-opacity="null" stroke-width="1.5" stroke="#000" fill="none"/>
  </g>
 </svg>

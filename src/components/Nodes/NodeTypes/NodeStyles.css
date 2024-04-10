@@ -1,0 +1,48 @@
+.node {
+
+}
+
+.selected {
+    background: rgba(34, 178, 230, 0.29);
+}
+
+.node-ver {
+    transform: rotate(90deg);
+}
+
+.react-flow__handle {
+    width: 4px;
+    height: 4px;
+    position: absolute;
+}
+
+.react-flow__handle-left {
+    left: -2px;
+}
+
+.react-flow__handle-right {
+    right: -2px;
+}
+
+.node:hover .rotate-button {
+    opacity: 1;
+}
+
+.rotate-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 12px;
+    height: 12px;
+    border: none;
+    border-radius: 4px;
+    opacity: 0;
+}
+
+.rotate-button img {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 12px;
+    height: 12px;
+}
