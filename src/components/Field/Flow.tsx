@@ -24,10 +24,7 @@ import ReactFlow, {
 
 import 'reactflow/dist/style.css';
 
-import {PowerSourceNode} from '../Nodes/NodeTypes/PowerSourceNode';
-import {BulbNode} from "../Nodes/NodeTypes/BulbNode";
-import {ResistorNode} from "../Nodes/NodeTypes/ResistorNode";
-import {SwitchNode} from "../Nodes/NodeTypes/SwitchNode";
+import {ResistorNode, PowerSourceNode, BulbNode, SwitchNode} from '../Nodes/NodeTypes/NodeTypes';
 
 import DeletableEdge from '../Nodes/DeletableEdge';
 import ContextMenu from "../Nodes/ContextMenu/ContextMenu.tsx";

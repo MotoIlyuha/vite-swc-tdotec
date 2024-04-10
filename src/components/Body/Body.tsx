@@ -3,7 +3,7 @@ import {ReactFlowProvider, Node, Edge} from "reactflow";
 import Flow from "../Field/Flow";
 import './Field.css';
 
-import {BaseNodeData} from '../Nodes/NodeTypes/NodeTypes.tsx';
+import {BaseNodeData, NodeProps} from '../Nodes/NodeTypes/NodeTypes.tsx';
 
 import resistor_img from "../../assets/Icons/resistor_icon.svg";
 import battery_img from "../../assets/Icons/battery_icon.svg";
@@ -12,11 +12,11 @@ import lamb_off_img from "../../assets/Icons/lamb_off_icon.svg";
 import switcher_on_img from "../../assets/Icons/switcher_on_icon.svg";
 import switcher_off_img from "../../assets/Icons/switcher_off_icon.svg";
 
-const initialNodes: BaseNodeData[] = [
-    {id: 'switch-1', data: {id: 'switch-1', values: {switchState: true}}, position: {x: 0, y: 0}, orientation: 'ver', type: 'switch'},
-    {id: 'bulb-1', data: {id: 'bulb-1', values: {brightness: 10}}, position: {x: 100, y: 0}, orientation: 'hor', type: 'bulb'},
-    {id: 'resistor-1', data: {orientation: 'hor', resistance: 10, showData: true}, position: {x: 200, y: 0}, type: 'resistor'},
-    {id: 'powerSource-1', data: {orientation: 'hor', power: 10, showData: false}, position: {x: 300, y: 0}, type: 'powerSource'},
+const initialNodes: BaseNodeData<NodeProps>[] = [
+    {id: 'switch-1', data: {switchState: true}, position: {x: 0, y: 0}, orientation: 'ver', type: 'switch'},
+    {id: 'bulb-1', data: {brightness: 10}, position: {x: 100, y: 0}, orientation: 'hor', type: 'bulb'},
+    {id: 'resistor-1', data: { resistance: 10}, position: {x: 200, y: 0},orientation: 'hor', type: 'resistor'},
+    {id: 'powerSource-1', data: {power: 10}, position: {x: 300, y: 0}, orientation: 'hor', type: 'powerSource'},
 ];
 
 const initialEdges: Edge[] = [{id: 'e1-2', source: '1', target: '2', type: 'default'}];
