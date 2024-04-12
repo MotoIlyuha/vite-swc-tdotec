@@ -35,6 +35,8 @@ import ContextMenu from "../Nodes/ContextMenu/ContextMenu.tsx";
 import AddElementMenu from "./AddElementMenu.tsx";
 import ElementsManager from "./ElementsManager.tsx";
 import Button from "react-bootstrap/Button";
+import {BaseNodeData, CircuitElementType, NodeDataProps, NodeProps, NodeType} from "../types";
+import {DefaultByType} from "../defaults.ts";
 
 const fitViewOptions: FitViewOptions = {
     padding: 0.2,
@@ -64,13 +66,13 @@ const edgeTypes: EdgeTypes = {
 };
 
 let id = 0;
-const getId = () => `dndnode_${id++}`;
+const getId = (type: NodeType) => `${type}_${id++}`;
 
 interface FlowProps {
     nodes: Node[];
     edges: Edge[];
     selectedNodes: Node[];
-    elements: Record<string, Record<string, string>>;
+    elements: CircuitElementType;
     setNodes: (nodes: (nds: Node[]) => Node[]) => void;
     setEdges: (edges: (eds: Edge[]) => Edge[]) => void;
     setSelectedNodes: (selectedNodes: Node[]) => void;
@@ -140,7 +142,7 @@ function Flow({nodes, edges, selectedNodes, elements, setNodes, setEdges, setSel
         (event: React.DragEvent) => {
             event.preventDefault();
 
-            const type = event.dataTransfer.getData('application/reactflow');
+            const type: string = event.dataTransfer.getData('application/reactflow');
 
             if (typeof type === 'undefined' || !type) {
                 return;
@@ -152,11 +154,11 @@ function Flow({nodes, edges, selectedNodes, elements, setNodes, setEdges, setSel
             });
             if (!position) return; // Добавлено условие для обработки случая, когда position не определено
 
-            const newNode = {
-                id: getId(),
-                type,
+            const newNode: BaseNodeData<NodeProps> = {
+                id: getId(type as NodeType),
+                data: DefaultByType(type as NodeType) as NodeDataProps<NodeProps>,
                 position,
-                data: {label: `${type} node`},
+                type: type as NodeType,
             };
 
             setNodes((nds) => nds.concat(newNode));
@@ -217,7 +219,7 @@ function Flow({nodes, edges, selectedNodes, elements, setNodes, setEdges, setSel
             {menu && <ContextMenu onClick={onPaneClick} onNodeDelete={onNodeDelete} {...menu} />}
 
             <Panel position='top-left'>
-                <ElementsManager nodes={nodes} elements={elements} selectNodes={selectNodes}
+                <ElementsManager nodes={nodes as BaseNodeData<NodeProps>[]} elements={elements} selectNodes={selectNodes}
                                  onNodeDelete={onNodeDelete}/>
             </Panel>
 

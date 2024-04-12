@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import {useStore, getBezierPath, SmoothStepEdgeProps} from 'reactflow';
+import {useStore, SmoothStepEdgeProps, getSmoothStepPath} from 'reactflow';
 
 import { getEdgeParams } from './utils.js';
 
@@ -13,7 +13,7 @@ export default function WireEdge({ id, source, target, markerEnd, style }: Smoot
 
   const { sx, sy, tx, ty, sourcePos, targetPos } = getEdgeParams(sourceNode, targetNode);
 
-  const [edgePath] = getBezierPath({
+  const [edgePath] = getSmoothStepPath({
     sourceX: sx,
     sourceY: sy,
     sourcePosition: sourcePos,
@@ -21,6 +21,10 @@ export default function WireEdge({ id, source, target, markerEnd, style }: Smoot
     targetX: tx,
     targetY: ty,
   });
+
+  function handleCLick() {
+    console.log(sx, sy, tx, ty, sourcePos, targetPos);
+  }
 
   return (
     <path
@@ -30,6 +34,7 @@ export default function WireEdge({ id, source, target, markerEnd, style }: Smoot
       strokeWidth={5}
       markerEnd={markerEnd}
       style={style}
+      onClick={handleCLick}
     />
   );
 }
