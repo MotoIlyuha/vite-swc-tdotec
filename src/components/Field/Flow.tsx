@@ -28,9 +28,7 @@ import {
     ResistorNode,
     PowerSourceNode,
     BulbNode,
-    SwitchNode,
-    BaseNodeData,
-    NodeProps
+    SwitchNode
 } from '../Nodes/NodeTypes/NodeTypes';
 import WireEdge from '../Nodes/EdgeTypes/WireEdge.tsx';
 import ContextMenu from "../Nodes/ContextMenu/ContextMenu.tsx";
@@ -69,11 +67,11 @@ let id = 0;
 const getId = () => `dndnode_${id++}`;
 
 interface FlowProps {
-    nodes: BaseNodeData<NodeProps>[];
+    nodes: Node[];
     edges: Edge[];
-    selectedNodes: BaseNodeData<NodeProps>[];
+    selectedNodes: Node[];
     elements: Record<string, Record<string, string>>;
-    setNodes: (nodes: (nds: BaseNodeData<NodeProps>[]) => BaseNodeData<NodeProps>[]) => void;
+    setNodes: (nodes: (nds: Node[]) => Node[]) => void;
     setEdges: (edges: (eds: Edge[]) => Edge[]) => void;
     setSelectedNodes: (selectedNodes: Node[]) => void;
 }

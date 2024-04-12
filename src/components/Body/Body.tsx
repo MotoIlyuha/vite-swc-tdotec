@@ -13,10 +13,10 @@ import switcher_on_img from "../../assets/Icons/switcher_on_icon.svg";
 import switcher_off_img from "../../assets/Icons/switcher_off_icon.svg";
 
 const initialNodes: BaseNodeData<NodeProps>[] = [
-    {id: 'powerSource-1', data: {power: 10}, position: {x: 140, y: 0}, orientation: 'hor', type: 'powerSource'},
-    {id: 'switch-1', data: {switchState: false}, position: {x: 220, y: 40}, orientation: 'ver', type: 'switch'},
-    {id: 'bulb-1', data: {brightness: 0}, position: {x: 140, y: 120}, orientation: 'hor', type: 'bulb'},
-    {id: 'resistor-1', data: {resistance: 10}, position: {x: 100, y: 40}, orientation: 'ver', type: 'resistor'},
+    {id: 'powerSource-1', data: {values: {power: 10}, orientation: 'hor'}, position: {x: 140, y: 0}, type: 'powerSource'},
+    {id: 'switch-1', data: {values: {switchState: false}, orientation: 'ver'}, position: {x: 220, y: 40}, type: 'switch'},
+    {id: 'bulb-1', data: {values: {brightness: 0}, orientation: 'hor'}, position: {x: 140, y: 120}, type: 'bulb'},
+    {id: 'resistor-1', data: {values: {resistance: 10}, orientation: 'ver'}, position: {x: 100, y: 40}, type: 'resistor'},
 ];
 
 const initialEdges: Edge[] = [
