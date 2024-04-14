@@ -58,14 +58,12 @@ function BulbFrame({brightness = DefaultValues.brightness}: BulbNodeProps) {
 
 function SwitchFrame({switchState = DefaultValues.switchState}: SwitchNodeProps) {
 
-    function handleClick() {
-        switchState = !switchState;
-    }
+    const [state, setState] = useState(switchState);
 
     return (
         <div>
-            <img src={circuit_icons[switchState ? 'switcher_on' : 'switcher_off']} alt={'Переключатель'}/>
-            <div className='switch_click_aria' onClick={handleClick}/>
+            <div className='switch_click_aria' onClick={() => setState(!state)}/>
+            <img src={circuit_icons[state ? 'switcher_on' : 'switcher_off']} alt={'Переключатель'}/>
         </div>
     );
 }

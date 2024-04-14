@@ -14,20 +14,24 @@
     left: 0;
 }
 
-.switch_click_aria:hover {
-    cursor: pointer;
+.switch_click_aria {
     position: absolute;
-    top: 50%;
-    left: 50%;
+    top: 0;
+    left: 0;
     width: 40px;
     height: 20px;
     margin-top: 0;
-    margin-left: -20px;
+    margin-left: 20px;
+    background-color: transparent;
+}
+
+.switch_click_aria:hover {
+    cursor: pointer;
     background-color: rgba(125, 125, 255, 0.2);
 }
 
 .selected {
-    background: rgba(34, 178, 230, 0.29);
+    background: rgba(34, 178, 230, 0.25);
 }
 
 .react-flow__handle {
