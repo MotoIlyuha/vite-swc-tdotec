@@ -24,7 +24,18 @@
     flex-direction: row;
     justify-content: center;
     padding: 8px;
-    gap: 8px;
+}
+
+.add-menu-element {
+    padding: 2px 8px;
+}
+
+.add-menu-element img {
+    width: 48px;
+    height: 48px;
+    padding: 4px;
+    border-radius: 8px;
+    background: rgba(90, 228, 255, 0.2);
 }
 
 .add-element-menu {
@@ -36,6 +47,7 @@
 }
 
 .description {
+    font-family: monospace;
     text-align: left;
     margin: 2px 24px 8px;
 }
