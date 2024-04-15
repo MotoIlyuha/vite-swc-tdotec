@@ -75,3 +75,7 @@
 .element.selected {
     background: rgba(34, 178, 230, 0.29);
 }
+
+.react-flow__node.selected {
+    background: rgba(34, 178, 230, 0.25)!important;
+}

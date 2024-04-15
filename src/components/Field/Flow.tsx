@@ -1,8 +1,9 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useMemo, useRef, useState} from 'react';
 import ReactFlow, {
     addEdge,
     applyEdgeChanges,
     applyNodeChanges,
+    useOnSelectionChange,
     Background,
     Controls,
     Panel,
@@ -18,7 +19,7 @@ import ReactFlow, {
     OnEdgesChange,
     OnNodesChange,
     ReactFlowInstance,
-    Connection, OnSelectionChangeParams, useOnSelectionChange
+    Connection, OnSelectionChangeParams,
 } from 'reactflow';
 
 import 'reactflow/dist/style.css';
@@ -36,8 +37,6 @@ import ElementsManager from "./ElementsManager.tsx";
 import Button from "react-bootstrap/Button";
 import {BaseNodeData, CircuitElementType, NodeDataProps, NodeProps, NodeType} from "../types";
 import {DefaultByType} from "../defaults.ts";
-import {useSelection} from "../SelectedNodesContext.tsx";
-
 
 const fitViewOptions: FitViewOptions = {
     padding: 0.2,
@@ -78,7 +77,7 @@ interface FlowProps {
 }
 
 function Flow({nodes, edges, elements, setNodes, setEdges}: FlowProps) {
-    const {setSelectedNodes} = useSelection();
+    const [selectedNodes, setSelectedNodes] = useState<Node[]>([]);
     const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
     const [menu, setMenu] = useState<{
         id: string;
@@ -168,29 +167,35 @@ function Flow({nodes, edges, elements, setNodes, setEdges}: FlowProps) {
         [setMenu],
     );
 
-    // const onSelectionChange = (params: OnSelectionChangeParams) => {
-    //     setSelectedNodes(params.nodes as BaseNodeData<NodeProps>[]);
-    // }
+    const onSelectionChange = useCallback((params: OnSelectionChangeParams) => {
+            setSelectedNodes(params.nodes);
+        }, [setSelectedNodes]
+    );
 
-    useOnSelectionChange({
-        onChange: ({nodes}) => {
-            setSelectedNodes(nodes as BaseNodeData<NodeProps>[]);
-        },
-    });
+    const selectableNodes = useMemo(() => nodes.map(node => ({
+        ...node,
+        className: selectedNodes.includes(node) ? 'selected' : ''
+    })), [nodes, selectedNodes]);
 
     const onPaneClick = useCallback(() => {
         setMenu(null);
         setSelectedNodes([]);
-    }, [setSelectedNodes]);
+    }, [setMenu, setSelectedNodes]);
+
+    useOnSelectionChange({
+        onChange: ({nodes}) => {
+            setSelectedNodes(nodes);
+        },
+    });
 
     return (
         <ReactFlow
             ref={ref}
-            nodes={nodes}
+            nodes={selectableNodes}
             edges={edges}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
-            // onSelectionChange={onSelectionChange}
+            onSelectionChange={onSelectionChange}
             onConnect={onConnect}
             fitView
             fitViewOptions={fitViewOptions}
@@ -211,7 +216,8 @@ function Flow({nodes, edges, elements, setNodes, setEdges}: FlowProps) {
 
             <Panel position='top-left'>
                 <ElementsManager nodes={nodes as BaseNodeData<NodeProps>[]} elements={elements}
-                                 onNodeDelete={onNodeDelete}/>
+                                 selectedNodes={selectedNodes as BaseNodeData<NodeProps>[]}
+                                 setSelectedNodes={setSelectedNodes} onNodeDelete={onNodeDelete}/>
             </Panel>
 
             <Panel position='bottom-left'>

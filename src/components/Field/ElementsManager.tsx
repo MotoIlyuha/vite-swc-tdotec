@@ -1,33 +1,33 @@
 import Image from "react-bootstrap/Image";
 import {BaseNodeData, CircuitElementType, NodeProps} from "../types";
-import {useSelection} from "../SelectedNodesContext";
 
 import delete_icon from "../../assets/Icons/delete_icon.png";
-import {useEffect} from "react";
+import {useCallback} from "react";
 
 
 interface ElementsManagerProps {
     nodes: BaseNodeData<NodeProps>[];
+    selectedNodes: BaseNodeData<NodeProps>[];
+    setSelectedNodes: (node: BaseNodeData<NodeProps>[]) => void;
     elements: CircuitElementType;
-    onNodeDelete: (nodeId: string) => void;
+    onNodeDelete: (arg0: string) => void;
 }
 
-export default function ElementsManager({nodes, elements, onNodeDelete}: ElementsManagerProps) {
+export default function ElementsManager({nodes, selectedNodes, setSelectedNodes, elements, onNodeDelete}: ElementsManagerProps) {
 
-    const {selectedNodes, setSelectedNodes} = useSelection();
+    const handleNodeClick = useCallback((node: BaseNodeData<NodeProps>) => {
+        setSelectedNodes([node]);
+    }, [setSelectedNodes]);
 
-    useEffect(() => {
-        setSelectedNodes(selectedNodes);
-        console.log(selectedNodes);
-    }, [selectedNodes, setSelectedNodes]);
+    const isSelected = useCallback((node: BaseNodeData<NodeProps>) =>
+        selectedNodes.some(selectedNode => selectedNode.id === node.id),
+    [selectedNodes]);
 
     return (
         <div className="elements-manager">
             {nodes.map((node) => (
-                <div className={'element ' + (selectedNodes.find(selected => selected.id === node.id) ? 'selected' : '')} key={node.id}
-                     onClick={() => {
-                         setSelectedNodes([node]);
-                     }}>
+                <div className={'element ' + (isSelected(node) ? 'selected' : '')} key={node.id}
+                     onClick={() => handleNodeClick(node)}>
                     <Image src={elements[node.type].icon}/>
                     <div>{elements[node.type]?.name}</div>
                     <button className='delete-button' onClick={(e) => {
@@ -46,7 +46,6 @@ export default function ElementsManager({nodes, elements, onNodeDelete}: Element
                     </button>
                 </div>
             ))}
-            <p>{nodes.map((node) => selectedNodes.find(selected => selected.id === node.id) ? node.id : '')}</p>
         </div>
     );
 }
