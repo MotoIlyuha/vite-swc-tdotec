@@ -8,12 +8,11 @@ import {elements, initialEdges, initialNodes} from "../defaults.ts";
 export default function Body() {
     const [nodes, setNodes] = useState<Node[]>(initialNodes);
     const [edges, setEdges] = useState<Edge[]>(initialEdges);
-    const [selectedNodes, setSelectedNodes] = useState<Node[]>([]);
 
     return (
         <ReactFlowProvider>
-            <Flow nodes={nodes as Node[]} edges={edges} elements={elements} selectedNodes={selectedNodes}
-                  setNodes={setNodes} setEdges={setEdges} setSelectedNodes={setSelectedNodes}/>
+            <Flow nodes={nodes as Node[]} edges={edges} elements={elements}
+                  setNodes={setNodes} setEdges={setEdges}/>
         </ReactFlowProvider>
     )
 }

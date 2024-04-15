@@ -30,10 +30,6 @@
     background-color: rgba(125, 125, 255, 0.2);
 }
 
-.selected {
-    background: rgba(34, 178, 230, 0.25);
-}
-
 .react-flow__handle {
     width: 4px;
     height: 4px;
