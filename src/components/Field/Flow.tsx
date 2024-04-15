@@ -80,7 +80,7 @@ function Flow({nodes, edges, elements, setNodes, setEdges}: FlowProps) {
     const [selectedNodes, setSelectedNodes] = useState<Node[]>([]);
     const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
     const [menu, setMenu] = useState<{
-        id: string;
+        node: BaseNodeData<NodeProps>;
         top?: number;
         left?: number;
         right?: number;
@@ -156,15 +156,17 @@ function Flow({nodes, edges, elements, setNodes, setEdges}: FlowProps) {
                 return;
             }
 
+            setSelectedNodes([node]);
+
             setMenu({
-                id: node.id,
+                node: node as BaseNodeData<NodeProps>,
                 top: event.clientY < pane.height - 50 ? event.clientY : undefined,
                 left: event.clientX < pane.width - 50 ? event.clientX : undefined,
                 right: event.clientX >= pane.width - 50 ? pane.width - event.clientX : undefined,
                 bottom: event.clientY >= pane.height - 50 ? pane.height - event.clientY : undefined,
             });
         },
-        [setMenu],
+        [setMenu, setSelectedNodes],
     );
 
     const onSelectionChange = useCallback((params: OnSelectionChangeParams) => {

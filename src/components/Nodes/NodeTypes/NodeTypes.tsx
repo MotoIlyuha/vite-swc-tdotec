@@ -29,7 +29,7 @@ const circuit_icons = {
     'switcher_off': switch_off_img
 };
 
-function ResistorFrame({resistance = DefaultValues.resistance}: ResistorNodeProps) {
+function ResistorFrame({resistance = DefaultValues.resistor.resistance}: ResistorNodeProps) {
     return (
         <div>
             <img src={circuit_icons['resistor']} alt={resistance.toString()}/>
@@ -37,7 +37,7 @@ function ResistorFrame({resistance = DefaultValues.resistance}: ResistorNodeProp
     );
 }
 
-function BulbFrame({brightness = DefaultValues.brightness}: BulbNodeProps) {
+function BulbFrame({brightness = DefaultValues.bulb.brightness}: BulbNodeProps) {
 
     function handleClick() {
         console.log(brightness);
@@ -56,7 +56,7 @@ function BulbFrame({brightness = DefaultValues.brightness}: BulbNodeProps) {
     );
 }
 
-function SwitchFrame({switchState = DefaultValues.switchState}: SwitchNodeProps) {
+function SwitchFrame({switchState = DefaultValues.switch.switchState}: SwitchNodeProps) {
 
     const [state, setState] = useState(switchState);
 
@@ -68,7 +68,7 @@ function SwitchFrame({switchState = DefaultValues.switchState}: SwitchNodeProps)
     );
 }
 
-function PowerSourceFrame({power = DefaultValues.power}: PowerSourceNodeProps) {
+function PowerSourceFrame({power = DefaultValues.powerSource.power}: PowerSourceNodeProps) {
     return (
         <div>
             <img src={circuit_icons['battery']} alt={power.toString()}/>
@@ -121,7 +121,7 @@ export const CircuitElementNode = memo((
 export const ResistorNode = memo(
     ({
          id,
-         data: {values: {resistance = DefaultValues.resistance}, orientation},
+         data: {values: {resistance = DefaultValues.resistor.resistance}, orientation},
          position
      }: BaseNodeData<ResistorNodeProps>) => {
 
@@ -134,7 +134,7 @@ export const ResistorNode = memo(
 export const BulbNode = memo(
     ({
          id,
-         data: {values: {brightness = DefaultValues.brightness}, orientation},
+         data: {values: {brightness = DefaultValues.bulb.brightness}, orientation},
          position
      }: BaseNodeData<BulbNodeProps>) => {
 
@@ -148,7 +148,7 @@ export const BulbNode = memo(
 export const PowerSourceNode = memo(
     ({
          id,
-         data: {values: {power = DefaultValues.power}, orientation},
+         data: {values: {power = DefaultValues.powerSource.power}, orientation},
          position
      }: BaseNodeData<PowerSourceNodeProps>) => {
 
@@ -162,7 +162,7 @@ export const PowerSourceNode = memo(
 export const SwitchNode = memo(
     ({
          id,
-         data: {values: {switchState = DefaultValues.switchState}, orientation},
+         data: {values: {switchState = DefaultValues.switch.switchState}, orientation},
          position
      }: BaseNodeData<SwitchNodeProps>) => {
 
