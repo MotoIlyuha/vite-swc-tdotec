@@ -1,7 +1,8 @@
 .context-menu {
   background: white;
-  border-style: solid;
-  box-shadow: 10px 19px 20px rgba(0, 0, 0, 10%);
+  border: darkgrey solid 2px;
+  border-radius: 8px;
+  box-shadow: 10px 19px 20px rgba(106, 106, 106, 0.1);
   position: absolute;
   z-index: 10;
 }
@@ -17,3 +18,4 @@
 .context-menu button:hover {
   background: white;
 }
+

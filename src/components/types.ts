@@ -40,6 +40,8 @@ export type PowerSourceNodeProps = {
 
 export type BulbNodeProps = {
     brightness?: number;
+    power?: number;
+    voltage?: number;
 }
 
 export type SwitchNodeProps = {

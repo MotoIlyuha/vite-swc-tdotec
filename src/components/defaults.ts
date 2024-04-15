@@ -33,18 +33,28 @@ export const elements: CircuitElementType = {
 }
 
 export const DefaultValues = {
-    resistance: 10,
-    power: 10,
-    brightness: 0,
-    switchState: false
+    bulb: {
+        brightness: 0,
+        power: 0.03,
+        voltage: 1.5
+    },
+    resistor: {
+        resistance: 3
+    },
+    powerSource: {
+        power: 6
+    },
+    switch: {
+        switchState: false
+    }
 }
 
 export const DefaultByType = (type: NodeType, orientation: 'hor' | 'ver' = 'hor') => {
     switch (type) {
-        case NodeType.PowerSource: return {values: {power: DefaultValues.power}, orientation: orientation, selected: false};
-        case NodeType.Resistor: return {values: {resistance: DefaultValues.resistance}, orientation: orientation, selected: false};
-        case NodeType.Bulb: return {values: {brightness: DefaultValues.brightness}, orientation: orientation, selected: false};
-        case NodeType.Switch: return {values: {switchState: DefaultValues.switchState}, orientation: orientation, selected: false};
+        case NodeType.PowerSource: return {values: DefaultValues.powerSource, orientation: orientation};
+        case NodeType.Resistor: return {values: DefaultValues.resistor, orientation: orientation};
+        case NodeType.Bulb: return {values: DefaultValues.bulb, orientation: orientation};
+        case NodeType.Switch: return {values: DefaultValues.switch, orientation: orientation};
     }
 }
 

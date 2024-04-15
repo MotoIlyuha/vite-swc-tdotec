@@ -62,20 +62,31 @@
     box-shadow: 0 0 36px 6px rgba(34, 60, 80, 0.25);
 }
 
-.element {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
+.show_values {
+    width: 20px;
+    height: 20px;
+    margin-left: 4px;
     border-radius: 4px;
-    padding: 0 8px;
+    border: none;
+}
+
+.react-flow__node.selected {
+    background: rgba(34, 178, 230, 0.25) !important;
+}
+
+.element {
+    border-radius: 6px;
 }
 
 .element.selected {
     background: rgba(34, 178, 230, 0.29);
 }
 
-.react-flow__node.selected {
-    background: rgba(34, 178, 230, 0.25)!important;
+.element-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    padding: 0 8px;
 }
