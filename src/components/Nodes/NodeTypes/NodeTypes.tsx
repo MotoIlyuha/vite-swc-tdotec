@@ -1,15 +1,15 @@
-import {Handle, Position, useUpdateNodeInternals} from 'reactflow';
-import {useCallback, useState, memo} from 'react';
+import {Handle, NodeToolbar, Position, useUpdateNodeInternals} from 'reactflow';
+import {memo, useCallback, useState} from 'react';
 import './NodeStyles.css';
 
 import {
     BaseNodeData,
-    NodeType,
-    NodeProps,
-    ResistorNodeProps,
     BulbNodeProps,
-    SwitchNodeProps,
-    PowerSourceNodeProps
+    NodeProps,
+    NodeType,
+    PowerSourceNodeProps,
+    ResistorNodeProps,
+    SwitchNodeProps
 } from "../../types.ts";
 import {DefaultValues} from "../../defaults.ts";
 
@@ -89,6 +89,13 @@ export const CircuitElementNode = memo((
     }, [id, orient, updateNodeInternals])
 
     return (
+        <>
+        <NodeToolbar isVisible={true} position={orient === 'hor' ? Position.Top : Position.Left}>
+            {type === NodeType.Resistor && 'resistance' in values && 'resistance' in values && <div>Сопротивление: {values.resistance}Ом</div>}
+            {type === NodeType.Bulb && 'power' in values && 'power' in values && <div>Мощность: {values.power}Вт</div>}
+            {type === NodeType.Bulb && 'voltage' in values && 'voltage' in values && <div>Напряжение: {values.voltage}В</div>}
+            {type === NodeType.PowerSource && 'power' in values && 'power' in values && <div>Мощность: {values.power}Вт</div>}
+        </NodeToolbar>
         <div id={id} className={`node ${type} ${orient} ${selected ? 'selected' : ''}`}
              style={{
                  'width': `${orient === 'hor' ? 80 : 40}px`,
@@ -97,17 +104,12 @@ export const CircuitElementNode = memo((
              }}>
             <Handle type="source" position={orient === 'hor' ? Position.Left : Position.Top}/>
             <div style={{
-                transform: `rotate(${orient === 'hor' ? 0 : 90}deg)`,
-                width: `${orient === 'hor' ? 40 : 80}px`,
-                height: `${orient === 'hor' ? 80 : 40}px`,
-                position: 'absolute',
-                top: `${orient === 'hor' ? 0 : 20}px`,
-                left: `${orient === 'hor' ? 0 : -20}px`,
+                transform: `rotate(${orient === 'hor' ? 0 : 90}deg)`
             }}>
-                {type === 'resistor' && 'resistance' in values && <ResistorFrame resistance={values.resistance}/>}
-                {type === 'bulb' && 'brightness' in values && <BulbFrame brightness={values.brightness}/>}
-                {type === 'powerSource' && 'power' in values && <PowerSourceFrame power={values.power}/>}
-                {type === 'switch' && 'switchState' in values && <SwitchFrame switchState={values.switchState}/>}
+                {type === NodeType.Resistor && 'resistance' in values && <ResistorFrame resistance={values.resistance}/>}
+                {type === NodeType.Bulb && 'brightness' in values && <BulbFrame brightness={values.brightness}/>}
+                {type === NodeType.PowerSource && 'power' in values && <PowerSourceFrame power={values.power}/>}
+                {type === NodeType.Switch && 'switchState' in values && <SwitchFrame switchState={values.switchState}/>}
             </div>
             <button className='rotate-button' onClick={rotateNode}
                     style={{transform: `rotate(${orient === 'hor' ? 0 : 90}deg)`}}>
@@ -115,6 +117,7 @@ export const CircuitElementNode = memo((
             </button>
             <Handle type="target" position={orient === 'hor' ? Position.Right : Position.Bottom}/>
         </div>
+        </>
     );
 });
 
