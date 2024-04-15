@@ -3,7 +3,7 @@ import {BaseNodeData, CircuitElementType, NodeProps} from "../types";
 
 import delete_icon from "../../assets/Icons/delete_icon.png";
 import arrow_icon from "../../assets/Icons/arrow_icon.png";
-import {useCallback, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {CircuitElementContextMenu} from "../Nodes/ContextMenu/ContextMenu.tsx";
 
 
@@ -19,6 +19,12 @@ export default function ElementsManager({nodes, selectedNodes, setSelectedNodes,
 
     const [showValues, setShowValues] = useState<boolean[]>(nodes.map(() => false));
     const [rotateValues, setRotateValues] = useState<boolean[]>(nodes.map(() => false));
+
+    useEffect(() => {
+        // Update showValues and rotateValues when nodes change
+        setShowValues(nodes.map(() => false));
+        setRotateValues(nodes.map(() => false));
+    }, [nodes]);
 
     const handleNodeClick = useCallback((node: BaseNodeData<NodeProps>) => {
         setSelectedNodes([node]);
