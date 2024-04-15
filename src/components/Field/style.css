@@ -1,3 +1,11 @@
+:root {
+    --scrollbarBg: rgba(180, 180, 220, 0.06);
+    --scrollbarThumb: rgba(28, 72, 182, 0.27);
+    --scrollbarWidth: 8px;
+    --scrollbarBorder: 3px solid var(--scrollbarBg);
+    --scrollbarBorderRadius: calc(var(--scrollbarWidth) / 2);
+}
+
 .sidebar {
     height: 100%;
     width: 270px;
@@ -56,10 +64,30 @@
     display: flex;
     flex-direction: column;
     background: aliceblue;
-    padding: 8px;
+    padding: 12px 8px;
     border-radius: 16px;
     user-select: none;
     box-shadow: 0 0 36px 6px rgba(34, 60, 80, 0.25);
+    overflow-y: auto;
+    max-height: 536px;
+    scrollbar-width: var(--scrollbarWidth);
+    scrollbar-color: var(--scrollbarThumb) var(--scrollbarBg);
+}
+
+.elements-manager::-webkit-scrollbar {
+    width: var(--scrollbarWidth);
+    margin: 8px;
+}
+
+.elements-manager::-webkit-scrollbar-track {
+    background: var(--scrollbarBg);
+    border-radius: var(--scrollbarBorderRadius);
+}
+
+.elements-manager::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbarThumb);
+    border-radius: var(--scrollbarBorderRadius);
+    border: var(--scrollbarBorder);
 }
 
 .show_values {

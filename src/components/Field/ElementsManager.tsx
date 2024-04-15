@@ -37,6 +37,7 @@ export default function ElementsManager({nodes, selectedNodes, setSelectedNodes,
     }, []);
 
     return (
+        <div style={{padding: '8px 0'}}>
         <div className="elements-manager">
             {nodes.map((node, index) => (
                 <div className={'element ' + (isSelected(node) ? 'selected' : '')} key={node.id}
@@ -72,6 +73,7 @@ export default function ElementsManager({nodes, selectedNodes, setSelectedNodes,
                 {showValues[index] && <CircuitElementContextMenu id={node.id} data={node.data} type={node.type} position={node.position}/>}
                 </div>
             ))}
+        </div>
         </div>
     );
 }
