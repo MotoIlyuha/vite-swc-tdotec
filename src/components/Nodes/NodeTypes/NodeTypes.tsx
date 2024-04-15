@@ -39,10 +39,6 @@ function ResistorFrame({resistance = DefaultValues.resistance}: ResistorNodeProp
 
 function BulbFrame({brightness = DefaultValues.brightness}: BulbNodeProps) {
 
-    function handleClick() {
-        console.log(brightness);
-    }
-
     return (
         <div style={{position: 'relative'}}>
             <div className='bulb_glow' style={{
@@ -51,7 +47,7 @@ function BulbFrame({brightness = DefaultValues.brightness}: BulbNodeProps) {
                 boxShadow: `0 0 16px ${brightness / 6}px rgba(${155 + brightness}, ${155 + brightness}, 5, 0.5)`
             }}>
             </div>
-            <img className='bulb_img' src={circuit_icons['bulb']} alt='Лампочка' onClick={handleClick}/>
+            <img className='bulb_img' src={circuit_icons['bulb']} alt='Лампочка'/>
         </div>
     );
 }
@@ -121,12 +117,12 @@ export const CircuitElementNode = memo((
 export const ResistorNode = memo(
     ({
          id,
-         data: {values: {resistance = DefaultValues.resistance}, orientation},
+         data: {values: {resistance = DefaultValues.resistance}, orientation, selected},
          position
      }: BaseNodeData<ResistorNodeProps>) => {
 
         return <CircuitElementNode
-            id={`resistor_${id}`} selected={false} data={{values: {resistance}, orientation}} position={position}
+            id={`resistor_${id}`} selected={false} data={{values: {resistance}, orientation, selected}} position={position}
             type={NodeType.Resistor}
         />;
     });
@@ -134,12 +130,12 @@ export const ResistorNode = memo(
 export const BulbNode = memo(
     ({
          id,
-         data: {values: {brightness = DefaultValues.brightness}, orientation},
+         data: {values: {brightness = DefaultValues.brightness}, orientation, selected},
          position
      }: BaseNodeData<BulbNodeProps>) => {
 
         return <CircuitElementNode
-            id={`bulb_${id}`} selected={false} data={{values: {brightness}, orientation}} position={position}
+            id={`bulb_${id}`} selected={false} data={{values: {brightness}, orientation, selected}} position={position}
             type={NodeType.Bulb}
         />;
     }
@@ -148,12 +144,12 @@ export const BulbNode = memo(
 export const PowerSourceNode = memo(
     ({
          id,
-         data: {values: {power = DefaultValues.power}, orientation},
+         data: {values: {power = DefaultValues.power}, orientation, selected},
          position
      }: BaseNodeData<PowerSourceNodeProps>) => {
 
         return <CircuitElementNode
-            id={`powerSource_${id}`} selected={false} data={{values: {power}, orientation}} position={position}
+            id={`powerSource_${id}`} selected={false} data={{values: {power}, orientation, selected}} position={position}
             type={NodeType.PowerSource}
         />;
     }
@@ -162,12 +158,12 @@ export const PowerSourceNode = memo(
 export const SwitchNode = memo(
     ({
          id,
-         data: {values: {switchState = DefaultValues.switchState}, orientation},
+         data: {values: {switchState = DefaultValues.switchState}, orientation, selected},
          position
      }: BaseNodeData<SwitchNodeProps>) => {
 
         return <CircuitElementNode
-            id={`switch_${id}`} selected={false} data={{values: {switchState}, orientation}} position={position}
+            id={`switch_${id}`} selected={false} data={{values: {switchState}, orientation, selected}} position={position}
             type={NodeType.Switch}
         />;
     }

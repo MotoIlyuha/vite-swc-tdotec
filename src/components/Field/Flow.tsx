@@ -1,9 +1,8 @@
-import React, {useCallback, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import ReactFlow, {
     addEdge,
     applyEdgeChanges,
     applyNodeChanges,
-    useOnSelectionChange,
     Background,
     Controls,
     Panel,
@@ -19,7 +18,7 @@ import ReactFlow, {
     OnEdgesChange,
     OnNodesChange,
     ReactFlowInstance,
-    Connection,
+    Connection, OnSelectionChangeParams, useOnSelectionChange
 } from 'reactflow';
 
 import 'reactflow/dist/style.css';
@@ -37,6 +36,8 @@ import ElementsManager from "./ElementsManager.tsx";
 import Button from "react-bootstrap/Button";
 import {BaseNodeData, CircuitElementType, NodeDataProps, NodeProps, NodeType} from "../types";
 import {DefaultByType} from "../defaults.ts";
+import {useSelection} from "../SelectedNodesContext.tsx";
+
 
 const fitViewOptions: FitViewOptions = {
     padding: 0.2,
@@ -71,14 +72,13 @@ const getId = (type: NodeType) => `${type}_${id++}`;
 interface FlowProps {
     nodes: Node[];
     edges: Edge[];
-    selectedNodes: Node[];
     elements: CircuitElementType;
     setNodes: (nodes: (nds: Node[]) => Node[]) => void;
     setEdges: (edges: (eds: Edge[]) => Edge[]) => void;
-    setSelectedNodes: (selectedNodes: Node[]) => void;
 }
 
-function Flow({nodes, edges, selectedNodes, elements, setNodes, setEdges, setSelectedNodes}: FlowProps) {
+function Flow({nodes, edges, elements, setNodes, setEdges}: FlowProps) {
+    const {setSelectedNodes} = useSelection();
     const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
     const [menu, setMenu] = useState<{
         id: string;
@@ -113,25 +113,6 @@ function Flow({nodes, edges, selectedNodes, elements, setNodes, setEdges, setSel
         },
         [setNodes, setEdges],
     );
-
-    const selectNodes = (nodes: Node[]) => {
-        setSelectedNodes(nodes);
-        nodes.map(node => {
-                node.selected = selectedNodes.includes(node);
-                node.className = selectedNodes.includes(node) ? 'selected' : 'notselected';
-            }
-        );
-    }
-
-    const onNodeClick = (_event: React.MouseEvent, node: Node) => {
-        selectNodes([node]);
-    }
-
-    useOnSelectionChange({
-        onChange: ({nodes}) => {
-            selectNodes(nodes);
-        },
-    });
 
     const onDragOver = useCallback((event: React.DragEvent) => {
         event.preventDefault();
@@ -187,10 +168,20 @@ function Flow({nodes, edges, selectedNodes, elements, setNodes, setEdges, setSel
         [setMenu],
     );
 
+    // const onSelectionChange = (params: OnSelectionChangeParams) => {
+    //     setSelectedNodes(params.nodes as BaseNodeData<NodeProps>[]);
+    // }
+
+    useOnSelectionChange({
+        onChange: ({nodes}) => {
+            setSelectedNodes(nodes as BaseNodeData<NodeProps>[]);
+        },
+    });
+
     const onPaneClick = useCallback(() => {
         setMenu(null);
         setSelectedNodes([]);
-    }, [setMenu, setSelectedNodes]);
+    }, [setSelectedNodes]);
 
     return (
         <ReactFlow
@@ -199,8 +190,8 @@ function Flow({nodes, edges, selectedNodes, elements, setNodes, setEdges, setSel
             edges={edges}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
+            // onSelectionChange={onSelectionChange}
             onConnect={onConnect}
-            onNodeClick={onNodeClick}
             fitView
             fitViewOptions={fitViewOptions}
             defaultEdgeOptions={defaultEdgeOptions}
@@ -219,7 +210,7 @@ function Flow({nodes, edges, selectedNodes, elements, setNodes, setEdges, setSel
             {menu && <ContextMenu onClick={onPaneClick} onNodeDelete={onNodeDelete} {...menu} />}
 
             <Panel position='top-left'>
-                <ElementsManager nodes={nodes as BaseNodeData<NodeProps>[]} elements={elements} selectNodes={selectNodes}
+                <ElementsManager nodes={nodes as BaseNodeData<NodeProps>[]} elements={elements}
                                  onNodeDelete={onNodeDelete}/>
             </Panel>
 

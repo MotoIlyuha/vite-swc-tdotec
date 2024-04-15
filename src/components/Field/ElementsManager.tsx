@@ -1,30 +1,33 @@
 import Image from "react-bootstrap/Image";
-import {Node} from "reactflow";
 import {BaseNodeData, CircuitElementType, NodeProps} from "../types";
+import {useSelection} from "../SelectedNodesContext";
 
 import delete_icon from "../../assets/Icons/delete_icon.png";
+import {useEffect} from "react";
 
 
 interface ElementsManagerProps {
     nodes: BaseNodeData<NodeProps>[];
-    selectNodes: (nodes: Node[]) => void;
     elements: CircuitElementType;
-    onNodeDelete: (arg0: string) => void;
+    onNodeDelete: (nodeId: string) => void;
 }
 
-export default function ElementsManager({nodes, selectNodes, elements, onNodeDelete}: ElementsManagerProps) {
+export default function ElementsManager({nodes, elements, onNodeDelete}: ElementsManagerProps) {
 
-    const handleElementClick = (node: Node) => {
-        selectNodes([node]);
-        node.selected = true;
-        node.className = 'selected';
-    }
+    const {selectedNodes, setSelectedNodes} = useSelection();
+
+    useEffect(() => {
+        setSelectedNodes(selectedNodes);
+        console.log(selectedNodes);
+    }, [selectedNodes, setSelectedNodes]);
 
     return (
         <div className="elements-manager">
             {nodes.map((node) => (
-                <div className={'element ' + (node.selected ? 'selected' : '')} key={node.id}
-                     onClick={() => handleElementClick(node)}>
+                <div className={'element ' + (selectedNodes.find(selected => selected.id === node.id) ? 'selected' : '')} key={node.id}
+                     onClick={() => {
+                         setSelectedNodes([node]);
+                     }}>
                     <Image src={elements[node.type].icon}/>
                     <div>{elements[node.type]?.name}</div>
                     <button className='delete-button' onClick={(e) => {
@@ -43,7 +46,7 @@ export default function ElementsManager({nodes, selectNodes, elements, onNodeDel
                     </button>
                 </div>
             ))}
-            <p>{nodes.map((node) => node.selected ? node.id : '')}</p>
+            <p>{nodes.map((node) => selectedNodes.find(selected => selected.id === node.id) ? node.id : '')}</p>
         </div>
     );
 }

@@ -41,10 +41,10 @@ export const DefaultValues = {
 
 export const DefaultByType = (type: NodeType, orientation: 'hor' | 'ver' = 'hor') => {
     switch (type) {
-        case NodeType.PowerSource: return {values: {power: DefaultValues.power}, orientation: orientation};
-        case NodeType.Resistor: return {values: {resistance: DefaultValues.resistance}, orientation: orientation};
-        case NodeType.Bulb: return {values: {brightness: DefaultValues.brightness}, orientation: orientation};
-        case NodeType.Switch: return {values: {switchState: DefaultValues.switchState}, orientation: orientation};
+        case NodeType.PowerSource: return {values: {power: DefaultValues.power}, orientation: orientation, selected: false};
+        case NodeType.Resistor: return {values: {resistance: DefaultValues.resistance}, orientation: orientation, selected: false};
+        case NodeType.Bulb: return {values: {brightness: DefaultValues.brightness}, orientation: orientation, selected: false};
+        case NodeType.Switch: return {values: {switchState: DefaultValues.switchState}, orientation: orientation, selected: false};
     }
 }
 
