@@ -38,6 +38,7 @@ import Button from "react-bootstrap/Button";
 import {BaseNodeData, CircuitElementType, NodeDataProps, NodeProps, NodeType} from "../types";
 import {DefaultByType} from "../defaults.ts";
 
+
 const fitViewOptions: FitViewOptions = {
     padding: 0.2,
 };
@@ -62,7 +63,7 @@ const nodeTypes: NodeTypes = {
 };
 
 const edgeTypes: EdgeTypes = {
-    wire: WireEdge,
+    wire: WireEdge
 };
 
 let id = 0;

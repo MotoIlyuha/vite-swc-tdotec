@@ -8,12 +8,6 @@
     margin: 10px 30px;
 }
 
-.bulb_img {
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-
 .switch_click_aria {
     position: absolute;
     top: 0;
@@ -33,15 +27,6 @@
 .react-flow__handle {
     width: 4px;
     height: 4px;
-    position: absolute;
-}
-
-.react-flow__handle-left {
-    left: -2px;
-}
-
-.react-flow__handle-right {
-    right: -2px;
 }
 
 .node:hover .rotate-button {
