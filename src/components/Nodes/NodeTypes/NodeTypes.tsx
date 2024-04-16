@@ -86,6 +86,7 @@ export const CircuitElementNode = memo((
     const rotateNode = useCallback(() => {
         setOrient(orient === 'hor' ? 'ver' : 'hor');
         updateNodeInternals(id);
+        console.log(id);
     }, [id, orient, updateNodeInternals])
 
     return (
@@ -102,7 +103,7 @@ export const CircuitElementNode = memo((
                  'height': `${orient === 'hor' ? 40 : 80}px`,
                  'position': 'relative'
              }}>
-            <Handle type="source" position={orient === 'hor' ? Position.Left : Position.Top}/>
+            <Handle id={id + '_source'} type="source" position={orient === 'hor' ? Position.Left : Position.Top}/>
             <div style={{
                 transform: `rotate(${orient === 'hor' ? 0 : 90}deg)`
             }}>
@@ -115,7 +116,7 @@ export const CircuitElementNode = memo((
                     style={{transform: `rotate(${orient === 'hor' ? 0 : 90}deg)`}}>
                 <img src={rotate_icon} alt='перевернуть'/>
             </button>
-            <Handle type="target" position={orient === 'hor' ? Position.Right : Position.Bottom}/>
+            <Handle id={id + '_target'} type="source" position={orient === 'hor' ? Position.Right : Position.Bottom}/>
         </div>
         </>
     );
@@ -129,7 +130,7 @@ export const ResistorNode = memo(
      }: BaseNodeData<ResistorNodeProps>) => {
 
         return <CircuitElementNode
-            id={`resistor_${id}`} selected={false} data={{values: {resistance}, orientation}} position={position}
+            id={id} selected={false} data={{values: {resistance}, orientation}} position={position}
             type={NodeType.Resistor}
         />;
     });
@@ -142,7 +143,7 @@ export const BulbNode = memo(
      }: BaseNodeData<BulbNodeProps>) => {
 
         return <CircuitElementNode
-            id={`bulb_${id}`} selected={false} data={{values: {brightness}, orientation}} position={position}
+            id={id} selected={false} data={{values: {brightness}, orientation}} position={position}
             type={NodeType.Bulb}
         />;
     }
@@ -156,7 +157,7 @@ export const PowerSourceNode = memo(
      }: BaseNodeData<PowerSourceNodeProps>) => {
 
         return <CircuitElementNode
-            id={`powerSource_${id}`} selected={false} data={{values: {power}, orientation}} position={position}
+            id={id} selected={false} data={{values: {power}, orientation}} position={position}
             type={NodeType.PowerSource}
         />;
     }
@@ -170,7 +171,7 @@ export const SwitchNode = memo(
      }: BaseNodeData<SwitchNodeProps>) => {
 
         return <CircuitElementNode
-            id={`switch_${id}`} selected={false} data={{values: {switchState}, orientation}} position={position}
+            id={id} selected={false} data={{values: {switchState}, orientation}} position={position}
             type={NodeType.Switch}
         />;
     }

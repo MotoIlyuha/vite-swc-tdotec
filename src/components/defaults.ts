@@ -59,10 +59,10 @@ export const DefaultByType = (type: NodeType, orientation: 'hor' | 'ver' = 'hor'
 }
 
 export const initialNodes: BaseNodeData<NodeProps>[] = [
-    {id: 'powerSource-1', data: DefaultByType(NodeType.PowerSource, 'hor') as NodeDataProps<NodeProps>, position: {x: 140, y: 0}, type: NodeType.PowerSource},
-    {id: 'switch-1', data: DefaultByType(NodeType.Switch, 'ver') as NodeDataProps<NodeProps>, position: {x: 220, y: 40}, type: NodeType.Switch},
-    {id: 'bulb-1', data: DefaultByType(NodeType.Bulb, 'hor') as NodeDataProps<NodeProps>, position: {x: 140, y: 120}, type: NodeType.Bulb},
-    {id: 'resistor-1', data: DefaultByType(NodeType.Resistor, 'ver') as NodeDataProps<NodeProps>, position: {x: 100, y: 40}, type: NodeType.Resistor},
+    {id: 'powerSource-1', data: DefaultByType(NodeType.PowerSource, 'hor') as NodeDataProps<NodeProps>, position: {x: 140, y: -20}, type: NodeType.PowerSource},
+    {id: 'switch-1', data: DefaultByType(NodeType.Switch, 'ver') as NodeDataProps<NodeProps>, position: {x: 240, y: 40}, type: NodeType.Switch},
+    {id: 'bulb-1', data: DefaultByType(NodeType.Bulb, 'hor') as NodeDataProps<NodeProps>, position: {x: 140, y: 140}, type: NodeType.Bulb},
+    {id: 'resistor-1', data: DefaultByType(NodeType.Resistor, 'ver') as NodeDataProps<NodeProps>, position: {x: 80, y: 40}, type: NodeType.Resistor},
 ];
 
 export const initialEdges: Edge[] = [
