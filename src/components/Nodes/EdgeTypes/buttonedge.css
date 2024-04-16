@@ -1,14 +1,20 @@
 .delete_button {
-  width: 20px;
-  height: 20px;
+  width: 12px;
+  height: 12px;
   background: #eee;
   border: 1px solid #fff;
   cursor: pointer;
   border-radius: 50%;
-  font-size: 12px;
+  font-size: 10px;
   line-height: 1;
+  padding: 0;
+  opacity: 0;
 }
 
 .delete_button:hover {
   box-shadow: 0 0 6px 2px rgba(0, 0, 0, 0.08);
+}
+
+.nopan:hover .delete_button {
+  opacity: 1;
 }
