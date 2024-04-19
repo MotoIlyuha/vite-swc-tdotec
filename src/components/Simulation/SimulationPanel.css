@@ -1,0 +1,19 @@
+.simulation-panel {
+    position: fixed;
+    margin: 16px;
+    right: 0;
+    bottom: -56px;
+    transition: bottom 0.5s ease-in-out;
+}
+
+.simulation-panel.active {
+    bottom: 8px;
+}
+
+.panel {
+    background: aliceblue;
+    padding: 8px;
+    margin: 8px;
+    border-radius: 16px;
+    box-shadow: 0 0 36px 6px rgba(34, 60, 80, 0.25);
+}
