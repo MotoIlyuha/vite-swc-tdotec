@@ -34,9 +34,9 @@ import WireEdge from '../Nodes/EdgeTypes/WireEdge.tsx';
 import ContextMenu from "../Nodes/ContextMenu/ContextMenu.tsx";
 import AddElementMenu from "./AddElementMenu.tsx";
 import ElementsManager from "./ElementsManager.tsx";
-import Button from "react-bootstrap/Button";
 import {BaseNodeData, CircuitElementType, NodeDataProps, NodeProps, NodeType} from "../types";
 import {DefaultByType} from "../defaults.ts";
+import SimulationPanel from "../Simulation/SimulationPanel.tsx";
 
 
 const fitViewOptions: FitViewOptions = {
@@ -228,7 +228,7 @@ function Flow({nodes, edges, elements, setNodes, setEdges}: FlowProps) {
             </Panel>
 
             <Panel position='bottom-right'>
-                <Button onClick={() => console.log(reactFlowInstance)}>Запустить</Button>
+                <SimulationPanel nodes={nodes as BaseNodeData<NodeProps>[]} edges={edges} />
             </Panel>
 
             <Controls position='top-right'/>
