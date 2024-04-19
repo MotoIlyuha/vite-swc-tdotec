@@ -10,7 +10,8 @@ import ToggleButton from "react-bootstrap/ToggleButton";
 import Image from "react-bootstrap/Image";
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
-import {useReactFlow} from "reactflow";
+import {getRectOfNodes, getTransformForBounds, useReactFlow} from "reactflow";
+import {toPng} from 'html-to-image';
 
 import logo from './icons/logo.png'
 import ru_icon from './icons/russia.png'
@@ -25,6 +26,10 @@ const Header: React.FC = () => {
         {name: 'ru', img: ru_icon},
         {name: 'en', img: usa_icon},
     ];
+
+    const imageWidth = 1024;
+    const imageHeight = 768;
+
 
     const onSave = useCallback(() => {
         if (rfInstance) {
@@ -72,6 +77,31 @@ const Header: React.FC = () => {
         setFileName((document.getElementById("file-name") as HTMLInputElement)?.value);
     }
 
+    function downloadImage(dataUrl: string) {
+        const a = document.createElement('a');
+
+        a.setAttribute('download', fileName + '.png');
+        a.setAttribute('href', dataUrl);
+        a.click();
+    }
+
+    const onSavePNG = () => {
+        const nodesBounds = getRectOfNodes(rfInstance.getNodes());
+        const transform = getTransformForBounds(nodesBounds, imageWidth, imageHeight, 0.5, 2);
+        const viewportElement = document.querySelector('.react-flow__viewport') as HTMLElement;
+
+        toPng(viewportElement, {
+            backgroundColor: '#1a365d',
+            width: imageWidth,
+            height: imageHeight,
+            style: {
+                width: imageWidth.toString(),
+                height: imageHeight.toString(),
+                transform: `translate(${transform[0]}px, ${transform[1]}px) scale(${transform[2]})`,
+            },
+        }).then(downloadImage);
+    };
+
     return (
         // <header className="header">
         <Navbar id="header" expand="md" className="bg-body-tertiary fixed-top" bg="dark" data-bs-theme="dark">
@@ -99,13 +129,14 @@ const Header: React.FC = () => {
                             <SplitButton key={'down'} drop={'down'} variant="success" align="end"
                                          className="text-nowrap" title={`Сохранить файл`}
                                          onClick={onSave}>
-                                <Dropdown.Item eventKey="1">Сохранить как SVG</Dropdown.Item>
-                                <Dropdown.Item eventKey="2">Сохранить как PNG</Dropdown.Item>
-                                <Dropdown.Item eventKey="3">Сохранить как JPEG</Dropdown.Item>
+                                <Dropdown.Item eventKey="1" onClick={onSavePNG}>Сохранить как SVG</Dropdown.Item>
+                                <Dropdown.Item eventKey="2" onClick={onSavePNG}>Сохранить как PNG</Dropdown.Item>
+                                <Dropdown.Item eventKey="3" onClick={onSavePNG}>Сохранить как JPEG</Dropdown.Item>
                             </SplitButton>
                         </Nav.Item>
                         <Nav.Item>
-                            <Button className="text-nowrap" variant="primary" onClick={onRestore}>Загрузить файл</Button>
+                            <Button className="text-nowrap" variant="primary" onClick={onRestore}>Загрузить
+                                файл</Button>
                         </Nav.Item>
                         <Nav.Item>
                             <ToggleButtonGroup id={"lang"} type="radio" name="lang" defaultValue="ru">
