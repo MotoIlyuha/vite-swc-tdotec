@@ -1,17 +1,13 @@
 import './App.css';
-import Header from "./components/Header/Header";
-import Body from "./components/Body/Body";
+import Main from './components/Main/Flow'
 import {ReactFlowProvider} from "reactflow";
 
 function App() {
 
     return (
-        <div className="App">
-            <ReactFlowProvider>
-                <Header/>
-                <Body/>
-            </ReactFlowProvider>
-        </div>
+        <ReactFlowProvider>
+            <Main />
+        </ReactFlowProvider>
     );
 }
 

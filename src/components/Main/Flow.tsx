@@ -34,9 +34,10 @@ import WireEdge from '../Nodes/EdgeTypes/WireEdge.tsx';
 import ContextMenu from "../Nodes/ContextMenu/ContextMenu.tsx";
 import AddElementMenu from "./AddElementMenu.tsx";
 import ElementsManager from "./ElementsManager.tsx";
-import {BaseNodeData, CircuitElementType, NodeDataProps, NodeProps, NodeType} from "../types";
-import {DefaultByType} from "../defaults.ts";
+import {BaseNodeData, NodeDataProps, NodeProps, NodeType} from "../types";
+import {DefaultByType, initialEdges, initialNodes, elements} from "../defaults.ts";
 import SimulationPanel from "../Simulation/SimulationPanel.tsx";
+import Header from "../Header/Header.tsx";
 
 
 const fitViewOptions: FitViewOptions = {
@@ -69,15 +70,10 @@ const edgeTypes: EdgeTypes = {
 let id = 0;
 const getId = (type: NodeType) => `${type}_${id++}`;
 
-interface FlowProps {
-    nodes: Node[];
-    edges: Edge[];
-    elements: CircuitElementType;
-    setNodes: (nodes: (nds: Node[]) => Node[]) => void;
-    setEdges: (edges: (eds: Edge[]) => Edge[]) => void;
-}
 
-function Flow({nodes, edges, elements, setNodes, setEdges}: FlowProps) {
+function Flow() {
+    const [nodes, setNodes] = useState<Node[]>(initialNodes);
+    const [edges, setEdges] = useState<Edge[]>(initialEdges);
     const [selectedNodes, setSelectedNodes] = useState<Node[]>([]);
     const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
     const [menu, setMenu] = useState<{
@@ -191,6 +187,8 @@ function Flow({nodes, edges, elements, setNodes, setEdges}: FlowProps) {
         },
     });
 
+    const [ElementsManagerMarginTop, setElementsManagerMarginTop] = useState(86);
+
     return (
         <ReactFlow
             ref={ref}
@@ -214,13 +212,17 @@ function Flow({nodes, edges, elements, setNodes, setEdges}: FlowProps) {
             onDragOver={onDragOver}
             snapToGrid={true}
             snapGrid={[20, 20]}
+            attributionPosition='bottom-left'
         >
             {menu && <ContextMenu onClick={onPaneClick} onNodeDelete={onNodeDelete} {...menu} />}
 
             <Panel position='top-left'>
+
+                <Header setMarginTop={setElementsManagerMarginTop}/>
                 <ElementsManager nodes={nodes as BaseNodeData<NodeProps>[]} elements={elements}
                                  selectedNodes={selectedNodes as BaseNodeData<NodeProps>[]}
-                                 setSelectedNodes={setSelectedNodes} onNodeDelete={onNodeDelete}/>
+                                 setSelectedNodes={setSelectedNodes} onNodeDelete={onNodeDelete}
+                                 marginTop={ElementsManagerMarginTop}/>
             </Panel>
 
             <Panel position='bottom-left'>
@@ -231,7 +233,8 @@ function Flow({nodes, edges, elements, setNodes, setEdges}: FlowProps) {
                 <SimulationPanel nodes={nodes as BaseNodeData<NodeProps>[]} edges={edges} />
             </Panel>
 
-            <Controls position='top-right'/>
+            <Controls position='top-right' style={{top: '86px'}}/>
+
             <Background
                 id="1"
                 gap={20}
