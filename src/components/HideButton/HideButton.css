@@ -1,0 +1,93 @@
+:root {
+    --button-bg-color: #f0f8ff;
+    --button-border-radius: 16px;
+    --button-handle-bg-color: var(--button-bg-color);
+    --button-handle-border-radius: 50%;
+    --button-border-size: var(--button-border-radius);
+    --button-curve-size: var(--button-border-radius);
+    --button-gradient-color: rgba(0, 0, 0, 0);
+    --button-gradient-color-end: rgba(var(--button-bg-color), 1);
+}
+
+.hide-button, .hide-button__handle {
+    width: 48px;
+    height: 24px;
+}
+
+.hide-button__handle img {
+    width: 28px;
+    height: 24px;
+    transition: all 0.3s ease;
+}
+
+.hide-button__handle {
+    position: relative;
+    padding-top: 0;
+    background-color: var(--button-bg-color);
+    border-bottom-left-radius: var(--button-border-radius);
+    border-bottom-right-radius: var(--button-border-radius);
+    border: none;
+}
+
+.hide-button::before,
+.hide-button::after,
+.hide-button__handle::before,
+.hide-button__handle::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    width: var(--button-curve-size);
+    height: var(--button-curve-size);
+}
+
+.hide-button.bottom::before {
+    left: calc(-1 * var(--button-border-size));
+    background: linear-gradient(45deg, var(--button-gradient-color) 80%, var(--button-gradient-color-end) 80%);
+    z-index: 1;
+}
+
+.hide-button.bottom::after {
+    right: calc(-1 * var(--button-border-size));
+    background: linear-gradient(-45deg, var(--button-gradient-color) 80%, var(--button-gradient-color-end) 80%);
+    z-index: 1;
+}
+
+.hide-button__handle.bottom::before {
+    left: calc(-1 * var(--button-border-size));
+    border-top-right-radius: var(--button-handle-border-radius);
+    background: linear-gradient(45deg, var(--button-gradient-color) 80%, var(--button-handle-bg-color) 80%);
+    z-index: 2;
+}
+
+.hide-button__handle.bottom::after {
+    right: calc(-1 * var(--button-border-size));
+    border-top-left-radius: var(--button-handle-border-radius);
+    background: linear-gradient(-45deg, var(--button-gradient-color) 80%, var(--button-handle-bg-color) 80%);
+    z-index: 2;
+}
+
+.hide-button.right::before {
+    left: calc(-1 * var(--button-border-size));
+    background: linear-gradient(45deg, var(--button-gradient-color) 80%, var(--button-handle-bg-color) 80%);;
+    z-index: 1;
+}
+
+.hide-button.right::after {
+    right: calc(-1 * var(--button-border-size));
+    background: linear-gradient(-45deg, var(--button-gradient-color) 80%, var(--button-handle-bg-color) 80%);
+    z-index: 1;
+}
+
+.hide-button__handle.right::before {
+    left: calc(-1 * var(--button-border-size));
+    border-top-right-radius: var(--button-handle-border-radius);
+    background: linear-gradient(45deg, var(--button-gradient-color) 80%, var(--button-gradient-color-end) 80%);
+    z-index: 2;
+}
+
+.hide-button__handle.right::after {
+    right: calc(-1 * var(--button-border-size));
+    border-top-left-radius: var(--button-handle-border-radius);
+    background: linear-gradient(-45deg, var(--button-gradient-color) 80%, var(--button-gradient-color-end) 80%);
+    z-index: 2;
+}

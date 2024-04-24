@@ -2,9 +2,16 @@
   "name": "vite-swc-tdotec",
   "private": true,
   "version": "0.0.0",
+  "license": "MIT",
+  "description": "Vite + SWC + TS example",
+  "main": "index.tsx",
+  "author": "MotoIlyuha",
+  "homepage": "https://motoilyuha.github.com/vite-swc-tdotec/",
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"

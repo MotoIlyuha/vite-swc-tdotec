@@ -1,3 +1,8 @@
+.react-flow__panel.center {
+     left: 0;
+     transform: translateX(-50%);
+}
+
 #header {
   height: 86px;
 }

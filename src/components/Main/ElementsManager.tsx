@@ -5,6 +5,7 @@ import delete_icon from "../../assets/Icons/delete_icon.png";
 import arrow_icon from "../../assets/Icons/arrow_icon.png";
 import {useCallback, useEffect, useState} from "react";
 import {CircuitElementContextMenu} from "../Nodes/ContextMenu/ContextMenu.tsx";
+import HideButton from "../HideButton/HideButton.tsx";
 
 
 interface ElementsManagerProps {
@@ -13,15 +14,16 @@ interface ElementsManagerProps {
     setSelectedNodes: (node: BaseNodeData<NodeProps>[]) => void;
     elements: CircuitElementType;
     onNodeDelete: (arg0: string) => void;
+    marginTop?: number;
 }
 
-export default function ElementsManager({nodes, selectedNodes, setSelectedNodes, elements, onNodeDelete}: ElementsManagerProps) {
+export default function ElementsManager({nodes, selectedNodes, setSelectedNodes, elements, onNodeDelete, marginTop}: ElementsManagerProps) {
 
     const [showValues, setShowValues] = useState<boolean[]>(nodes.map(() => false));
     const [rotateValues, setRotateValues] = useState<boolean[]>(nodes.map(() => false));
+    const [marginRight, setMarginRight] = useState<number>(-300);
 
     useEffect(() => {
-        // Update showValues and rotateValues when nodes change
         setShowValues(nodes.map(() => false));
         setRotateValues(nodes.map(() => false));
     }, [nodes]);
@@ -42,8 +44,20 @@ export default function ElementsManager({nodes, selectedNodes, setSelectedNodes,
         setRotateValues(prevRotateValues => prevRotateValues.map((value, i) => i === index ? !value : value));
     }, []);
 
+    const handleHide = () => {
+        setMarginRight(marginRight === -300 ? -15 : -300);
+    }
+
     return (
-        <div style={{padding: '8px 0'}}>
+        <div style={{
+            width: '270px',
+            position: 'absolute',
+            padding: '8px 0',
+            margin: 15,
+            top: marginTop,
+            right: marginRight,
+            transition: 'all 0.5s ease-in-out',
+        }}>
         <div className="elements-manager">
             {nodes.map((node, index) => (
                 <div className={'element ' + (isSelected(node) ? 'selected' : '')} key={node.id}
@@ -80,6 +94,7 @@ export default function ElementsManager({nodes, selectedNodes, setSelectedNodes,
                 </div>
             ))}
         </div>
+            <HideButton orientation='right' position={{x: -35, y: 45}} handleClick={handleHide} />
         </div>
     );
 }

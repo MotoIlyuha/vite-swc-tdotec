@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import {useCallback, useState} from 'react';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import Button from 'react-bootstrap/Button';
@@ -10,6 +10,7 @@ import ToggleButton from "react-bootstrap/ToggleButton";
 import Image from "react-bootstrap/Image";
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+import HideButton from "../HideButton/HideButton.tsx";
 import {getRectOfNodes, getTransformForBounds, useReactFlow} from "reactflow";
 import {toPng} from 'html-to-image';
 
@@ -18,8 +19,9 @@ import ru_icon from './icons/russia.png'
 import usa_icon from './icons/usa.png'
 import './Header.css';
 
-const Header: React.FC = () => {
+function Header({setMarginTop}: { setMarginTop: (marginTop: number) => void }) {
     const rfInstance = useReactFlow();
+    const [topValue, setTopValue] = useState(0);
     const [fileName, setFileName] = useState('Новая схема');
     const [radioValue, setRadioValue] = useState('ru');
     const languages = [
@@ -29,7 +31,6 @@ const Header: React.FC = () => {
 
     const imageWidth = 1024;
     const imageHeight = 768;
-
 
     const onSave = useCallback(() => {
         if (rfInstance) {
@@ -43,7 +44,7 @@ const Header: React.FC = () => {
             link.click();
             URL.revokeObjectURL(url);
         }
-    }, [rfInstance]);
+    }, [fileName, rfInstance]);
 
     const onRestore = useCallback(() => {
         const fileInput = document.createElement('input');
@@ -71,7 +72,7 @@ const Header: React.FC = () => {
         };
 
         fileInput.click();
-    }, []);
+    }, [rfInstance]);
 
     function handleChange() {
         setFileName((document.getElementById("file-name") as HTMLInputElement)?.value);
@@ -102,61 +103,78 @@ const Header: React.FC = () => {
         }).then(downloadImage);
     };
 
+    const handleHideHeader = () => {
+        setTopValue(topValue === 0 ? -86 : 0);
+        setMarginTop(topValue === 0 ? 0 : 86);
+    }
+
     return (
-        // <header className="header">
-        <Navbar id="header" expand="md" className="bg-body-tertiary fixed-top" bg="dark" data-bs-theme="dark">
-            <Container className="gap-3" fluid>
-                <Navbar.Brand>
-                    <Image src={logo} alt="logo" className="d-inline-block align-top logo"/>
-                </Navbar.Brand>
-                <Navbar.Text>
-                    <OverlayTrigger
-                        placement="bottom"
-                        delay={{show: 250, hide: 400}}
-                        overlay={
-                            <Tooltip id={`tooltip`}>
-                                Переименовать
-                            </Tooltip>
-                        }
-                    >
-                        <input id="file-name" type="text" value={fileName} onChange={handleChange}/>
-                    </OverlayTrigger>
-                </Navbar.Text>
-                <Navbar.Toggle aria-controls="basic-navbar-nav"/>
-                <Navbar.Collapse className="justify-content-end">
-                    <Nav className="align-items-sm-center gap-3">
-                        <Nav.Item>
-                            <SplitButton key={'down'} drop={'down'} variant="success" align="end"
-                                         className="text-nowrap" title={`Сохранить файл`}
-                                         onClick={onSave}>
-                                <Dropdown.Item eventKey="1" onClick={onSavePNG}>Сохранить как SVG</Dropdown.Item>
-                                <Dropdown.Item eventKey="2" onClick={onSavePNG}>Сохранить как PNG</Dropdown.Item>
-                                <Dropdown.Item eventKey="3" onClick={onSavePNG}>Сохранить как JPEG</Dropdown.Item>
-                            </SplitButton>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Button className="text-nowrap" variant="primary" onClick={onRestore}>Загрузить
-                                файл</Button>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <ToggleButtonGroup id={"lang"} type="radio" name="lang" defaultValue="ru">
-                                {languages.map((lang) => (
-                                    <ToggleButton id={lang.name} key={lang.name} value={lang.name} variant="link"
-                                                  checked={radioValue === lang.name}
-                                                  onChange={(e) => setRadioValue(e.currentTarget.value)}>
-                                        <div>
-                                            <Image src={lang.img} alt={lang.name} rounded/>
-                                        </div>
-                                    </ToggleButton>
-                                ))}
-                            </ToggleButtonGroup>
-                        </Nav.Item>
-                    </Nav>
-                </Navbar.Collapse>
-            </Container>
-        </Navbar>
-        // </header>
+        <header className="header" style={{
+            width: '100vw',
+            height: '86px',
+            position: 'absolute',
+            top: topValue,
+            transition: 'top 0.5s ease'
+        }}>
+            <Navbar id="header" expand="md" className="bg-body-tertiary fixed-top" data-bs-theme="dark"
+                    style={{
+                        borderEndEndRadius: 16,
+                        borderEndStartRadius: 16,
+                        position: 'relative',
+                    }}>
+                <Container className="gap-3" fluid>
+                    <Navbar.Brand>
+                        <Image src={logo} alt="logo" className="d-inline-block align-top logo"/>
+                    </Navbar.Brand>
+                    <Navbar.Text>
+                        <OverlayTrigger
+                            placement="bottom"
+                            delay={{show: 250, hide: 400}}
+                            overlay={
+                                <Tooltip id={`tooltip`}>
+                                    Переименовать
+                                </Tooltip>
+                            }
+                        >
+                            <input id="file-name" type="text" value={fileName} onChange={handleChange}/>
+                        </OverlayTrigger>
+                    </Navbar.Text>
+                    <Navbar.Toggle aria-controls="basic-navbar-nav"/>
+                    <Navbar.Collapse className="justify-content-end">
+                        <Nav className="align-items-sm-center gap-3">
+                            <Nav.Item>
+                                <SplitButton key={'down'} drop={'down'} variant="success" align="end"
+                                             className="text-nowrap" title={`Сохранить файл`}
+                                             onClick={onSave}>
+                                    <Dropdown.Item eventKey="1" onClick={onSavePNG}>Сохранить как SVG</Dropdown.Item>
+                                    <Dropdown.Item eventKey="2" onClick={onSavePNG}>Сохранить как PNG</Dropdown.Item>
+                                    <Dropdown.Item eventKey="3" onClick={onSavePNG}>Сохранить как JPEG</Dropdown.Item>
+                                </SplitButton>
+                            </Nav.Item>
+                            <Nav.Item>
+                                <Button className="text-nowrap" variant="primary" onClick={onRestore}>Загрузить
+                                    файл</Button>
+                            </Nav.Item>
+                            <Nav.Item>
+                                <ToggleButtonGroup id={"lang"} type="radio" name="lang" defaultValue="ru">
+                                    {languages.map((lang) => (
+                                        <ToggleButton id={lang.name} key={lang.name} value={lang.name} variant="link"
+                                                      checked={radioValue === lang.name}
+                                                      onChange={(e) => setRadioValue(e.currentTarget.value)}>
+                                            <div>
+                                                <Image src={lang.img} alt={lang.name} rounded/>
+                                            </div>
+                                        </ToggleButton>
+                                    ))}
+                                </ToggleButtonGroup>
+                            </Nav.Item>
+                        </Nav>
+                    </Navbar.Collapse>
+                </Container>
+            </Navbar>
+            <HideButton orientation="bottom" position={{x: 100, y: 86}} handleClick={handleHideHeader}/>
+        </header>
     );
-};
+}
 
 export default Header;
