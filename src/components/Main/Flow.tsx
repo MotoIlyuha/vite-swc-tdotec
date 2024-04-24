@@ -75,6 +75,7 @@ function Flow() {
     const [nodes, setNodes] = useState<Node[]>(initialNodes);
     const [edges, setEdges] = useState<Edge[]>(initialEdges);
     const [selectedNodes, setSelectedNodes] = useState<Node[]>([]);
+    const [erroredNodes, setErroredNodes] = useState<Node[]>([]);
     const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
     const [menu, setMenu] = useState<{
         node: BaseNodeData<NodeProps>;
@@ -110,6 +111,11 @@ function Flow() {
         [setNodes, setEdges],
     );
 
+    const deleteErroredNodes = useCallback(() => {
+        console.log(erroredNodes);
+        setNodes((nds) => nds.filter((node: Node) => !erroredNodes.includes(node)));
+    }, [setNodes, erroredNodes]);
+
     const onDragOver = useCallback((event: React.DragEvent) => {
         event.preventDefault();
         event.dataTransfer.dropEffect = 'move';
@@ -121,15 +127,13 @@ function Flow() {
 
             const type: string = event.dataTransfer.getData('application/reactflow');
 
-            if (typeof type === 'undefined' || !type) {
-                return;
-            }
+            if (typeof type === 'undefined' || !type) return;
 
             const position = reactFlowInstance?.screenToFlowPosition({
                 x: event.clientX,
                 y: event.clientY,
             });
-            if (!position) return; // Добавлено условие для обработки случая, когда position не определено
+            if (!position) return;
 
             const newNode: BaseNodeData<NodeProps> = {
                 id: getId(type as NodeType),
@@ -148,10 +152,7 @@ function Flow() {
             event.preventDefault();
 
             const pane = ref.current?.getBoundingClientRect();
-            if (!pane) {
-                console.log('Pane not found');
-                return;
-            }
+            if (!pane) return;
 
             setSelectedNodes([node]);
 
@@ -173,8 +174,9 @@ function Flow() {
 
     const selectableNodes = useMemo(() => nodes.map(node => ({
         ...node,
-        className: selectedNodes.includes(node) ? 'selected' : ''
-    })), [nodes, selectedNodes]);
+        className: (erroredNodes.includes(node as BaseNodeData<NodeProps>) ? 'errored ' : '') +
+            (selectedNodes.includes(node) ? 'selected ' : '')
+    })), [nodes, erroredNodes, selectedNodes]);
 
     const onPaneClick = useCallback(() => {
         setMenu(null);
@@ -220,6 +222,7 @@ function Flow() {
 
                 <Header setMarginTop={setElementsManagerMarginTop}/>
                 <ElementsManager nodes={nodes as BaseNodeData<NodeProps>[]} elements={elements}
+                                 erroredNodes={erroredNodes as BaseNodeData<NodeProps>[]}
                                  selectedNodes={selectedNodes as BaseNodeData<NodeProps>[]}
                                  setSelectedNodes={setSelectedNodes} onNodeDelete={onNodeDelete}
                                  marginTop={ElementsManagerMarginTop}/>
@@ -230,7 +233,12 @@ function Flow() {
             </Panel>
 
             <Panel position='bottom-right'>
-                <SimulationPanel nodes={nodes as BaseNodeData<NodeProps>[]} edges={edges} />
+                <SimulationPanel
+                    nodes={nodes as BaseNodeData<NodeProps>[]}
+                    edges={edges}
+                    deleteErroredNodes={deleteErroredNodes}
+                    setErroredNodes={setErroredNodes}
+                />
             </Panel>
 
             <Controls position='top-right' style={{top: '86px'}}/>

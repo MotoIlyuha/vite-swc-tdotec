@@ -121,12 +121,20 @@ body {
     background: rgba(34, 178, 230, 0.25) !important;
 }
 
+.react-flow__node.errored {
+    background: rgba(255, 0, 0, 0.25) !important;
+}
+
 .element {
     border-radius: 6px;
 }
 
 .element.selected {
     background: rgba(34, 178, 230, 0.29);
+}
+
+.element.errored {
+    background: rgba(255, 0, 0, 0.29);
 }
 
 .element-header {
