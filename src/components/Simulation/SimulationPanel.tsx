@@ -106,7 +106,7 @@ export default function SimulationPanel({nodes, edges, setErroredNodes, deleteEr
         <div className={'simulation-panel ' + (simulationState === 'running' ? 'active' : '')} style={{width: 460}}>
             <Button onClick={() => setSimulationState(filterCircuit(nodes, edges))}
                     variant={simulationState === 'error' ? 'danger' : 'primary'}
-                    style={{width: '148px', height: '46px', position: 'relative'}}>
+                    style={{width: '148px', height: '46px', position: 'relative', right: '-30%'}}>
                 <span style={{
                     fontSize: '18px',
                     fontWeight: '500'
