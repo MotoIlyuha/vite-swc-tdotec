@@ -12,12 +12,13 @@ interface ElementsManagerProps {
     nodes: BaseNodeData<NodeProps>[];
     selectedNodes: BaseNodeData<NodeProps>[];
     setSelectedNodes: (node: BaseNodeData<NodeProps>[]) => void;
+    erroredNodes: BaseNodeData<NodeProps>[]
     elements: CircuitElementType;
     onNodeDelete: (arg0: string) => void;
     marginTop?: number;
 }
 
-export default function ElementsManager({nodes, selectedNodes, setSelectedNodes, elements, onNodeDelete, marginTop}: ElementsManagerProps) {
+export default function ElementsManager({nodes, selectedNodes, setSelectedNodes, erroredNodes, elements, onNodeDelete, marginTop}: ElementsManagerProps) {
 
     const [showValues, setShowValues] = useState<boolean[]>(nodes.map(() => false));
     const [rotateValues, setRotateValues] = useState<boolean[]>(nodes.map(() => false));
@@ -60,7 +61,7 @@ export default function ElementsManager({nodes, selectedNodes, setSelectedNodes,
         }}>
         <div className="elements-manager">
             {nodes.map((node, index) => (
-                <div className={'element ' + (isSelected(node) ? 'selected' : '')} key={node.id}
+                <div className={'element ' + (isSelected(node) ? 'selected ' : '') + (erroredNodes.includes(node) ? 'errored ' : '')} key={node.id}
                      onClick={() => handleNodeClick(node)}>
                     <div className='element-header'>
                     <Image src={elements[node.type].icon}/>

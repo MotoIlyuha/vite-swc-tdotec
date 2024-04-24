@@ -17,3 +17,13 @@
     border-radius: 16px;
     box-shadow: 0 0 36px 6px rgba(34, 60, 80, 0.25);
 }
+
+button.accordion-button {
+    background-color: #dc3545 !important;
+    color: white !important;
+    margin-right: 12px;
+}
+
+div.accordion-body {
+    background-color: #f4b0b5;
+}

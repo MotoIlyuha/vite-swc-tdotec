@@ -46,3 +46,10 @@ export type BulbNodeProps = {
 export type SwitchNodeProps = {
     switchState?: boolean;
 }
+
+export type CircuitErrorsType = {
+    name: string;
+    proposal_solution: string;
+    button_text: string;
+    solution_func: () => void;
+}
