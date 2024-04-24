@@ -19,7 +19,7 @@ function ResistorContextMenu({resistance = DefaultValues.resistor.resistance}: R
     return <InputGroup>
         <InputGroup.Text>Сопротивление</InputGroup.Text>
         <Form.Control className='resistance' aria-label="Resistance" type='number' defaultValue={resistance} step='0.1'
-                      min='0' style={{width: '72px'}}/>
+                      min='0' style={{width: '58px'}}/>
         <InputGroup.Text>Ом</InputGroup.Text>
       </InputGroup>;
 }

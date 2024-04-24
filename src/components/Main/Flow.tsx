@@ -70,6 +70,16 @@ const edgeTypes: EdgeTypes = {
 let id = 0;
 const getId = (type: NodeType) => `${type}_${id++}`;
 
+function isOverlap(node1: Node, node2: Node) {
+    const buffer = 0; // небольшой зазор для более естественного взаимодействия
+    return !(
+        node1.position.x + (node1.width ?? 0) + buffer < node2.position.x ||
+        node1.position.x > node2.position.x + (node2.width ?? 0) + buffer ||
+        node1.position.y + (node1.height ?? 0) + buffer < node2.position.y ||
+        node1.position.y > node2.position.y + (node2.height ?? 0) + buffer
+    );
+}
+
 
 function Flow() {
     const [nodes, setNodes] = useState<Node[]>(initialNodes);
@@ -86,10 +96,24 @@ function Flow() {
     } | null>(null);
     const ref = useRef<HTMLDivElement>(null);
 
-    const onNodesChange: OnNodesChange = useCallback(
-        (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
-        [setNodes],
-    );
+    const onNodesChange: OnNodesChange = useCallback((changes) => {
+        setNodes((currentNodes) => {
+            return applyNodeChanges(changes, currentNodes).map((node) => {
+                // Проверяем, не пересекается ли текущий узел с другими узлами
+                const otherNodes = currentNodes.filter(n => n.id !== node.id);
+                const hasOverlap = otherNodes.some(otherNode => isOverlap(node, otherNode));
+
+                if (hasOverlap) {
+                    // Если есть пересечение, возвращаем узел без изменений
+                    return currentNodes.find(n => n.id === node.id) || node;
+                }
+
+                // Если пересечения нет, применяем изменения
+                return node;
+            });
+        });
+    }, [setNodes]);
+
     const onEdgesChange: OnEdgesChange = useCallback(
         (changes) => setEdges((eds) => applyEdgeChanges(changes, eds)),
         [setEdges],
@@ -202,6 +226,8 @@ function Flow() {
             onConnect={onConnect}
             fitView
             fitViewOptions={fitViewOptions}
+            minZoom={1.2}
+            maxZoom={2}
             defaultEdgeOptions={defaultEdgeOptions}
             nodeTypes={nodeTypes}
             edgeTypes={edgeTypes}
