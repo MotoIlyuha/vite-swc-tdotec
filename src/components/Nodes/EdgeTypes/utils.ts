@@ -35,6 +35,7 @@ function getHandleCoordsByPosition(node: Node, handlePosition: Position): [numbe
     );
 
     if (!handle) {
+        console.log(node, handlePosition);
         throw new Error('Handle not found');
     }
 

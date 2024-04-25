@@ -64,7 +64,7 @@ const nodeTypes: NodeTypes = {
 };
 
 const edgeTypes: EdgeTypes = {
-    wire: WireEdge
+    wire: WireEdge,
 };
 
 let id = 0;
@@ -227,7 +227,7 @@ function Flow() {
             fitView
             fitViewOptions={fitViewOptions}
             minZoom={1.2}
-            maxZoom={2}
+            maxZoom={2.2}
             defaultEdgeOptions={defaultEdgeOptions}
             nodeTypes={nodeTypes}
             edgeTypes={edgeTypes}
