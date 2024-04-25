@@ -80,6 +80,7 @@ body {
 }
 
 .elements-manager {
+    min-height: 104px;
     display: flex;
     flex-direction: column;
     background: aliceblue;
@@ -91,6 +92,11 @@ body {
     max-height: 536px;
     scrollbar-width: var(--scrollbarWidth);
     scrollbar-color: var(--scrollbarThumb) var(--scrollbarBg);
+}
+
+.elements-manager span {
+    color: dimgray;
+    margin: auto;
 }
 
 .elements-manager::-webkit-scrollbar {
@@ -135,6 +141,11 @@ body {
 
 .element.errored {
     background: rgba(255, 0, 0, 0.29);
+}
+
+.react-flow__edge .react-flow__edge-path{
+    stroke: grey;
+    stroke-width: 1.5;
 }
 
 .element-header {

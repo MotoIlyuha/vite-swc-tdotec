@@ -86,7 +86,6 @@ export const CircuitElementNode = memo((
     const rotateNode = useCallback(() => {
         setOrient(orient === 'hor' ? 'ver' : 'hor');
         updateNodeInternals(id);
-        console.log(id);
     }, [id, orient, updateNodeInternals])
 
     return (

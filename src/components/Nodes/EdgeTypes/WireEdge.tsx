@@ -31,6 +31,8 @@ function SimpleFloatingEdge({id, source, target, markerEnd, style}: SimpleFloati
         targetPosition: targetPos,
         targetX: tx,
         targetY: ty,
+        borderRadius: 2,
+        offset: 0,
     });
 
     const onEdgeClick = () => {

@@ -60,7 +60,8 @@ export default function ElementsManager({nodes, selectedNodes, setSelectedNodes,
             transition: 'all 0.5s ease-in-out',
         }}>
         <div className="elements-manager">
-            {nodes.map((node, index) => (
+            {nodes.length === 0 ? <span>Добавьте хотя бы один элемент на рабочее пространство</span> :
+            nodes.map((node, index) => (
                 <div className={'element ' + (isSelected(node) ? 'selected ' : '') + (erroredNodes.includes(node) ? 'errored ' : '')} key={node.id}
                      onClick={() => handleNodeClick(node)}>
                     <div className='element-header'>
