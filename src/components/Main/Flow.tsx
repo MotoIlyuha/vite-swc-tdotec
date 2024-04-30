@@ -66,11 +66,11 @@ const edgeTypes: EdgeTypes = {
     wire: WireEdge,
 };
 
-let id = 0;
-const getId = (type: NodeType) => `${type}_${id++}`;
+let id = 2;
+const getId = (type: NodeType) => `${type}-${id++}`;
 
 function isOverlap(node1: Node, node2: Node) {
-    const buffer = 0; // небольшой зазор для более естественного взаимодействия
+    const buffer = 0;
     return !(
         node1.position.x + (node1.width ?? 0) + buffer < node2.position.x ||
         node1.position.x > node2.position.x + (node2.width ?? 0) + buffer ||
@@ -122,8 +122,7 @@ function Flow() {
                 eds.map(edge => ({...edge, animated: !animateEdges}))
             );
             setAnimateEdges(!animateEdges);
-        }
-        else {
+        } else {
             setEdges((eds) =>
                 eds.map(edge => ({...edge, animated: false}))
             );
@@ -157,18 +156,23 @@ function Flow() {
         event.dataTransfer.dropEffect = 'move';
     }, []);
 
-    const onChange = useCallback((id: BaseNodeData<NodeProps>['id'], values: NodeDataProps<NodeProps>['values']) => {
-        setNodes(nodes => nodes.map(node => {
-            return {
-                ...node,
-                data: {
-                    ...node.data,
-                    values: node.id === id ? values : node.data.values,
-                },
-            };
-        }));
-        console.log(id, values);
-    }, [setNodes]);
+    const onNodeValuesChange = useCallback((
+        id: BaseNodeData<NodeProps>['id'],
+        values: NodeDataProps<NodeProps>['values'],
+        orientation?: NodeDataProps<NodeProps>['orientation']
+    ) => {
+            setNodes(nodes => (nodes as BaseNodeData<NodeProps>[]).map(node => {
+                return {
+                    ...node,
+                    data: {
+                        ...node.data,
+                        orientation: node.id === id && orientation !== undefined ? orientation : node.data.orientation,
+                        values: node.id === id ? values : node.data.values,
+                    },
+                };
+            }));
+            console.log(id, values, orientation);
+        }, [setNodes]);
 
     const onDrop = useCallback(
         (event: React.DragEvent) => {
@@ -186,14 +190,14 @@ function Flow() {
 
             const newNode: BaseNodeData<NodeProps> = {
                 id: getId(type as NodeType),
-                data: DefaultByType(type as NodeType, 'hor', onChange) as NodeDataProps<NodeProps>,
+                data: DefaultByType(type as NodeType, 'hor', onNodeValuesChange) as NodeDataProps<NodeProps>,
                 position,
                 type: type as NodeType,
             };
 
             setNodes((nds) => nds.concat(newNode));
         },
-        [onChange, reactFlowInstance],
+        [onNodeValuesChange, reactFlowInstance],
     );
 
     const onNodeContextMenu = useCallback(
@@ -232,7 +236,7 @@ function Flow() {
         setSelectedNodes([]);
     }, [setMenu, setSelectedNodes]);
 
-    useInitialSetup(setNodes, setEdges, onChange);
+    useInitialSetup(setNodes, setEdges, onNodeValuesChange);
 
     const [ElementsManagerMarginTop, setElementsManagerMarginTop] = useState(86);
 

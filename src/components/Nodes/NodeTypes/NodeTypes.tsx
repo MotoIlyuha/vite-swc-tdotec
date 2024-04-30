@@ -1,5 +1,5 @@
 import {Handle, NodeToolbar, Position, useUpdateNodeInternals} from 'reactflow';
-import {memo, useCallback, useState} from 'react';
+import {memo, useCallback} from 'react';
 import './NodeStyles.css';
 
 import {
@@ -82,30 +82,25 @@ function PowerSourceFrame({power = DefaultValues.powerSource.power}: PowerSource
 
 interface CircuitElementNodeProps<T> {
     id: BaseNodeData<T>['id'];
-    data: {
-        values: T;
-        orientation: 'hor' | 'ver';
-        onSwitchChange?: NodeDataProps<SwitchNodeProps>['onValuesChange'];
-    };
+    data: BaseNodeData<T>['data'];
     type: BaseNodeData<T>['type'];
     selected: BaseNodeData<T>['selected'];
 }
 
 export const CircuitElementNode = memo((
-    {id, data: {values, orientation, onSwitchChange}, type, selected}: CircuitElementNodeProps<NodeProps>
+    {id, data: {values, orientation, onValuesChange}, type, selected}: CircuitElementNodeProps<NodeProps>
 ) => {
 
-    const [orient, setOrient] = useState(orientation);
     const updateNodeInternals = useUpdateNodeInternals();
 
     const rotateNode = useCallback(() => {
-        setOrient(orient === 'hor' ? 'ver' : 'hor');
+        onValuesChange(id, values, orientation === 'ver' ? 'hor' : 'ver');
         updateNodeInternals(id);
-    }, [id, orient, updateNodeInternals])
+    }, [id, onValuesChange, orientation, updateNodeInternals, values])
 
     return (
         <>
-            <NodeToolbar isVisible={true} position={orient === 'hor' ? Position.Top : Position.Left}>
+            <NodeToolbar isVisible={true} position={orientation === 'hor' ? Position.Top : Position.Left}>
                 {type === NodeType.Resistor && 'resistance' in values &&
                     <div>Сопротивление: {values.resistance}Ом</div>}
                 {type === NodeType.Bulb && 'power' in values &&
@@ -115,15 +110,15 @@ export const CircuitElementNode = memo((
                 {type === NodeType.PowerSource && 'power' in values &&
                     <div>Мощность: {values.power}Вт</div>}
             </NodeToolbar>
-            <div id={id} className={`node ${type} ${orient} ${selected ? 'selected' : ''}`}
+            <div id={id} className={`node ${type} ${orientation} ${selected ? 'selected' : ''}`}
                  style={{
-                     'width': `${orient === 'hor' ? 80 : 40}px`,
-                     'height': `${orient === 'hor' ? 40 : 80}px`,
+                     'width': `${orientation === 'hor' ? 80 : 40}px`,
+                     'height': `${orientation === 'hor' ? 40 : 80}px`,
                      'position': 'relative'
                  }}>
-                <Handle id={id + '_source'} type="source" position={orient === 'hor' ? Position.Left : Position.Top}/>
+                <Handle id={id + '_source'} type="source" position={orientation === 'hor' ? Position.Left : Position.Top}/>
                 <div style={{
-                    transform: `rotate(${orient === 'hor' ? 0 : 90}deg)`
+                    transform: `rotate(${orientation === 'hor' ? 0 : 90}deg)`
                 }}>
                     {type === NodeType.Resistor && 'resistance' in values &&
                         <ResistorFrame resistance={values.resistance}/>}
@@ -131,15 +126,15 @@ export const CircuitElementNode = memo((
                         <BulbFrame brightness={values.brightness} power={values.power} voltage={values.voltage}/>}
                     {type === NodeType.PowerSource && 'power' in values &&
                         <PowerSourceFrame power={values.power}/>}
-                    {type === NodeType.Switch && 'switchState' in values && onSwitchChange &&
-                        <SwitchFrame id={id} onSwitchChange={onSwitchChange} switchState={values.switchState}/>}
+                    {type === NodeType.Switch && 'switchState' in values && 
+                        <SwitchFrame id={id} onSwitchChange={onValuesChange} switchState={values.switchState}/>}
                 </div>
                 <button className='rotate-button' onClick={rotateNode}
-                        style={{transform: `rotate(${orient === 'hor' ? 0 : 90}deg)`}}>
+                        style={{transform: `rotate(${orientation === 'hor' ? 0 : 90}deg)`}}>
                     <img src={rotate_icon} alt='перевернуть'/>
                 </button>
                 <Handle id={id + '_target'} type="source"
-                        position={orient === 'hor' ? Position.Right : Position.Bottom}/>
+                        position={orientation === 'hor' ? Position.Right : Position.Bottom}/>
             </div>
         </>
     );
@@ -153,7 +148,8 @@ export const ResistorNode = memo(
             type={NodeType.Resistor}
             data={{
                 values: {resistance: data.values.resistance},
-                orientation: data.orientation
+                orientation: data.orientation,
+                onValuesChange: (data as NodeDataProps<NodeProps>).onValuesChange
             }}
         />;
     }
@@ -167,7 +163,8 @@ export const BulbNode = memo(
             type={NodeType.Bulb}
             data={{
                 values: {power: data.values.power, voltage: data.values.voltage},
-                orientation: data.orientation
+                orientation: data.orientation,
+                onValuesChange: (data as NodeDataProps<NodeProps>).onValuesChange
             }}
         />;
     }
@@ -181,7 +178,8 @@ export const PowerSourceNode = memo(
             type={NodeType.PowerSource}
             data={{
                 values: {power: data.values.power},
-                orientation: data.orientation
+                orientation: data.orientation,
+                onValuesChange: (data as NodeDataProps<NodeProps>).onValuesChange
             }}
         />;
     }
@@ -196,7 +194,7 @@ export const SwitchNode = memo(
             data={{
                 values: {switchState: data.values.switchState},
                 orientation: data.orientation,
-                onSwitchChange: (data as NodeDataProps<SwitchNodeProps>).onValuesChange
+                onValuesChange: (data as NodeDataProps<NodeProps>).onValuesChange
             }}
         />;
     }

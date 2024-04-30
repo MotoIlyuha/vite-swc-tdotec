@@ -1,4 +1,5 @@
 import {Position, internalsSymbol, Node, Handle} from 'reactflow';
+import {BaseNodeData, NodeProps} from "../../types.ts";
 
 interface Handle {
     width: number;
@@ -36,7 +37,8 @@ function getHandleCoordsByPosition(node: Node, handlePosition: Position): [numbe
 
     if (!handle) {
         console.log(node, handlePosition);
-        throw new Error('Handle not found');
+        return [0, 0];
+        // throw new Error('Handle not found');
     }
 
     let offsetX = handle.width / 2;
@@ -63,7 +65,7 @@ function getHandleCoordsByPosition(node: Node, handlePosition: Position): [numbe
     return [x, y];
 }
 
-function getParams(nodeA: Node, nodeB: Node): [number, number, Position] {
+function getParams(nodeA: BaseNodeData<NodeProps>, nodeB: BaseNodeData<NodeProps>): [number, number, Position] {
     const centerA = getNodeCenter(nodeA);
     const centerB = getNodeCenter(nodeB);
 
@@ -79,9 +81,9 @@ function getParams(nodeA: Node, nodeB: Node): [number, number, Position] {
         position = centerA.y > centerB.y ? Position.Top : Position.Bottom;
     } else if (nodeAOrientation === 'hor' && nodeBOrientation === 'ver') {
         position = centerA.x > centerB.x ? Position.Left : Position.Right;
-    } else if (nodeAOrientation === 'hor' || nodeBOrientation === 'hor') {
+    } else if (nodeAOrientation === 'hor' && nodeBOrientation === 'hor') {
         position = centerA.x > centerB.x ? Position.Left : Position.Right;
-    } else if (nodeAOrientation === 'ver' || nodeBOrientation === 'ver') {
+    } else if (nodeAOrientation === 'ver' && nodeBOrientation === 'ver') {
         position = centerA.y > centerB.y ? Position.Top : Position.Bottom;
     } else {
         if (horizontalDiff > verticalDiff) {
@@ -95,7 +97,7 @@ function getParams(nodeA: Node, nodeB: Node): [number, number, Position] {
     return [x, y, position];
 }
 
-export function getEdgeParams(source: Node, target: Node): EdgeParams {
+export function getEdgeParams(source: BaseNodeData<NodeProps>, target: BaseNodeData<NodeProps>): EdgeParams {
     const [sx, sy, sourcePos] = getParams(source, target);
     const [tx, ty, targetPos] = getParams(target, source);
 
