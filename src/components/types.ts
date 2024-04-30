@@ -1,4 +1,4 @@
-import { Node as ReactFlowNode } from 'reactflow';
+import {Node as ReactFlowNode} from 'reactflow';
 
 export enum NodeType {
     PowerSource = 'powerSource',
@@ -9,15 +9,16 @@ export enum NodeType {
 
 export type CircuitElementType = {
     [key in NodeType]: {
-        name: string;
         icon: string;
-        on_img?: string;
+        name: string;
         off_img?: string;
+        on_img?: string;
     }
 }
 
 export interface NodeDataProps<T> {
     values: T;
+    onValuesChange: (id: BaseNodeData<T>['id'], values: NodeDataProps<T>['values']) => void;
     orientation: 'ver' | 'hor';
 }
 
@@ -30,21 +31,21 @@ export type NodeProps = ResistorNodeProps | PowerSourceNodeProps | BulbNodeProps
 
 
 export type ResistorNodeProps = {
-    resistance?: number;
+    resistance: number
 }
 
 export type PowerSourceNodeProps = {
-    power?: number;
+    power: number;
 }
 
 export type BulbNodeProps = {
-    brightness?: number;
-    power?: number;
-    voltage?: number;
+    brightness: number;
+    power: number;
+    voltage: number;
 }
 
 export type SwitchNodeProps = {
-    switchState?: boolean;
+    switchState: boolean,
 }
 
 export type CircuitErrorsType = {

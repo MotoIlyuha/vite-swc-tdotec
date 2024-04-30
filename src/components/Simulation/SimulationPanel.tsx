@@ -11,6 +11,7 @@ import SuggestionDeleteErrors from "../Main/SuggestionDeleteErrors.tsx";
 interface SimulationPanelProps {
     nodes: BaseNodeData<NodeProps>[];
     edges: Edge[];
+    toggleAnimateEdges: (state: boolean) => void;
     setErroredNodes: (node: BaseNodeData<NodeProps>[]) => void;
     deleteErroredNodes: () => void;
 }
@@ -18,13 +19,16 @@ interface SimulationPanelProps {
 type SimulationState = 'running' | 'error' | 'stopped';
 
 
-export default function SimulationPanel({nodes, edges, setErroredNodes, deleteErroredNodes}: SimulationPanelProps) {
+export default function SimulationPanel({nodes, edges, setErroredNodes, toggleAnimateEdges, deleteErroredNodes}: SimulationPanelProps) {
     const [simulationState, setSimulationState] = useState<SimulationState>('stopped');
     const [errors, setErrors] = useState<CircuitErrorsType[]>([]);
 
     const filterCircuit = (nodes: BaseNodeData<NodeProps>[], edges: Edge[]): SimulationState => {
 
-        if (simulationState === 'running') return 'stopped';
+        if (simulationState === 'running') {
+            toggleAnimateEdges(false);
+            return 'stopped';
+        }
 
         const nodeMap: Map<string, Node> = new Map(nodes.map(node => [node.id, node]));
         const adjacencyList: Map<string, string[]> = new Map();
@@ -95,9 +99,11 @@ export default function SimulationPanel({nodes, edges, setErroredNodes, deleteEr
                 solution_func: deleteErroredNodes
             }
             setErrors([error]);
+            toggleAnimateEdges(false);
             return 'error';
         } else {
             setErroredNodes([]);
+            toggleAnimateEdges(true);
             return 'running';
         }
     };

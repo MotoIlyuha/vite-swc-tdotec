@@ -25,9 +25,29 @@ export default function ElementsManager({nodes, selectedNodes, setSelectedNodes,
     const [marginRight, setMarginRight] = useState<number>(-300);
 
     useEffect(() => {
-        setShowValues(nodes.map(() => false));
-        setRotateValues(nodes.map(() => false));
+        setShowValues(prevShowValues => {
+            const newShowValues = [...prevShowValues];
+            while (newShowValues.length < nodes.length) {
+                newShowValues.push(false);
+            }
+            if (newShowValues.length > nodes.length) {
+                newShowValues.length = nodes.length;
+            }
+            return newShowValues;
+        });
+
+        setRotateValues(prevRotateValues => {
+            const newRotateValues = [...prevRotateValues];
+            while (newRotateValues.length < nodes.length) {
+                newRotateValues.push(false);
+            }
+            if (newRotateValues.length > nodes.length) {
+                newRotateValues.length = nodes.length;
+            }
+            return newRotateValues;
+        });
     }, [nodes]);
+
 
     const handleNodeClick = useCallback((node: BaseNodeData<NodeProps>) => {
         setSelectedNodes([node]);

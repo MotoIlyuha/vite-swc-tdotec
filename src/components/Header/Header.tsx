@@ -11,7 +11,7 @@ import Image from "react-bootstrap/Image";
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import HideButton from "../HideButton/HideButton.tsx";
-import {getRectOfNodes, getTransformForBounds, useReactFlow} from "reactflow";
+import {getNodesBounds, getViewportForBounds, useReactFlow} from "reactflow";
 import {toPng} from 'html-to-image';
 
 import logo from './icons/logo.png'
@@ -87,8 +87,8 @@ function Header({setMarginTop}: { setMarginTop: (marginTop: number) => void }) {
     }
 
     const onSavePNG = () => {
-        const nodesBounds = getRectOfNodes(rfInstance.getNodes());
-        const transform = getTransformForBounds(nodesBounds, imageWidth, imageHeight, 0.5, 2);
+        const nodesBounds = getNodesBounds(rfInstance.getNodes());
+        const transform = getViewportForBounds(nodesBounds, imageWidth, imageHeight, 0.5, 2);
         const viewportElement = document.querySelector('.react-flow__viewport') as HTMLElement;
 
         toPng(viewportElement, {
@@ -98,7 +98,7 @@ function Header({setMarginTop}: { setMarginTop: (marginTop: number) => void }) {
             style: {
                 width: imageWidth.toString(),
                 height: imageHeight.toString(),
-                transform: `translate(${transform[0]}px, ${transform[1]}px) scale(${transform[2]})`,
+                transform: `translate(${transform.x}px, ${transform.y}px) scale(${transform.zoom})`,
             },
         }).then(downloadImage);
     };

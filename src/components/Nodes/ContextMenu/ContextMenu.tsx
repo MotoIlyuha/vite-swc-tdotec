@@ -1,74 +1,106 @@
-import React from 'react';
+import React, {memo, useState} from 'react';
 import './ContextMenu.css';
 import {
     BaseNodeData,
     BulbNodeProps,
+    NodeDataProps,
     NodeProps,
+    NodeType,
     PowerSourceNodeProps,
     ResistorNodeProps,
     SwitchNodeProps
 } from "../../types.ts";
-import {DefaultValues, elements} from "../../defaults.ts";
+import {elements} from "../../defaults.ts";
 
 import delete_icon from '../../../assets/Icons/delete_icon.png'
 import {ButtonGroup, Form, InputGroup} from "react-bootstrap";
 import ToggleButton from "react-bootstrap/ToggleButton";
 
 
-function ResistorContextMenu({resistance = DefaultValues.resistor.resistance}: ResistorNodeProps) {
+interface CircuitElementContextMenuProps<T> {
+   id: BaseNodeData<NodeProps>['id'];
+   values: T;
+   onValuesChange: NodeDataProps<T>['onValuesChange'];
+}
+
+
+function ResistorContextMenu({id, values: {resistance}, onValuesChange}: CircuitElementContextMenuProps<ResistorNodeProps>) {
     return <InputGroup>
         <InputGroup.Text>Сопротивление</InputGroup.Text>
         <Form.Control className='resistance' aria-label="Resistance" type='number' defaultValue={resistance} step='0.1'
-                      min='0' style={{width: '58px'}}/>
+                      min='0' style={{width: 60}} onChange={(e) => onValuesChange ? onValuesChange(id, {resistance: Number(e.target.value)}) : null}/>
         <InputGroup.Text>Ом</InputGroup.Text>
       </InputGroup>;
 }
 
-function BulbContextMenu({
-    power = DefaultValues.bulb.power,
-    voltage = DefaultValues.bulb.voltage
-}: BulbNodeProps) {
+function BulbContextMenu ({id, values: {power, voltage}, onValuesChange}: CircuitElementContextMenuProps<BulbNodeProps>) {
     return <>
         <InputGroup>
             <InputGroup.Text style={{width: '120px'}}>Мощность</InputGroup.Text>
             <Form.Control className='power' aria-label="Power" type='number' defaultValue={power} step='0.1'
-                          min='0' style={{width: '72px'}}/>
+                          min='0' style={{width: '72px'}} onChange={(e) => onValuesChange ? onValuesChange(id, {
+                power: Number(e.target.value),
+                voltage: voltage,
+                brightness: 0
+            }) : null} />
             <InputGroup.Text style={{width: '40px'}}>Вт</InputGroup.Text>
         </InputGroup>
         <InputGroup>
             <InputGroup.Text style={{width: '120px'}}>Напряжение</InputGroup.Text>
             <Form.Control className='voltage' aria-label="Voltage" type='number' defaultValue={voltage} step='0.1'
-                          min='0' style={{width: '72px'}}/>
+                          min='0' style={{width: '72px'}} onChange={(e) => onValuesChange ? onValuesChange(id, {
+                power: power,
+                voltage: Number(e.target.value),
+                brightness: 0
+            }) : null}/>
             <InputGroup.Text style={{width: '40px'}}>В</InputGroup.Text>
         </InputGroup>
     </>;
 }
 
-function PowerSourceContextMenu({power = DefaultValues.powerSource.power}: PowerSourceNodeProps) {
+function PowerSourceContextMenu({id, values: {power}, onValuesChange}: CircuitElementContextMenuProps<PowerSourceNodeProps>) {
     return <InputGroup>
         <InputGroup.Text>Мощность</InputGroup.Text>
         <Form.Control className='power' aria-label="Power" type='number' defaultValue={power} step='0.1'
-                      min='0' style={{width: '72px'}}/>
+                      min='0' style={{width: '72px'}} onChange={(e) => onValuesChange ? onValuesChange(id,
+            {power: Number(e.target.value)}) : null}/>
         <InputGroup.Text>Вт</InputGroup.Text>
     </InputGroup>;
 }
 
-function SwitcherContextMenu({switchState = DefaultValues.switch.switchState}: SwitchNodeProps) {
+function SwitchContextMenu({id, values: {switchState}, onValuesChange}: CircuitElementContextMenuProps<SwitchNodeProps>) {
+    const [checked, setChecked] = useState(switchState);
+
     return <ButtonGroup>
-        <ToggleButton id={'text'} value={0} type="radio" disabled variant="secondary">Состояние</ToggleButton>
-        <ToggleButton id={'on'} value={1} checked={switchState} type="radio" variant="success">Вкл</ToggleButton>
-        <ToggleButton id={'off'} value={0} checked={!switchState} type="radio" variant="danger">Выкл</ToggleButton>
+        <ToggleButton id={'text'} value={-1} type="radio" disabled variant="secondary">Состояние</ToggleButton>
+        <ToggleButton id={'on'} value={1} checked={checked} type="checkbox" variant="outline-success"
+                      onChange={() => {
+                          onValuesChange ? onValuesChange(id, {switchState: true}) : null
+                          setChecked(true)
+                      }}>Вкл</ToggleButton>
+        <ToggleButton id={'off'} value={0} checked={!checked} type="checkbox" variant="outline-danger"
+                      onChange={() => {
+                          onValuesChange ? onValuesChange(id, {switchState: false}) : null
+                          setChecked(false)
+                      }}>Выкл</ToggleButton>
     </ButtonGroup>;
 }
 
-export function CircuitElementContextMenu({ data: {values}, type }: BaseNodeData<NodeProps>) {
-    return <>
-        {type === 'resistor' && 'resistance' in values && <ResistorContextMenu resistance={values.resistance}/>}
-        {type === 'bulb' && 'brightness' in values && <BulbContextMenu power={values.power} voltage={values.voltage}/>}
-        {type === 'powerSource' && 'power' in values && <PowerSourceContextMenu power={values.power}/>}
-        {type === 'switch' && 'switchState' in values && <SwitcherContextMenu switchState={values.switchState}/>}
-    </>
-}
+export const CircuitElementContextMenu = memo(({ id, data: {values, onValuesChange}, type}: BaseNodeData<NodeProps>) => {
+    let contextMenuComponent = null;
+
+    if (type === NodeType.Resistor && 'resistance' in values) {
+        contextMenuComponent = <ResistorContextMenu id={id} values={values} onValuesChange={onValuesChange} />;
+    } else if (type === NodeType.Bulb && 'power' in values && 'voltage' in values) {
+        contextMenuComponent = <BulbContextMenu id={id} values={values} onValuesChange={onValuesChange}/>;
+    } else if (type === NodeType.PowerSource && 'power' in values) {
+        contextMenuComponent = <PowerSourceContextMenu id={id} values={values} onValuesChange={onValuesChange}/>;
+    } else if (type === NodeType.Switch && 'switchState' in values) {
+        contextMenuComponent = <SwitchContextMenu id={id} values={values} onValuesChange={onValuesChange}/>;
+    }
+
+    return contextMenuComponent;
+});
 
 
 interface ContextMenuProps {

@@ -3,7 +3,6 @@ import ReactFlow, {
     addEdge,
     applyEdgeChanges,
     applyNodeChanges,
-    useOnSelectionChange,
     Background,
     Controls,
     Panel,
@@ -24,18 +23,18 @@ import ReactFlow, {
 
 import 'reactflow/dist/style.css';
 
-import {
-    ResistorNode,
-    PowerSourceNode,
-    BulbNode,
-    SwitchNode
-} from '../Nodes/NodeTypes/NodeTypes';
+import {BulbNode, PowerSourceNode, ResistorNode, SwitchNode} from '../Nodes/NodeTypes/NodeTypes';
 import WireEdge from '../Nodes/EdgeTypes/WireEdge.tsx';
 import ContextMenu from "../Nodes/ContextMenu/ContextMenu.tsx";
 import AddElementMenu from "./AddElementMenu.tsx";
 import ElementsManager from "./ElementsManager.tsx";
-import {BaseNodeData, NodeDataProps, NodeProps, NodeType} from "../types";
-import {DefaultByType, initialEdges, initialNodes, elements} from "../defaults.ts";
+import {
+    BaseNodeData,
+    NodeDataProps,
+    NodeProps,
+    NodeType,
+} from "../types";
+import {DefaultByType, elements, useInitialSetup} from "../defaults.ts";
 import SimulationPanel from "../Simulation/SimulationPanel.tsx";
 import Header from "../Header/Header.tsx";
 
@@ -82,8 +81,9 @@ function isOverlap(node1: Node, node2: Node) {
 
 
 function Flow() {
-    const [nodes, setNodes] = useState<Node[]>(initialNodes);
-    const [edges, setEdges] = useState<Edge[]>(initialEdges);
+    const [nodes, setNodes] = useState<Node[]>([]);
+    const [edges, setEdges] = useState<Edge[]>([]);
+    const [animateEdges, setAnimateEdges] = useState(false);
     const [selectedNodes, setSelectedNodes] = useState<Node[]>([]);
     const [erroredNodes, setErroredNodes] = useState<Node[]>([]);
     const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
@@ -99,16 +99,13 @@ function Flow() {
     const onNodesChange: OnNodesChange = useCallback((changes) => {
         setNodes((currentNodes) => {
             return applyNodeChanges(changes, currentNodes).map((node) => {
-                // Проверяем, не пересекается ли текущий узел с другими узлами
                 const otherNodes = currentNodes.filter(n => n.id !== node.id);
                 const hasOverlap = otherNodes.some(otherNode => isOverlap(node, otherNode));
 
                 if (hasOverlap) {
-                    // Если есть пересечение, возвращаем узел без изменений
                     return currentNodes.find(n => n.id === node.id) || node;
                 }
 
-                // Если пересечения нет, применяем изменения
                 return node;
             });
         });
@@ -118,6 +115,21 @@ function Flow() {
         (changes) => setEdges((eds) => applyEdgeChanges(changes, eds)),
         [setEdges],
     );
+
+    const toggleEdgeAnimation = useCallback((state: boolean) => {
+        if (state) {
+            setEdges((eds) =>
+                eds.map(edge => ({...edge, animated: !animateEdges}))
+            );
+            setAnimateEdges(!animateEdges);
+        }
+        else {
+            setEdges((eds) =>
+                eds.map(edge => ({...edge, animated: false}))
+            );
+            setAnimateEdges(false);
+        }
+    }, [animateEdges]);
 
     const onConnect = useCallback(
         (params: Connection) =>
@@ -136,14 +148,27 @@ function Flow() {
     );
 
     const deleteErroredNodes = useCallback(() => {
-        console.log(erroredNodes);
         setNodes((nds) => nds.filter((node: Node) => !erroredNodes.includes(node)));
+        setErroredNodes([]);
     }, [setNodes, erroredNodes]);
 
     const onDragOver = useCallback((event: React.DragEvent) => {
         event.preventDefault();
         event.dataTransfer.dropEffect = 'move';
     }, []);
+
+    const onChange = useCallback((id: BaseNodeData<NodeProps>['id'], values: NodeDataProps<NodeProps>['values']) => {
+        setNodes(nodes => nodes.map(node => {
+            return {
+                ...node,
+                data: {
+                    ...node.data,
+                    values: node.id === id ? values : node.data.values,
+                },
+            };
+        }));
+        console.log(id, values);
+    }, [setNodes]);
 
     const onDrop = useCallback(
         (event: React.DragEvent) => {
@@ -161,14 +186,14 @@ function Flow() {
 
             const newNode: BaseNodeData<NodeProps> = {
                 id: getId(type as NodeType),
-                data: DefaultByType(type as NodeType) as NodeDataProps<NodeProps>,
+                data: DefaultByType(type as NodeType, 'hor', onChange) as NodeDataProps<NodeProps>,
                 position,
                 type: type as NodeType,
             };
 
             setNodes((nds) => nds.concat(newNode));
         },
-        [reactFlowInstance, setNodes],
+        [onChange, reactFlowInstance],
     );
 
     const onNodeContextMenu = useCallback(
@@ -207,11 +232,7 @@ function Flow() {
         setSelectedNodes([]);
     }, [setMenu, setSelectedNodes]);
 
-    useOnSelectionChange({
-        onChange: ({nodes}) => {
-            setSelectedNodes(nodes);
-        },
-    });
+    useInitialSetup(setNodes, setEdges, onChange);
 
     const [ElementsManagerMarginTop, setElementsManagerMarginTop] = useState(86);
 
@@ -262,6 +283,7 @@ function Flow() {
                 <SimulationPanel
                     nodes={nodes as BaseNodeData<NodeProps>[]}
                     edges={edges}
+                    toggleAnimateEdges={toggleEdgeAnimation}
                     deleteErroredNodes={deleteErroredNodes}
                     setErroredNodes={setErroredNodes}
                 />
