@@ -196,10 +196,7 @@ export const SwitchNode = memo(
             data={{
                 values: {switchState: data.values.switchState},
                 orientation: data.orientation,
-                onSwitchChange: () => {
-                    data.onSwitchChange;
-                    console.log(id, data.onSwitchChange);
-                }
+                onSwitchChange: (data as NodeDataProps<SwitchNodeProps>).onValuesChange
             }}
         />;
     }
