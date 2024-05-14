@@ -1,5 +1,5 @@
 import {Position, internalsSymbol, Node, Handle} from 'reactflow';
-import {BaseNodeData, NodeProps} from "../../types.ts";
+import {CircuitNode, NodeProps} from "../../types.ts";
 
 interface Handle {
     width: number;
@@ -65,7 +65,7 @@ function getHandleCoordsByPosition(node: Node, handlePosition: Position): [numbe
     return [x, y];
 }
 
-function getParams(nodeA: BaseNodeData<NodeProps>, nodeB: BaseNodeData<NodeProps>): [number, number, Position] {
+function getParams(nodeA: CircuitNode<NodeProps>, nodeB: CircuitNode<NodeProps>): [number, number, Position] {
     const centerA = getNodeCenter(nodeA);
     const centerB = getNodeCenter(nodeB);
 
@@ -97,7 +97,7 @@ function getParams(nodeA: BaseNodeData<NodeProps>, nodeB: BaseNodeData<NodeProps
     return [x, y, position];
 }
 
-export function getEdgeParams(source: BaseNodeData<NodeProps>, target: BaseNodeData<NodeProps>): EdgeParams {
+export function getEdgeParams(source: CircuitNode<NodeProps>, target: CircuitNode<NodeProps>): EdgeParams {
     const [sx, sy, sourcePos] = getParams(source, target);
     const [tx, ty, targetPos] = getParams(target, source);
 

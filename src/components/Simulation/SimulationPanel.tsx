@@ -4,30 +4,29 @@ import pause_icon from '../../assets/Icons/pause_icon.svg';
 import Image from "react-bootstrap/Image";
 import {useState} from "react";
 import './SimulationPanel.css';
-import {BaseNodeData, CircuitErrorsType, NodeProps, NodeType} from "../types.ts";
+import {CircuitNode, CircuitErrorsType, NodeProps, NodeType, SimulationState} from "../types.ts";
 import SuggestionDeleteErrors from "../Main/SuggestionDeleteErrors.tsx";
 
 
 interface SimulationPanelProps {
-    nodes: BaseNodeData<NodeProps>[];
+    nodes: CircuitNode<NodeProps>[];
     edges: Edge[];
-    toggleAnimateEdges: (state: boolean) => void;
-    setErroredNodes: (node: BaseNodeData<NodeProps>[]) => void;
+    setErroredNodes: (node: CircuitNode<NodeProps>[]) => void;
     deleteErroredNodes: () => void;
+    simulationState: SimulationState;
+    setSimulationMode: (state: SimulationState) => void;
 }
 
-type SimulationState = 'running' | 'error' | 'stopped';
 
-
-export default function SimulationPanel({nodes, edges, setErroredNodes, toggleAnimateEdges, deleteErroredNodes}: SimulationPanelProps) {
-    const [simulationState, setSimulationState] = useState<SimulationState>('stopped');
+export default function SimulationPanel(
+    {nodes, edges, setErroredNodes, deleteErroredNodes, simulationState, setSimulationMode}: SimulationPanelProps
+) {
     const [errors, setErrors] = useState<CircuitErrorsType[]>([]);
 
-    const filterCircuit = (nodes: BaseNodeData<NodeProps>[], edges: Edge[]): SimulationState => {
+    const filterCircuit = (nodes: CircuitNode<NodeProps>[], edges: Edge[]): SimulationState => {
 
         if (simulationState === 'running') {
-            toggleAnimateEdges(false);
-            return 'stopped';
+            return SimulationState.stopped;
         }
 
         const nodeMap: Map<string, Node> = new Map(nodes.map(node => [node.id, node]));
@@ -72,7 +71,6 @@ export default function SimulationPanel({nodes, edges, setErroredNodes, toggleAn
             }
         });
 
-        // Filter components that contain a power source
         const filteredNodes: Node[] = [];
         const filteredEdges: Edge[] = [];
 
@@ -91,7 +89,7 @@ export default function SimulationPanel({nodes, edges, setErroredNodes, toggleAn
         console.log([filteredNodes, filteredEdges]);
 
         if (filteredNodes.length !== 0) {
-            setErroredNodes(filteredNodes as BaseNodeData<NodeProps>[]);
+            setErroredNodes(filteredNodes as CircuitNode<NodeProps>[]);
             const error: CircuitErrorsType = {
                 name: 'Рабочая область содержит невалидные элементы',
                 proposal_solution: 'Удалить эти элементы?',
@@ -99,30 +97,28 @@ export default function SimulationPanel({nodes, edges, setErroredNodes, toggleAn
                 solution_func: deleteErroredNodes
             }
             setErrors([error]);
-            toggleAnimateEdges(false);
-            return 'error';
+            return SimulationState.errored;
         } else {
             setErroredNodes([]);
-            toggleAnimateEdges(true);
-            return 'running';
+            return SimulationState.running;
         }
     };
 
     return (
-        <div className={'simulation-panel ' + (simulationState === 'running' ? 'active' : '')} style={{width: 460}}>
-            <Button onClick={() => setSimulationState(filterCircuit(nodes, edges))}
-                    variant={simulationState === 'error' ? 'danger' : 'primary'}
+        <div className={'simulation-panel ' + (simulationState === SimulationState.running ? 'active' : '')} style={{width: 460}}>
+            <Button onClick={() => setSimulationMode(filterCircuit(nodes, edges))}
+                    variant={simulationState === SimulationState.errored ? 'danger' : 'primary'}
                     style={{width: '148px', height: '46px', position: 'relative', right: '-30%'}}>
                 <span style={{
                     fontSize: '18px',
                     fontWeight: '500'
-                }}>{simulationState === 'running' ? 'Пауза ' : 'Запустить '}</span>
-                <Image src={simulationState === 'running' ? pause_icon : play_icon} width={20} height={20}
+                }}>{simulationState === SimulationState.running ? 'Пауза ' : 'Запустить '}</span>
+                <Image src={simulationState === SimulationState.running ? pause_icon : play_icon} width={20} height={20}
                        alt="Запустить"
                        style={{padding: '2px', margin: '4px'}}/>
             </Button>
             <div className='panel'>
-                {simulationState === 'error' && <SuggestionDeleteErrors errors={errors}/>}
+                {simulationState === SimulationState.errored && <SuggestionDeleteErrors errors={errors}/>}
                 <span style={{fontSize: '18px', fontWeight: '500'}}>Симуляция</span>
             </div>
         </div>
@@ -139,32 +135,3 @@ interface Edge {
     source: string;
     target: string;
 }
-
-
-// function isCircuitCorrect(nodes: BaseNodeData<NodeProps>[], edges: Edge[]): SimulationState {
-//     const elements = [...nodes, ...edges];
-//     const visited = new Set<string>();
-//     const stack: string[] = [];
-//
-//     elements.forEach(el => {
-//         if (isNode(el) && el.type === 'powerSource') {
-//             stack.push(el.id);
-//         }
-//     });
-//
-//     while (stack.length) {
-//         const id = stack.pop();
-//         if (!visited.has(id!)) {
-//             visited.add(id!);
-//             elements.forEach(el => {
-//                 if (isEdge(el) && (el.source === id || el.target === id)) {
-//                     stack.push(el.source === id ? el.target : el.source);
-//                     visited.add(el.source);
-//                     visited.add(el.target);
-//                 }
-//             });
-//         }
-//     }
-//
-//     return 'running';
-// }

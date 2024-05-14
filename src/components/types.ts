@@ -7,6 +7,12 @@ export enum NodeType {
     Switch = 'switch'
 }
 
+export enum SimulationState {
+    running = 'running',
+    stopped = 'stopped',
+    errored = 'errored'
+}
+
 export type CircuitElementType = {
     [key in NodeType]: {
         icon: string;
@@ -16,23 +22,23 @@ export type CircuitElementType = {
     }
 }
 
-export interface NodeDataProps<T> {
-    values: T;
+export interface CircuitNode<T> extends ReactFlowNode {
+    id: string;
+    data: T,
+    type: NodeType.PowerSource | NodeType.Resistor | NodeType.Bulb | NodeType.Switch;
     orientation?: 'ver' | 'hor';
-    onValuesChange: (
-        id: BaseNodeData<NodeProps>['id'],
-        values: NodeDataProps<T>['values'],
-        orientation?: NodeDataProps<NodeProps>["orientation"]
+    polar?: 'pos' | 'neg';
+    selected?: boolean;
+    errored?: boolean;
+    onChange: (
+        id: CircuitNode<NodeProps>['id'],
+        data?: CircuitNode<T>['data'],
+        orientation?: CircuitNode<NodeProps>['orientation'],
+        polar?: CircuitNode<NodeProps>['polar']
     ) => void;
 }
 
-export interface BaseNodeData<T> extends ReactFlowNode {
-    data: NodeDataProps<T>
-    type: NodeType.PowerSource | NodeType.Resistor | NodeType.Bulb | NodeType.Switch;
-}
-
 export type NodeProps = ResistorNodeProps | PowerSourceNodeProps | BulbNodeProps | SwitchNodeProps;
-
 
 export type ResistorNodeProps = {
     resistance: number

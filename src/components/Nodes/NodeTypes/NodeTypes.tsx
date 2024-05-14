@@ -3,8 +3,8 @@ import {memo, useCallback} from 'react';
 import './NodeStyles.css';
 
 import {
-    BaseNodeData,
-    BulbNodeProps, NodeDataProps,
+    CircuitNode,
+    BulbNodeProps,
     NodeProps,
     NodeType,
     PowerSourceNodeProps,
@@ -57,8 +57,8 @@ function BulbFrame({brightness = DefaultValues.bulb.brightness}: BulbNodeProps) 
 }
 
 interface SwitchFrameProps {
-    id: BaseNodeData<SwitchNodeProps>['id'];
-    onSwitchChange: NodeDataProps<SwitchNodeProps>['onValuesChange'];
+    id: CircuitNode<SwitchNodeProps>['id'];
+    onSwitchChange: CircuitNode<SwitchNodeProps>['onChange'];
     switchState: SwitchNodeProps['switchState'];
 }
 
@@ -80,35 +80,36 @@ function PowerSourceFrame({power = DefaultValues.powerSource.power}: PowerSource
     );
 }
 
-interface CircuitElementNodeProps<T> {
-    id: BaseNodeData<T>['id'];
-    data: BaseNodeData<T>['data'];
-    type: BaseNodeData<T>['type'];
-    selected: BaseNodeData<T>['selected'];
-}
+// interface CircuitElementNodeProps<T> {
+//     id: CircuitNode<T>['id'];
+//     data: CircuitNode<T>['data'];
+//     orientation: CircuitNode<T>['orientation'];
+//     type: CircuitNode<T>['type'];
+//     selected: CircuitNode<T>['selected'];
+// }
 
 export const CircuitElementNode = memo((
-    {id, data: {values, orientation, onValuesChange}, type, selected}: CircuitElementNodeProps<NodeProps>
+    {id, data, onChange, orientation, type, selected}: CircuitNode<NodeProps>
 ) => {
 
     const updateNodeInternals = useUpdateNodeInternals();
 
     const rotateNode = useCallback(() => {
-        onValuesChange(id, values, orientation === 'ver' ? 'hor' : 'ver');
+        onChange(id, data, orientation === 'ver' ? 'hor' : 'ver');
         updateNodeInternals(id);
-    }, [id, onValuesChange, orientation, updateNodeInternals, values])
+    }, [id, onChange, orientation, updateNodeInternals, data])
 
     return (
         <>
             <NodeToolbar isVisible={true} position={orientation === 'hor' ? Position.Top : Position.Left}>
-                {type === NodeType.Resistor && 'resistance' in values &&
-                    <div>Сопротивление: {values.resistance}Ом</div>}
-                {type === NodeType.Bulb && 'power' in values &&
-                    <div>Мощность: {values.power}Вт</div>}
-                {type === NodeType.Bulb && 'voltage' in values &&
-                    <div>Напряжение: {values.voltage}В</div>}
-                {type === NodeType.PowerSource && 'power' in values &&
-                    <div>Мощность: {values.power}Вт</div>}
+                {type === NodeType.Resistor && 'resistance' in data &&
+                    <div>Сопротивление: {data.resistance}Ом</div>}
+                {type === NodeType.Bulb && 'power' in data &&
+                    <div>Мощность: {data.power}Вт</div>}
+                {type === NodeType.Bulb && 'voltage' in data &&
+                    <div>Напряжение: {data.voltage}В</div>}
+                {type === NodeType.PowerSource && 'power' in data &&
+                    <div>Мощность: {data.power}Вт</div>}
             </NodeToolbar>
             <div id={id} className={`node ${type} ${orientation} ${selected ? 'selected' : ''}`}
                  style={{
@@ -120,14 +121,14 @@ export const CircuitElementNode = memo((
                 <div style={{
                     transform: `rotate(${orientation === 'hor' ? 0 : 90}deg)`
                 }}>
-                    {type === NodeType.Resistor && 'resistance' in values &&
-                        <ResistorFrame resistance={values.resistance}/>}
-                    {type === NodeType.Bulb && 'power' in values && 'voltage' in values &&
-                        <BulbFrame brightness={values.brightness} power={values.power} voltage={values.voltage}/>}
-                    {type === NodeType.PowerSource && 'power' in values &&
-                        <PowerSourceFrame power={values.power}/>}
-                    {type === NodeType.Switch && 'switchState' in values && 
-                        <SwitchFrame id={id} onSwitchChange={onValuesChange} switchState={values.switchState}/>}
+                    {type === NodeType.Resistor && 'resistance' in data &&
+                        <ResistorFrame resistance={data.resistance}/>}
+                    {type === NodeType.Bulb && 'power' in data && 'voltage' in data &&
+                        <BulbFrame brightness={data.brightness} power={data.power} voltage={data.voltage}/>}
+                    {type === NodeType.PowerSource && 'power' in data &&
+                        <PowerSourceFrame power={data.power}/>}
+                    {type === NodeType.Switch && 'switchState' in data &&
+                        <SwitchFrame id={id} onSwitchChange={onChange} switchState={data.switchState}/>}
                 </div>
                 <button className='rotate-button' onClick={rotateNode}
                         style={{transform: `rotate(${orientation === 'hor' ? 0 : 90}deg)`}}>
@@ -141,61 +142,57 @@ export const CircuitElementNode = memo((
 });
 
 export const ResistorNode = memo(
-    ({id, data, selected}: CircuitElementNodeProps<ResistorNodeProps>) => {
+    ({id, data, orientation, onChange, position, selected}: CircuitNode<ResistorNodeProps>) => {
         return <CircuitElementNode
             id={id}
-            selected={selected}
+            data={data}
+            onChange={() => onChange(id, data, orientation)}
+            orientation={orientation}
             type={NodeType.Resistor}
-            data={{
-                values: {resistance: data.values.resistance},
-                orientation: data.orientation,
-                onValuesChange: (data as NodeDataProps<NodeProps>).onValuesChange
-            }}
+            selected={selected}
+            position={position}
         />;
     }
 );
 
 export const BulbNode = memo(
-    ({id, data, selected}: CircuitElementNodeProps<BulbNodeProps>) => {
+    ({id, data, orientation, onChange, position, selected}: CircuitNode<BulbNodeProps>) => {
         return <CircuitElementNode
             id={id}
-            selected={selected}
+            data={data}
+            onChange={() => onChange(id, data, orientation)}
+            orientation={orientation}
             type={NodeType.Bulb}
-            data={{
-                values: {power: data.values.power, voltage: data.values.voltage},
-                orientation: data.orientation,
-                onValuesChange: (data as NodeDataProps<NodeProps>).onValuesChange
-            }}
+            selected={selected}
+            position={position}
         />;
     }
 )
 
 export const PowerSourceNode = memo(
-    ({id, data, selected}: CircuitElementNodeProps<PowerSourceNodeProps>) => {
+    ({id, data, orientation, onChange, position, selected}: CircuitNode<PowerSourceNodeProps>) => {
         return <CircuitElementNode
             id={id}
-            selected={selected}
+            data={data}
+            onChange={() => onChange(id, data, orientation)}
+            orientation={orientation}
             type={NodeType.PowerSource}
-            data={{
-                values: {power: data.values.power},
-                orientation: data.orientation,
-                onValuesChange: (data as NodeDataProps<NodeProps>).onValuesChange
-            }}
+            selected={selected}
+            position={position}
         />;
     }
 )
 
 export const SwitchNode = memo(
-    ({id, data, selected}: CircuitElementNodeProps<SwitchNodeProps>) => {
+    ({id, data, orientation, onChange, position, selected}: CircuitNode<SwitchNodeProps>) => {
         return <CircuitElementNode
             id={id}
-            selected={selected}
+            data={data}
+            onChange={() => onChange(id, data, orientation)}
+            orientation={orientation}
             type={NodeType.Switch}
-            data={{
-                values: {switchState: data.values.switchState},
-                orientation: data.orientation,
-                onValuesChange: (data as NodeDataProps<NodeProps>).onValuesChange
-            }}
+            selected={selected}
+            position={position}
         />;
     }
 )

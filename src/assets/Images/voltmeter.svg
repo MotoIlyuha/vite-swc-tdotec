@@ -1,0 +1,15 @@
+<svg width="80" height="40" xmlns="http://www.w3.org/2000/svg">
+ <!-- Created with SVG Editor - http://github.com/mzalive/SVG Editor/ -->
+
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="402" width="582" y="-1" x="-1"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <line fill="none" stroke="#000" stroke-width="1.5" stroke-opacity="null" fill-opacity="null" x1="51.501757" y1="20" x2="79.249999" y2="20" id="svg_3" stroke-linejoin="undefined" stroke-linecap="undefined"/>
+  <line fill="none" stroke="#000" stroke-width="1.5" stroke-opacity="null" fill-opacity="null" x1="0.906043" y1="20" x2="28.654284" y2="20" id="svg_4" stroke-linejoin="undefined" stroke-linecap="undefined"/>
+  <ellipse fill="none" stroke="#000" stroke-width="1.5" stroke-opacity="null" fill-opacity="null" cx="40" cy="19.999999" id="svg_9" rx="10.313631" ry="10.313631"/>
+  <text stroke="#000" transform="matrix(0.5747963786125183,0,0,0.5747963786125183,21.45489034334173,13.94921530122042) " xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="24" id="svg_1" y="18.794931" x="24.259447" fill-opacity="null" stroke-opacity="null" stroke-width="0" fill="#000000">V</text>
+ </g>
+</svg>

@@ -4,11 +4,11 @@ import ReactFlow, {
     applyEdgeChanges,
     applyNodeChanges,
     Background,
-    Controls,
-    Panel,
     BackgroundVariant,
+    Connection,
     ConnectionLineType,
     ConnectionMode,
+    Controls,
     DefaultEdgeOptions,
     Edge,
     EdgeTypes,
@@ -17,8 +17,9 @@ import ReactFlow, {
     NodeTypes,
     OnEdgesChange,
     OnNodesChange,
+    OnSelectionChangeParams,
+    Panel,
     ReactFlowInstance,
-    Connection, OnSelectionChangeParams,
 } from 'reactflow';
 
 import 'reactflow/dist/style.css';
@@ -28,12 +29,7 @@ import WireEdge from '../Nodes/EdgeTypes/WireEdge.tsx';
 import ContextMenu from "../Nodes/ContextMenu/ContextMenu.tsx";
 import AddElementMenu from "./AddElementMenu.tsx";
 import ElementsManager from "./ElementsManager.tsx";
-import {
-    BaseNodeData,
-    NodeDataProps,
-    NodeProps,
-    NodeType,
-} from "../types";
+import {CircuitNode, NodeProps, NodeType, SimulationState,} from "../types";
 import {DefaultByType, elements, useInitialSetup} from "../defaults.ts";
 import SimulationPanel from "../Simulation/SimulationPanel.tsx";
 import Header from "../Header/Header.tsx";
@@ -83,18 +79,22 @@ function isOverlap(node1: Node, node2: Node) {
 function Flow() {
     const [nodes, setNodes] = useState<Node[]>([]);
     const [edges, setEdges] = useState<Edge[]>([]);
-    const [animateEdges, setAnimateEdges] = useState(false);
     const [selectedNodes, setSelectedNodes] = useState<Node[]>([]);
     const [erroredNodes, setErroredNodes] = useState<Node[]>([]);
     const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
-    const [menu, setMenu] = useState<{
-        node: BaseNodeData<NodeProps>;
-        top?: number;
-        left?: number;
-        right?: number;
-        bottom?: number;
-    } | null>(null);
+    const [simulationState, setSimulationState] = useState<SimulationState>(SimulationState.stopped);
+    const [menu, setMenu] = useState<{node: CircuitNode<NodeProps>;top?: number;left?: number;right?: number;bottom?: number;} | null>(null);
     const ref = useRef<HTMLDivElement>(null);
+
+    const setSimulationMode = useCallback((state: SimulationState) => {
+        setSimulationState(state);
+        if (state === SimulationState.running) {
+            setEdges(edges => edges.map(edge => ({...edge, animated: true})));
+        }
+        else {
+            setEdges(edges => edges.map(edge => ({...edge, animated: false})));
+        }
+    }, [setEdges]);
 
     const onNodesChange: OnNodesChange = useCallback((changes) => {
         setNodes((currentNodes) => {
@@ -109,32 +109,23 @@ function Flow() {
                 return node;
             });
         });
-    }, [setNodes]);
+        SimulationState.running && setSimulationMode(SimulationState.stopped);
+    }, [setSimulationMode, setNodes]);
 
     const onEdgesChange: OnEdgesChange = useCallback(
-        (changes) => setEdges((eds) => applyEdgeChanges(changes, eds)),
-        [setEdges],
+        (changes) => {
+            setEdges((eds) => applyEdgeChanges(changes, eds))
+            SimulationState.running && setSimulationMode(SimulationState.stopped);
+        },
+        [setSimulationMode, setEdges],
     );
 
-    const toggleEdgeAnimation = useCallback((state: boolean) => {
-        if (state) {
-            setEdges((eds) =>
-                eds.map(edge => ({...edge, animated: !animateEdges}))
-            );
-            setAnimateEdges(!animateEdges);
-        } else {
-            setEdges((eds) =>
-                eds.map(edge => ({...edge, animated: false}))
-            );
-            setAnimateEdges(false);
-        }
-    }, [animateEdges]);
-
     const onConnect = useCallback(
-        (params: Connection) =>
+        (params: Connection) => {
             setEdges((eds) =>
-                addEdge({...params, type: 'wire'}, eds)
-            ),
+                addEdge({...params, type: 'smoothstep'}, eds)
+            );
+        },
         [setEdges]
     );
 
@@ -156,22 +147,21 @@ function Flow() {
         event.dataTransfer.dropEffect = 'move';
     }, []);
 
-    const onNodeValuesChange = useCallback((
-        id: BaseNodeData<NodeProps>['id'],
-        values: NodeDataProps<NodeProps>['values'],
-        orientation?: NodeDataProps<NodeProps>['orientation']
+    const onCircuitChange = useCallback((
+        id: CircuitNode<NodeProps>['id'],
+        data?: CircuitNode<NodeProps>['data'],
+        orientation?: CircuitNode<NodeProps>['orientation'],
+        polar?: CircuitNode<NodeProps>['polar']
     ) => {
-            setNodes(nodes => (nodes as BaseNodeData<NodeProps>[]).map(node => {
+            setNodes(nodes => (nodes as CircuitNode<NodeProps>[]).map(node => {
                 return {
                     ...node,
-                    data: {
-                        ...node.data,
-                        orientation: node.id === id && orientation !== undefined ? orientation : node.data.orientation,
-                        values: node.id === id ? values : node.data.values,
-                    },
+                    data: node.id === id && data ? data : node.data,
+                    orientation: node.id === id && orientation ? orientation : node.orientation,
+                    polar: node.id === id && polar ? polar : node.polar,
                 };
             }));
-            console.log(id, values, orientation);
+            console.log(id, data, orientation, polar);
         }, [setNodes]);
 
     const onDrop = useCallback(
@@ -188,16 +178,20 @@ function Flow() {
             });
             if (!position) return;
 
-            const newNode: BaseNodeData<NodeProps> = {
+            const newNode: CircuitNode<NodeProps> = {
                 id: getId(type as NodeType),
-                data: DefaultByType(type as NodeType, 'hor', onNodeValuesChange) as NodeDataProps<NodeProps>,
+                data: DefaultByType(type as NodeType) as CircuitNode<NodeProps>['data'],
+                onChange: () => onCircuitChange(newNode.id, newNode.data, newNode.orientation, newNode.polar),
+                orientation: 'hor',
+                polar: 'pos',
                 position,
                 type: type as NodeType,
+                selected: false
             };
 
             setNodes((nds) => nds.concat(newNode));
         },
-        [onNodeValuesChange, reactFlowInstance],
+        [onCircuitChange, reactFlowInstance],
     );
 
     const onNodeContextMenu = useCallback(
@@ -210,7 +204,7 @@ function Flow() {
             setSelectedNodes([node]);
 
             setMenu({
-                node: node as BaseNodeData<NodeProps>,
+                node: node as CircuitNode<NodeProps>,
                 top: event.clientY < pane.height - 50 ? event.clientY : undefined,
                 left: event.clientX < pane.width - 50 ? event.clientX : undefined,
                 right: event.clientX >= pane.width - 50 ? pane.width - event.clientX : undefined,
@@ -227,7 +221,7 @@ function Flow() {
 
     const selectableNodes = useMemo(() => nodes.map(node => ({
         ...node,
-        className: (erroredNodes.includes(node as BaseNodeData<NodeProps>) ? 'errored ' : '') +
+        className: (erroredNodes.includes(node as CircuitNode<NodeProps>) ? 'errored ' : '') +
             (selectedNodes.includes(node) ? 'selected ' : '')
     })), [nodes, erroredNodes, selectedNodes]);
 
@@ -236,7 +230,7 @@ function Flow() {
         setSelectedNodes([]);
     }, [setMenu, setSelectedNodes]);
 
-    useInitialSetup(setNodes, setEdges, onNodeValuesChange);
+    useInitialSetup(setNodes, setEdges, onCircuitChange);
 
     const [ElementsManagerMarginTop, setElementsManagerMarginTop] = useState(86);
 
@@ -270,11 +264,10 @@ function Flow() {
             {menu && <ContextMenu onClick={onPaneClick} onNodeDelete={onNodeDelete} {...menu} />}
 
             <Panel position='top-left'>
-
                 <Header setMarginTop={setElementsManagerMarginTop}/>
-                <ElementsManager nodes={nodes as BaseNodeData<NodeProps>[]} elements={elements}
-                                 erroredNodes={erroredNodes as BaseNodeData<NodeProps>[]}
-                                 selectedNodes={selectedNodes as BaseNodeData<NodeProps>[]}
+                <ElementsManager nodes={nodes as CircuitNode<NodeProps>[]} elements={elements}
+                                 erroredNodes={erroredNodes as CircuitNode<NodeProps>[]}
+                                 selectedNodes={selectedNodes as CircuitNode<NodeProps>[]}
                                  setSelectedNodes={setSelectedNodes} onNodeDelete={onNodeDelete}
                                  marginTop={ElementsManagerMarginTop}/>
             </Panel>
@@ -285,11 +278,12 @@ function Flow() {
 
             <Panel position='bottom-right'>
                 <SimulationPanel
-                    nodes={nodes as BaseNodeData<NodeProps>[]}
+                    nodes={nodes as CircuitNode<NodeProps>[]}
                     edges={edges}
-                    toggleAnimateEdges={toggleEdgeAnimation}
                     deleteErroredNodes={deleteErroredNodes}
                     setErroredNodes={setErroredNodes}
+                    simulationState={simulationState}
+                    setSimulationMode={setSimulationMode}
                 />
             </Panel>
 
