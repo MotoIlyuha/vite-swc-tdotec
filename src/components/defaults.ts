@@ -134,10 +134,10 @@ export const useInitialSetup = (
         ]);
 
         setEdges([
-            {id: 'wire_ps1-s1', source: 'powerSource-1', target: 'switch-1', type: 'wire'},
-            {id: 'wire_s1-b1', source: 'switch-1', target: 'bulb-1', type: 'wire'},
-            {id: 'wire_b1-r1', source: 'bulb-1', target: 'resistor-1', type: 'wire'},
-            {id: 'wire_r1-ps1', source: 'resistor-1', target: 'powerSource-1', type: 'wire'},
+            {id: 'wire_ps1-s1', source: 'powerSource-1', target: 'switch-1', sourceHandle: 'powerSource-1_target', targetHandle: 'switch-1_source', type: 'wire'},
+            {id: 'wire_s1-b1', source: 'switch-1', target: 'bulb-1', sourceHandle: 'switch-1_target', targetHandle: 'bulb-1_target', type: 'wire'},
+            {id: 'wire_b1-r1', source: 'bulb-1', target: 'resistor-1', sourceHandle: 'bulb-1_source', targetHandle: 'resistor-1_target', type: 'wire'},
+            {id: 'wire_r1-ps1', source: 'resistor-1', target: 'powerSource-1', sourceHandle: 'resistor-1_source', targetHandle: 'powerSource-1_source', type: 'wire'},
         ]);
     }, [setNodes, setEdges, onChange]);
 };

@@ -1,36 +1,18 @@
-import {CSSProperties, useCallback} from 'react';
-import {useStore, getSmoothStepPath, EdgeLabelRenderer, useReactFlow, BaseEdge} from 'reactflow';
-import {getEdgeParams} from './utils';
+import {getSmoothStepPath, EdgeLabelRenderer, useReactFlow, BaseEdge, EdgeProps} from 'reactflow';
 import './buttonedge.css';
 
 
-interface SimpleFloatingEdgeProps {
-    id: string;
-    source: string;
-    target: string;
-    markerEnd?: string;
-    style?: CSSProperties;
-}
+function SimpleFloatingEdge({id, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition}: EdgeProps) {
 
-function SimpleFloatingEdge({id, source, target, markerEnd, style}: SimpleFloatingEdgeProps) {
-    const sourceNode = useStore(useCallback((store) => store.nodeInternals.get(source), [source]));
-    const targetNode = useStore(useCallback((store) => store.nodeInternals.get(target), [target]));
-
-    const { setEdges } = useReactFlow();
-
-    if (!sourceNode || !targetNode) {
-        return null;
-    }
-
-    const {sx, sy, tx, ty, sourcePos, targetPos} = getEdgeParams(sourceNode, targetNode);
+    const {setEdges} = useReactFlow();
 
     const [edgePath, labelX, labelY] = getSmoothStepPath({
-        sourceX: sx,
-        sourceY: sy,
-        sourcePosition: sourcePos,
-        targetPosition: targetPos,
-        targetX: tx,
-        targetY: ty,
+        sourceX,
+        sourceY,
+        sourcePosition,
+        targetX,
+        targetY,
+        targetPosition,
         borderRadius: 2,
         offset: 0,
     });
@@ -41,7 +23,7 @@ function SimpleFloatingEdge({id, source, target, markerEnd, style}: SimpleFloati
 
     return (
         <>
-            <BaseEdge path={edgePath} id={id} markerEnd={markerEnd} style={style} />
+            <BaseEdge path={edgePath} id={id}/>
             <EdgeLabelRenderer>
                 <div
                     className="nodrag nopan"

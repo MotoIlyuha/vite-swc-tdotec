@@ -115,7 +115,6 @@ export const CircuitElementNode = memo((
                  'height': `${orientation === 'hor' ? 40 : 80}px`,
                  'position': 'relative'
              }}>
-            <Handle id={id + '_source'} type="source" position={orientation === 'hor' ? Position.Left : Position.Top}/>
             <div style={{
                 transform: `
                     rotate(${orientation === 'hor' ? 0 : 90}deg)
@@ -140,8 +139,8 @@ export const CircuitElementNode = memo((
                               style={{transform: `rotate(${orientation === 'hor' ? 0 : 90}deg)`}}>
                 <img src={reflect_icon} alt='отразить'/>
             </button>}
-            <Handle id={id + '_target'} type="source"
-                    position={orientation === 'hor' ? Position.Right : Position.Bottom}/>
+            <Handle id={id + '_source'} type="source" position={orientation === 'hor' ? Position.Left : Position.Top}/>
+            <Handle id={id + '_target'} type="source" position={orientation === 'hor' ? Position.Right : Position.Bottom}/>
         </div>
     </>;
 });

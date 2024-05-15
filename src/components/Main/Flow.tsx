@@ -70,7 +70,7 @@ let id = 0;
 const getId = (type: NodeType) => `${type}_${id++}`;
 
 function isOverlap(node1: Node, node2: Node) {
-    const buffer = 0; // небольшой зазор для более естественного взаимодействия
+    const buffer = 1; // небольшой зазор для более естественного взаимодействия
     return !(
         node1.position.x + (node1.width ?? 0) + buffer < node2.position.x ||
         node1.position.x > node2.position.x + (node2.width ?? 0) + buffer ||

@@ -123,6 +123,10 @@ body {
     border: none;
 }
 
+/*.react-flow__node {*/
+/*    transition: all 0.15s cubic-bezier(0.42, 0, 0.62, 1.52);*/
+/*}*/
+
 .react-flow__node.selected {
     background: rgba(34, 178, 230, 0.25) !important;
 }
