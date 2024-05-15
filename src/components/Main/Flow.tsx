@@ -29,7 +29,7 @@ import ContextMenu from "../Nodes/ContextMenu/ContextMenu.tsx";
 import AddElementMenu from "./AddElementMenu.tsx";
 import ElementsManager from "./ElementsManager.tsx";
 import {
-    BaseNodeData,
+    CircuitNode,
     NodeDataProps,
     NodeProps,
     NodeType,
@@ -79,6 +79,13 @@ function isOverlap(node1: Node, node2: Node) {
     );
 }
 
+interface MenuProps {
+    node: CircuitNode<NodeProps>;
+    top?: number;
+    left?: number;
+    right?: number;
+    bottom?: number;
+}
 
 function Flow() {
     const [nodes, setNodes] = useState<Node[]>([]);
@@ -87,13 +94,7 @@ function Flow() {
     const [selectedNodes, setSelectedNodes] = useState<Node[]>([]);
     const [erroredNodes, setErroredNodes] = useState<Node[]>([]);
     const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
-    const [menu, setMenu] = useState<{
-        node: BaseNodeData<NodeProps>;
-        top?: number;
-        left?: number;
-        right?: number;
-        bottom?: number;
-    } | null>(null);
+    const [menu, setMenu] = useState<MenuProps | null>(null);
     const ref = useRef<HTMLDivElement>(null);
 
     const onNodesChange: OnNodesChange = useCallback((changes) => {
@@ -157,17 +158,24 @@ function Flow() {
         event.dataTransfer.dropEffect = 'move';
     }, []);
 
-    const onChange = useCallback((id: BaseNodeData<NodeProps>['id'], values: NodeDataProps<NodeProps>['values']) => {
+    const onDataChange = useCallback((
+        id: CircuitNode<NodeProps>['id'],
+        values?: NodeDataProps<NodeProps>['values'],
+        orientation?: NodeDataProps<NodeProps>['orientation'],
+        polar?: NodeDataProps<NodeProps>['polar'],
+    ) => {
         setNodes(nodes => nodes.map(node => {
             return {
                 ...node,
                 data: {
                     ...node.data,
-                    values: node.id === id ? values : node.data.values,
+                    values: node.id === id && values ? values : node.data.values,
+                    orientation: node.id === id && orientation ? orientation : node.data.orientation,
+                    polar: node.id === id && polar ? polar : node.data.polar,
                 },
             };
         }));
-        console.log(id, values);
+        console.log(id, values, orientation, polar);
     }, [setNodes]);
 
     const onDrop = useCallback(
@@ -184,16 +192,23 @@ function Flow() {
             });
             if (!position) return;
 
-            const newNode: BaseNodeData<NodeProps> = {
+            const newNode: CircuitNode<NodeProps> = {
                 id: getId(type as NodeType),
-                data: DefaultByType(type as NodeType, 'hor', onChange) as NodeDataProps<NodeProps>,
+                data: {
+                    values: DefaultByType(type as NodeType),
+                    orientation: 'hor',
+                    polar: 'pos',
+                    onDataChange: onDataChange as NodeDataProps<NodeProps>['onDataChange'],
+                },
                 position,
                 type: type as NodeType,
             };
 
+            console.log(newNode)
+
             setNodes((nds) => nds.concat(newNode));
         },
-        [onChange, reactFlowInstance],
+        [onDataChange, reactFlowInstance],
     );
 
     const onNodeContextMenu = useCallback(
@@ -206,7 +221,7 @@ function Flow() {
             setSelectedNodes([node]);
 
             setMenu({
-                node: node as BaseNodeData<NodeProps>,
+                node: node as CircuitNode<NodeProps>,
                 top: event.clientY < pane.height - 50 ? event.clientY : undefined,
                 left: event.clientX < pane.width - 50 ? event.clientX : undefined,
                 right: event.clientX >= pane.width - 50 ? pane.width - event.clientX : undefined,
@@ -223,7 +238,7 @@ function Flow() {
 
     const selectableNodes = useMemo(() => nodes.map(node => ({
         ...node,
-        className: (erroredNodes.includes(node as BaseNodeData<NodeProps>) ? 'errored ' : '') +
+        className: (erroredNodes.includes(node as CircuitNode<NodeProps>) ? 'errored ' : '') +
             (selectedNodes.includes(node) ? 'selected ' : '')
     })), [nodes, erroredNodes, selectedNodes]);
 
@@ -232,7 +247,7 @@ function Flow() {
         setSelectedNodes([]);
     }, [setMenu, setSelectedNodes]);
 
-    useInitialSetup(setNodes, setEdges, onChange);
+    useInitialSetup(setNodes, setEdges, onDataChange);
 
     const [ElementsManagerMarginTop, setElementsManagerMarginTop] = useState(86);
 
@@ -268,9 +283,9 @@ function Flow() {
             <Panel position='top-left'>
 
                 <Header setMarginTop={setElementsManagerMarginTop}/>
-                <ElementsManager nodes={nodes as BaseNodeData<NodeProps>[]} elements={elements}
-                                 erroredNodes={erroredNodes as BaseNodeData<NodeProps>[]}
-                                 selectedNodes={selectedNodes as BaseNodeData<NodeProps>[]}
+                <ElementsManager nodes={nodes as CircuitNode<NodeProps>[]} elements={elements}
+                                 erroredNodes={erroredNodes as CircuitNode<NodeProps>[]}
+                                 selectedNodes={selectedNodes as CircuitNode<NodeProps>[]}
                                  setSelectedNodes={setSelectedNodes} onNodeDelete={onNodeDelete}
                                  marginTop={ElementsManagerMarginTop}/>
             </Panel>
@@ -281,7 +296,7 @@ function Flow() {
 
             <Panel position='bottom-right'>
                 <SimulationPanel
-                    nodes={nodes as BaseNodeData<NodeProps>[]}
+                    nodes={nodes as CircuitNode<NodeProps>[]}
                     edges={edges}
                     toggleAnimateEdges={toggleEdgeAnimation}
                     deleteErroredNodes={deleteErroredNodes}

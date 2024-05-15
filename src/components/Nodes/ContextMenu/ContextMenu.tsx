@@ -1,7 +1,7 @@
 import React, {memo, useState} from 'react';
 import './ContextMenu.css';
 import {
-    BaseNodeData,
+    CircuitNode,
     BulbNodeProps,
     NodeDataProps,
     NodeProps,
@@ -18,9 +18,9 @@ import ToggleButton from "react-bootstrap/ToggleButton";
 
 
 interface CircuitElementContextMenuProps<T> {
-   id: BaseNodeData<NodeProps>['id'];
+   id: CircuitNode<NodeProps>['id'];
    values: T;
-   onValuesChange: NodeDataProps<T>['onValuesChange'];
+   onValuesChange: NodeDataProps<T>['onDataChange'];
 }
 
 
@@ -86,17 +86,17 @@ function SwitchContextMenu({id, values: {switchState}, onValuesChange}: CircuitE
     </ButtonGroup>;
 }
 
-export const CircuitElementContextMenu = memo(({ id, data: {values, onValuesChange}, type}: BaseNodeData<NodeProps>) => {
+export const CircuitElementContextMenu = memo(({ id, data: {values, onDataChange}, type}: CircuitNode<NodeProps>) => {
     let contextMenuComponent = null;
 
     if (type === NodeType.Resistor && 'resistance' in values) {
-        contextMenuComponent = <ResistorContextMenu id={id} values={values} onValuesChange={onValuesChange} />;
+        contextMenuComponent = <ResistorContextMenu id={id} values={values} onValuesChange={onDataChange} />;
     } else if (type === NodeType.Bulb && 'power' in values && 'voltage' in values) {
-        contextMenuComponent = <BulbContextMenu id={id} values={values} onValuesChange={onValuesChange}/>;
+        contextMenuComponent = <BulbContextMenu id={id} values={values} onValuesChange={onDataChange}/>;
     } else if (type === NodeType.PowerSource && 'power' in values) {
-        contextMenuComponent = <PowerSourceContextMenu id={id} values={values} onValuesChange={onValuesChange}/>;
+        contextMenuComponent = <PowerSourceContextMenu id={id} values={values} onValuesChange={onDataChange}/>;
     } else if (type === NodeType.Switch && 'switchState' in values) {
-        contextMenuComponent = <SwitchContextMenu id={id} values={values} onValuesChange={onValuesChange}/>;
+        contextMenuComponent = <SwitchContextMenu id={id} values={values} onValuesChange={onDataChange}/>;
     }
 
     return contextMenuComponent;
@@ -104,7 +104,7 @@ export const CircuitElementContextMenu = memo(({ id, data: {values, onValuesChan
 
 
 interface ContextMenuProps {
-    node: BaseNodeData<NodeProps>,
+    node: CircuitNode<NodeProps>,
     top?: number,
     left?: number,
     right?: number,

@@ -4,15 +4,15 @@ import pause_icon from '../../assets/Icons/pause_icon.svg';
 import Image from "react-bootstrap/Image";
 import {useState} from "react";
 import './SimulationPanel.css';
-import {BaseNodeData, CircuitErrorsType, NodeProps, NodeType} from "../types.ts";
+import {CircuitNode, CircuitErrorsType, NodeProps, NodeType} from "../types.ts";
 import SuggestionDeleteErrors from "../Main/SuggestionDeleteErrors.tsx";
 
 
 interface SimulationPanelProps {
-    nodes: BaseNodeData<NodeProps>[];
+    nodes: CircuitNode<NodeProps>[];
     edges: Edge[];
     toggleAnimateEdges: (state: boolean) => void;
-    setErroredNodes: (node: BaseNodeData<NodeProps>[]) => void;
+    setErroredNodes: (node: CircuitNode<NodeProps>[]) => void;
     deleteErroredNodes: () => void;
 }
 
@@ -23,7 +23,7 @@ export default function SimulationPanel({nodes, edges, setErroredNodes, toggleAn
     const [simulationState, setSimulationState] = useState<SimulationState>('stopped');
     const [errors, setErrors] = useState<CircuitErrorsType[]>([]);
 
-    const filterCircuit = (nodes: BaseNodeData<NodeProps>[], edges: Edge[]): SimulationState => {
+    const filterCircuit = (nodes: CircuitNode<NodeProps>[], edges: Edge[]): SimulationState => {
 
         if (simulationState === 'running') {
             toggleAnimateEdges(false);
@@ -91,7 +91,7 @@ export default function SimulationPanel({nodes, edges, setErroredNodes, toggleAn
         console.log([filteredNodes, filteredEdges]);
 
         if (filteredNodes.length !== 0) {
-            setErroredNodes(filteredNodes as BaseNodeData<NodeProps>[]);
+            setErroredNodes(filteredNodes as CircuitNode<NodeProps>[]);
             const error: CircuitErrorsType = {
                 name: 'Рабочая область содержит невалидные элементы',
                 proposal_solution: 'Удалить эти элементы?',

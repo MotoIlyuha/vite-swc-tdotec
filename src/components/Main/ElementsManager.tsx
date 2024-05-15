@@ -1,5 +1,5 @@
 import Image from "react-bootstrap/Image";
-import {BaseNodeData, CircuitElementType, NodeProps} from "../types";
+import {CircuitNode, CircuitElementType, NodeProps} from "../types";
 
 import delete_icon from "../../assets/Icons/delete_icon.png";
 import arrow_icon from "../../assets/Icons/arrow_icon.png";
@@ -9,10 +9,10 @@ import HideButton from "../HideButton/HideButton.tsx";
 
 
 interface ElementsManagerProps {
-    nodes: BaseNodeData<NodeProps>[];
-    selectedNodes: BaseNodeData<NodeProps>[];
-    setSelectedNodes: (node: BaseNodeData<NodeProps>[]) => void;
-    erroredNodes: BaseNodeData<NodeProps>[]
+    nodes: CircuitNode<NodeProps>[];
+    selectedNodes: CircuitNode<NodeProps>[];
+    setSelectedNodes: (node: CircuitNode<NodeProps>[]) => void;
+    erroredNodes: CircuitNode<NodeProps>[]
     elements: CircuitElementType;
     onNodeDelete: (arg0: string) => void;
     marginTop?: number;
@@ -49,11 +49,11 @@ export default function ElementsManager({nodes, selectedNodes, setSelectedNodes,
     }, [nodes]);
 
 
-    const handleNodeClick = useCallback((node: BaseNodeData<NodeProps>) => {
+    const handleNodeClick = useCallback((node: CircuitNode<NodeProps>) => {
         setSelectedNodes([node]);
     }, [setSelectedNodes]);
 
-    const isSelected = useCallback((node: BaseNodeData<NodeProps>) =>
+    const isSelected = useCallback((node: CircuitNode<NodeProps>) =>
         selectedNodes.some(selectedNode => selectedNode.id === node.id),
     [selectedNodes]);
 

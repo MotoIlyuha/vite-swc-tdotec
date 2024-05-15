@@ -18,18 +18,24 @@ export type CircuitElementType = {
 
 export interface NodeDataProps<T> {
     values: T;
-    onValuesChange: (id: BaseNodeData<T>['id'], values: NodeDataProps<T>['values']) => void;
-    orientation: 'ver' | 'hor';
+    orientation?: 'ver' | 'hor';
+    polar?: 'pos' | 'neg';
+    onDataChange: (
+        id: CircuitNode<T>['id'],
+        values?: T,
+        orientation?: NodeDataProps<T>['orientation'],
+        polar?: NodeDataProps<T>['polar']
+    ) => void;
     selected?: boolean;
+    errored?: boolean;
 }
 
-export interface BaseNodeData<T> extends ReactFlowNode {
+export interface CircuitNode<T> extends ReactFlowNode {
     data: NodeDataProps<T>
-    type: NodeType.PowerSource | NodeType.Resistor | NodeType.Bulb | NodeType.Switch;
+    type: string;
 }
 
 export type NodeProps = ResistorNodeProps | PowerSourceNodeProps | BulbNodeProps | SwitchNodeProps;
-
 
 export type ResistorNodeProps = {
     resistance: number

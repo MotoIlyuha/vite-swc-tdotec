@@ -1,10 +1,10 @@
 import {createContext, FC, ReactNode, useContext, useState} from 'react';
-import {BaseNodeData, NodeProps} from "./types.ts";
+import {CircuitNode, NodeProps} from "./types.ts";
 import {Node} from "reactflow";
 
 interface SelectionContextType {
-    selectedNodes: BaseNodeData<NodeProps>[];
-    setSelectedNodes: (nodes: BaseNodeData<NodeProps>[]) => void;
+    selectedNodes: CircuitNode<NodeProps>[];
+    setSelectedNodes: (nodes: CircuitNode<NodeProps>[]) => void;
 }
 
 const SelectionContext = createContext<SelectionContextType>({
@@ -37,7 +37,7 @@ interface SelectionProviderProps {
 }
 
 export const SelectionProvider: FC<SelectionProviderProps> = ({children}) => {
-    const [selectedNodes, setSelectedNodes] = useState<BaseNodeData<NodeProps>[]>([]);
+    const [selectedNodes, setSelectedNodes] = useState<CircuitNode<NodeProps>[]>([]);
     const selectNodes = selectNode(() => setSelectedNodes(selectedNodes));
 
     return (

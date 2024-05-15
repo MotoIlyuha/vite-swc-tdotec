@@ -2,9 +2,8 @@ import {useEffect} from "react";
 import {
     NodeType,
     CircuitElementType,
-    BaseNodeData,
+    CircuitNode,
     NodeProps,
-    NodeDataProps,
     PowerSourceNodeProps,
     SwitchNodeProps, BulbNodeProps, ResistorNodeProps
 } from "./types";
@@ -58,69 +57,77 @@ export const DefaultValues = {
     }
 }
 
+// TODO: Реализовать функцию генерации id
+
 export const DefaultByType = (
-    type: NodeType,
-    orientation: NodeDataProps<NodeProps>["orientation"],
-    onChange: (id: string, event: NodeDataProps<NodeProps>["values"]) => void
+    type: NodeType
 ) => {
     let defaultValues;
-    let onValuesChange;
 
     switch (type) {
         case NodeType.PowerSource:
             defaultValues = DefaultValues.powerSource;
-            onValuesChange = (id: string, power: PowerSourceNodeProps) => onChange(id, power);
             break;
         case NodeType.Resistor:
             defaultValues = DefaultValues.resistor;
-            onValuesChange = (id: string, resistance: ResistorNodeProps) => onChange(id, resistance);
             break;
         case NodeType.Bulb:
             defaultValues = DefaultValues.bulb;
-            onValuesChange = (id: string, props: BulbNodeProps) => onChange(id, props);
             break;
         case NodeType.Switch:
             defaultValues = DefaultValues.switch;
-            onValuesChange = (id: string, switchState: SwitchNodeProps) => onChange(id, switchState);
             break;
         default:
             throw new Error(`Invalid NodeType: ${type}`);
     }
-    return {
-        values: defaultValues,
-        orientation: orientation,
-        onValuesChange: onValuesChange
-    } as NodeDataProps<NodeProps>;
+    return defaultValues;
 }
 
 export const useInitialSetup = (
-    setNodes: (nodes: BaseNodeData<NodeProps>[]) => void,
+    setNodes: (nodes: CircuitNode<NodeProps>[]) => void,
     setEdges: (edges: Edge[]) => void,
-    onChange: (id: string, event: NodeDataProps<NodeProps>['values']) => void
+    onChange: CircuitNode<NodeProps>['data']['onDataChange']
 ) => {
     useEffect(() => {
         setNodes([
             {
                 id: 'powerSource-1',
-                data: DefaultByType(NodeType.PowerSource, 'hor', onChange),
+                data: {
+                    values: DefaultByType(NodeType.PowerSource),
+                    orientation: 'hor',
+                    polar: 'pos',
+                    onDataChange: (id, values, orientation, polar) => onChange(id, values as PowerSourceNodeProps, orientation, polar)
+                },
                 position: {x: 140, y: -20},
                 type: NodeType.PowerSource
             },
             {
                 id: 'switch-1',
-                data: DefaultByType(NodeType.Switch, 'ver', onChange),
+                data: {
+                    values: DefaultByType(NodeType.Switch),
+                    orientation: 'ver',
+                    onDataChange: (id, values, orientation, polar) => onChange(id, values as SwitchNodeProps, orientation, polar)
+                },
                 position: {x: 240, y: 40},
                 type: NodeType.Switch
             },
             {
                 id: 'bulb-1',
-                data: DefaultByType(NodeType.Bulb, 'hor', onChange),
+                data: {
+                    values: DefaultByType(NodeType.Bulb),
+                    orientation: 'hor',
+                    onDataChange: (id, values, orientation, polar) => onChange(id, values as BulbNodeProps, orientation, polar)
+                },
                 position: {x: 140, y: 140},
                 type: NodeType.Bulb
             },
             {
                 id: 'resistor-1',
-                data: DefaultByType(NodeType.Resistor, 'ver', onChange),
+                data: {
+                    values: DefaultByType(NodeType.Resistor),
+                    orientation: 'ver',
+                    onDataChange: (id, values, orientation, polar) => onChange(id, values as ResistorNodeProps, orientation, polar)
+                },
                 position: {x: 80, y: 40},
                 type: NodeType.Resistor
             },

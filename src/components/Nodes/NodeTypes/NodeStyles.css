@@ -29,11 +29,7 @@
     height: 4px;
 }
 
-.node:hover .rotate-button {
-    opacity: 1;
-}
-
-.rotate-button {
+.rotate-button, .reflect-button {
     position: absolute;
     top: 0;
     right: 0;
@@ -44,10 +40,18 @@
     opacity: 0;
 }
 
-.rotate-button img {
+.reflect-button {
+    margin-right: 12px;
+}
+
+.rotate-button img, .reflect-button img {
     position: absolute;
     top: 0;
     right: 0;
     width: 12px;
     height: 12px;
+}
+
+.node:hover .rotate-button, .node:hover .reflect-button {
+    opacity: 1;
 }
