@@ -61,7 +61,7 @@ export const DefaultValues = {
 export const DefaultByType = (
     type: NodeType,
     orientation: NodeDataProps<NodeProps>["orientation"],
-    onChange: NodeDataProps<NodeProps>["onValuesChange"]
+    onChange: (id: string, event: NodeDataProps<NodeProps>["values"]) => void
 ) => {
     let defaultValues;
     let onValuesChange;
@@ -69,19 +69,19 @@ export const DefaultByType = (
     switch (type) {
         case NodeType.PowerSource:
             defaultValues = DefaultValues.powerSource;
-            onValuesChange = (id: string, power: PowerSourceNodeProps, orientation?: NodeDataProps<NodeProps>["orientation"]) => onChange(id, power, orientation);
+            onValuesChange = (id: string, power: PowerSourceNodeProps) => onChange(id, power);
             break;
         case NodeType.Resistor:
             defaultValues = DefaultValues.resistor;
-            onValuesChange = (id: string, resistance: ResistorNodeProps, orientation?: NodeDataProps<NodeProps>["orientation"]) => onChange(id, resistance, orientation);
+            onValuesChange = (id: string, resistance: ResistorNodeProps) => onChange(id, resistance);
             break;
-            case NodeType.Bulb:
+        case NodeType.Bulb:
             defaultValues = DefaultValues.bulb;
-            onValuesChange = (id: string, props: BulbNodeProps, orientation?: NodeDataProps<NodeProps>["orientation"]) => onChange(id, props, orientation);
+            onValuesChange = (id: string, props: BulbNodeProps) => onChange(id, props);
             break;
         case NodeType.Switch:
             defaultValues = DefaultValues.switch;
-            onValuesChange = (id: string, switchState: SwitchNodeProps, orientation?: NodeDataProps<NodeProps>["orientation"]) => onChange(id, switchState, orientation);
+            onValuesChange = (id: string, switchState: SwitchNodeProps) => onChange(id, switchState);
             break;
         default:
             throw new Error(`Invalid NodeType: ${type}`);

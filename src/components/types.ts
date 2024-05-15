@@ -18,12 +18,9 @@ export type CircuitElementType = {
 
 export interface NodeDataProps<T> {
     values: T;
-    orientation?: 'ver' | 'hor';
-    onValuesChange: (
-        id: BaseNodeData<NodeProps>['id'],
-        values: NodeDataProps<T>['values'],
-        orientation?: NodeDataProps<NodeProps>["orientation"]
-    ) => void;
+    onValuesChange: (id: BaseNodeData<T>['id'], values: NodeDataProps<T>['values']) => void;
+    orientation: 'ver' | 'hor';
+    selected?: boolean;
 }
 
 export interface BaseNodeData<T> extends ReactFlowNode {
