@@ -1,0 +1,25 @@
+<svg width="40" height="40" xmlns="http://www.w3.org/2000/svg">
+ <!-- Created with SVG Editor - http://github.com/mzalive/SVG Editor/ -->
+
+ <g>
+  <title>background</title>
+  <rect x="-1" y="-1" width="42" height="42" id="canvas_background" fill="none"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <line stroke="#000" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_9" y2="28.90865" x2="13.29569" y1="14.41303" x1="13.29569" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" fill="none"/>
+  <line stroke="#000" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_15" y2="16.74826" x2="33.89397" y1="11.75074" x1="33.89397" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" fill="none"/>
+  <line stroke="#000" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_18" y2="14.56456" x2="3.37819" y1="14.56456" x1="8.37571" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" fill="none"/>
+  <line stroke="#000" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_1" y2="21.96149" x2="1.33206" y1="21.96149" x1="38.47825" stroke-width="1.5" fill="none"/>
+  <line stroke="#000" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_2" y2="14.24958" x2="31.39513" y1="14.24958" x1="36.39265" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" fill="none"/>
+  <path stroke="#000" id="svg_3" d="m28.25326,28.77801l-14.34625,-6.81659l14.34625,-6.81659l0,13.63318z" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" fill="none"/>
+  <g stroke="null" transform="matrix(0.499599 -0.499599 0.499599 0.499599 -1.42698 15.8127)" id="svg_7">
+   <path stroke="#000" id="svg_4" d="m25.35656,17.06286l1.28205,-2.24359l1.28205,2.24359l-2.5641,0z" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" fill="none"/>
+   <line stroke="#000" stroke-linecap="null" stroke-linejoin="null" id="svg_5" y2="22.77089" x2="26.65597" y1="17.75417" x1="26.65597" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" fill="none"/>
+  </g>
+  <g stroke="null" transform="matrix(0.499599 -0.499599 0.499599 0.499599 -3.2393 13.1702)" id="svg_11">
+   <path stroke="#000" id="svg_8" d="m19.55946,18.28917l1.28205,-2.24359l1.28205,2.24359l-2.5641,0z" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" fill="none"/>
+   <line stroke="#000" stroke-linecap="null" stroke-linejoin="null" id="svg_10" y2="23.9972" x2="20.85887" y1="18.98048" x1="20.85887" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" fill="none"/>
+  </g>
+ </g>
+</svg>

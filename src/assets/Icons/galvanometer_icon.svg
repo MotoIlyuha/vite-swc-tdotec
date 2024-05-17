@@ -1,0 +1,16 @@
+<svg width="40" height="40" xmlns="http://www.w3.org/2000/svg">
+ <!-- Created with SVG Editor - http://github.com/mzalive/SVG Editor/ -->
+
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="42" width="42" y="-1" x="-1"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <line stroke="#000" fill="none" stroke-width="1.5" stroke-opacity="null" fill-opacity="null" x1="26.12553" y1="20" x2="38.70076" y2="20" id="svg_3" stroke-linejoin="undefined" stroke-linecap="undefined"/>
+  <line stroke="#000" fill="none" stroke-width="1.5" stroke-opacity="null" fill-opacity="null" x1="1.29924" y1="20" x2="13.87447" y2="20" id="svg_4" stroke-linejoin="undefined" stroke-linecap="undefined"/>
+  <ellipse stroke="#000" fill="none" stroke-width="1.5" stroke-opacity="null" fill-opacity="null" cx="19.95817" cy="20" id="svg_9" rx="5.53028" ry="5.53028"/>
+  <path stroke="#000" fill="#000000" stroke-width="0.5" stroke-opacity="null" fill-opacity="null" d="m18.56902,18.83493l1.38914,-1.94481l1.38914,1.94481l-2.77829,0z" id="svg_6"/>
+  <line stroke="#000" fill="none" stroke-opacity="null" fill-opacity="null" x1="19.95817" y1="18.32469" x2="19.95817" y2="23.66942" id="svg_7" stroke-linejoin="null" stroke-linecap="null"/>
+ </g>
+</svg>

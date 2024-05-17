@@ -1,0 +1,20 @@
+<svg width="80" height="40" xmlns="http://www.w3.org/2000/svg">
+ <!-- Created with SVG Editor - http://github.com/mzalive/SVG Editor/ -->
+
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="402" width="582" y="-1" x="-1"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <line stroke="#000" fill="none" stroke-width="1.5" x1="34.83061" y1="19.999999" x2="0.750001" y2="19.999999" id="svg_4" stroke-linejoin="undefined" stroke-linecap="undefined"/>
+  <line fill="none" stroke-width="1.5" stroke-opacity="null" fill-opacity="null" x1="37.787002" y1="9.316282" x2="37.787002" y2="29.832652" id="svg_6" stroke-linejoin="undefined" stroke-linecap="undefined" stroke="#000"/>
+  <line fill="none" stroke-width="1.5" stroke-opacity="null" fill-opacity="null" x1="42.328224" y1="9.316283" x2="42.328224" y2="29.832653" id="svg_9" stroke-linejoin="undefined" stroke-linecap="undefined" stroke="#000"/>
+  <line fill="none" stroke="#000" stroke-width="1.5" stroke-opacity="null" fill-opacity="null" x1="52.306958" y1="7.108978" x2="52.306958" y2="14.182217" id="svg_15" stroke-linejoin="undefined" stroke-linecap="undefined"/>
+  <line fill="none" stroke="#000" stroke-width="1.5" stroke-opacity="null" fill-opacity="null" x1="27.814726" y1="7.10898" x2="27.814726" y2="14.182219" id="svg_18" stroke-linejoin="undefined" stroke-linecap="undefined" transform="rotate(90 27.815067291259766,10.645597457885746) "/>
+  <line stroke="#000" fill="none" stroke-width="1.5" x1="79.250003" y1="20.000001" x2="45.169394" y2="20.000001" id="svg_1" stroke-linejoin="undefined" stroke-linecap="undefined"/>
+  <line fill="none" stroke="#000" stroke-width="1.5" stroke-opacity="null" fill-opacity="null" x1="52.30696" y1="7.10898" x2="52.30696" y2="14.182219" id="svg_2" stroke-linejoin="undefined" stroke-linecap="undefined" transform="rotate(90 52.30696105957031,10.64559936523438) "/>
+   <text x="65" y="15" rotate="90" dy="-10" stroke="#fc0202" text-anchor="start" font-size="16" id="svg_3" fill="#ff0000">+</text>
+  <text x="5" y="15" rotate="90" dy="-10" stroke="#007fff" text-anchor="start" font-size="16" id="svg_5" fill="#007fff">−</text>
+ </g>
+</svg>

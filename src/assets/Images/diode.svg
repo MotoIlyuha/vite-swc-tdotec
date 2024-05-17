@@ -1,0 +1,25 @@
+<svg width="80" height="40" xmlns="http://www.w3.org/2000/svg">
+ <!-- Created with SVG Editor - http://github.com/mzalive/SVG Editor/ -->
+
+ <g>
+  <title>background</title>
+  <rect x="-1" y="-1" width="82" height="42" id="canvas_background" fill="none"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <line stroke="#000" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_9" y2="29.832653" x2="30.511061" y1="9.316283" x1="30.511061" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" fill="none"/>
+  <line stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_15" y2="12.62146" x2="59.664814" y1="5.548221" x1="59.664814" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" stroke="#000" fill="none"/>
+  <line transform="rotate(90 20.010938644409183,9.530772209167482) " stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_18" y2="13.067392" x2="20.010939" y1="5.994153" x1="20.010939" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" stroke="#000" fill="none"/>
+  <line stroke="#000" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_1" y2="19.999999" x2="1.332058" y1="19.999999" x1="78.667946" stroke-width="1.5" fill="none"/>
+  <line transform="rotate(90 59.66489028930664,9.084841728210455) " stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_2" y2="12.621462" x2="59.664816" y1="5.548223" x1="59.664816" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" stroke="#000" fill="none"/>
+  <path stroke="#000" transform="rotate(-90 41.52887344360352,20.000001907348636) " id="svg_3" d="m31.881021,30.152484l9.647853,-20.304967l9.647853,20.304967l-19.295705,0z" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" fill="none"/>
+  <g transform="rotate(-45 41.7999267578125,5.751062393188472) " id="svg_7">
+   <path stroke="#000" id="svg_4" d="m40.517764,4.018838l1.28205,-2.243588l1.28205,2.243588l-2.5641,0z" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" fill="none"/>
+   <line stroke-linecap="null" stroke-linejoin="null" id="svg_5" y2="9.726872" x2="41.817167" y1="4.710151" x1="41.817167" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" stroke="#000" fill="none"/>
+  </g>
+  <g transform="rotate(-45 36.002723693847656,6.977372169494628) " id="svg_11">
+   <path stroke="#000" id="svg_8" d="m34.720664,5.245151l1.28205,-2.24359l1.28205,2.24359l-2.5641,0z" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" fill="none"/>
+   <line stroke-linecap="null" stroke-linejoin="null" id="svg_10" y2="10.953181" x2="36.020068" y1="5.936461" x1="36.020068" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" stroke="#000" fill="none"/>
+  </g>
+ </g>
+</svg>

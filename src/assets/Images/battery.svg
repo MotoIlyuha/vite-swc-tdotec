@@ -2,17 +2,17 @@
  <!-- Created with SVG Editor - http://github.com/mzalive/SVG Editor/ -->
  <g>
   <title>Layer 1</title>
-  <line stroke="#000" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_4" y2="20.000001" x2="57.83367" y1="20.000001" x1="79.250002" stroke-width="1.5" fill="none"/>
-  <line stroke="#000" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_5" y2="20.38223" x2="0.75" y1="20.38223" x1="22.166332" stroke-width="1.5" fill="none"/>
-  <line stroke="#000" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_6" y2="30.051575" x2="55.289253" y1="9.535205" x1="55.289253" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" fill="none"/>
-  <line stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_8" y2="26.02265" x2="51.157022" y1="13.564129" x1="51.157022" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" stroke="#000" fill="none"/>
-  <line stroke="#000" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_9" y2="30.258186" x2="29.049589" y1="9.741816" x1="29.049589" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" fill="none"/>
-  <line stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_10" y2="26.22926" x2="24.917358" y1="13.770739" x1="24.917358" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" stroke="#000" fill="none"/>
-  <line stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_11" y2="20" x2="48.858996" y1="20" x1="44.442146" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" stroke="#000" fill="none"/>
-  <line stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_12" y2="20" x2="35.635858" y1="20" x1="31.219008" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" stroke="#000" fill="none"/>
-  <line stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_13" y2="20" x2="42.454039" y1="20" x1="38.037189" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" stroke="#000" fill="none"/>
-  <line stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_15" y2="35.926541" x2="63.657017" y1="28.853302" x1="63.657017" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" stroke="#000" fill="none"/>
-  <line transform="rotate(90 17.16942977905273,33.629596710205085) " stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_17" y2="37.166213" x2="17.169426" y1="30.092973" x1="17.169426" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" stroke="#000" fill="none"/>
-  <line transform="rotate(90 63.657020568847656,32.38992309570313) " stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_18" y2="35.926543" x2="63.657019" y1="28.853304" x1="63.657019" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" stroke="#000" fill="none"/>
+  <line stroke="#000" id="svg_4" y2="20.000001" x2="57.83367" y1="20.000001" x1="79.250002" stroke-width="1.5" fill="none"/>
+  <line stroke="#000" id="svg_5" y2="20.38223" x2="0.75" y1="20.38223" x1="22.166332" stroke-width="1.5" fill="none"/>
+  <line stroke="#000" id="svg_6" y2="30.051575" x2="55.289253" y1="9.535205" x1="55.289253" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" fill="none"/>
+  <line id="svg_8" y2="26.02265" x2="51.157022" y1="13.564129" x1="51.157022" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" stroke="#000" fill="none"/>
+  <line stroke="#000" id="svg_9" y2="30.258186" x2="29.049589" y1="9.741816" x1="29.049589" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" fill="none"/>
+  <line id="svg_10" y2="26.22926" x2="24.917358" y1="13.770739" x1="24.917358" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" stroke="#000" fill="none"/>
+  <line id="svg_11" y2="20" x2="48.858996" y1="20" x1="44.442146" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" stroke="#000" fill="none"/>
+  <line id="svg_12" y2="20" x2="35.635858" y1="20" x1="31.219008" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" stroke="#000" fill="none"/>
+  <line id="svg_13" y2="20" x2="42.454039" y1="20" x1="38.037189" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" stroke="#000" fill="none"/>
+  <line id="svg_15" y2="35.926541" x2="63.657017" y1="28.853302" x1="63.657017" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" stroke="#000" fill="none"/>
+  <line transform="rotate(90 17.16942977905273,33.629596710205085) " id="svg_17" y2="37.166213" x2="17.169426" y1="30.092973" x1="17.169426" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" stroke="#000" fill="none"/>
+  <line transform="rotate(90 63.657020568847656,32.38992309570313) " id="svg_18" y2="35.926543" x2="63.657019" y1="28.853304" x1="63.657019" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" stroke="#000" fill="none"/>
  </g>
 </svg>

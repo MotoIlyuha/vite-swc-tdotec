@@ -1,0 +1,22 @@
+<svg width="40" height="40" xmlns="http://www.w3.org/2000/svg">
+ <!-- Created with SVG Editor - http://github.com/mzalive/SVG Editor/ -->
+
+ <g>
+  <title>background</title>
+  <rect x="-1" y="-1" width="42" height="42" id="canvas_background" fill="none"/>
+  <g id="canvasGrid" display="none">
+   <rect id="svg_1" width="100%" height="100%" x="0" y="0" stroke-width="0" fill="url(#gridpattern)"/>
+  </g>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <line fill="none" stroke-width="1.5" x1="9.19996" y1="20" x2="25.921812" y2="20" id="svg_4" stroke-linejoin="undefined" stroke-linecap="undefined" transform="rotate(90 17.56088638305664,20.000001907348636) " stroke="#000"/>
+  <line fill="none" stroke-width="1.5" x1="23.725163" y1="20" x2="38.625822" y2="20" id="svg_6" stroke-linejoin="undefined" stroke-linecap="undefined" stroke="#000"/>
+  <line fill="none" stroke-width="1.5" x1="0.749999" y1="20" x2="14.988407" y2="20" id="svg_7" stroke-linejoin="undefined" stroke-linecap="undefined" stroke="#000"/>
+  <line fill="none" stroke-opacity="null" fill-opacity="null" x1="28.198639" y1="22.438565" x2="28.198639" y2="28.249805" id="svg_10" stroke-linejoin="null" stroke-linecap="null" transform="rotate(90 28.198640823364258,25.344182968139652) " stroke="#000"/>
+  <line fill="none" stroke="#000" stroke-opacity="null" fill-opacity="null" x1="52.533107" y1="3.551322" x2="53.029796" y2="3.551322" id="svg_12" stroke-linejoin="null" stroke-linecap="null"/>
+  <line fill="none" stroke-opacity="null" fill-opacity="null" x1="10.976829" y1="22.267555" x2="10.976829" y2="28.078795" id="svg_13" stroke-linejoin="null" stroke-linecap="null" transform="rotate(90 10.976829528808592,25.17317390441895) " stroke="#000"/>
+  <line fill="none" stroke-opacity="null" fill-opacity="null" x1="28.198639" y1="22.438566" x2="28.198639" y2="28.249806" id="svg_14" stroke-linejoin="null" stroke-linecap="null" transform="rotate(180 28.198638916015625,25.344186782836914) " stroke="#000"/>
+  <line fill="none" stroke-width="1.5" x1="12.632452" y1="20.000001" x2="29.354304" y2="20.000001" id="svg_2" stroke-linejoin="undefined" stroke-linecap="undefined" transform="rotate(90 20.993377685546875,20.000001907348636) " stroke="#000"/>
+ </g>
+</svg>

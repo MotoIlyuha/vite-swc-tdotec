@@ -14,12 +14,13 @@ import HideButton from "../HideButton/HideButton.tsx";
 import {getNodesBounds, getViewportForBounds, useReactFlow} from "reactflow";
 import {toPng} from 'html-to-image';
 
+import {theme} from "../types.ts";
 import logo from './icons/logo.png'
 import ru_icon from './icons/russia.png'
 import usa_icon from './icons/usa.png'
 import './Header.css';
 
-function Header({setMarginTop}: { setMarginTop: (marginTop: number) => void }) {
+function Header({setMarginTop, setThemeMode}: { setMarginTop: (marginTop: number) => void, setThemeMode: (themeMode: theme) => void }) {
     const rfInstance = useReactFlow();
     const [topValue, setTopValue] = useState(0);
     const [fileName, setFileName] = useState('Новая схема');
@@ -154,6 +155,20 @@ function Header({setMarginTop}: { setMarginTop: (marginTop: number) => void }) {
                             <Nav.Item>
                                 <Button className="text-nowrap" variant="primary" onClick={onRestore}>Загрузить
                                     файл</Button>
+                            </Nav.Item>
+                            <Nav.Item>
+                                <Dropdown onSelect={(e) => e && setThemeMode(e as theme)}>
+                                    <Dropdown.Toggle variant="success" id="dropdown-basic">
+                                        Выберите тему
+                                    </Dropdown.Toggle>
+
+                                    <Dropdown.Menu>
+                                        <Dropdown.Item eventKey='light'>Светлая</Dropdown.Item>
+                                        <Dropdown.Item eventKey='dark'>Тёмная</Dropdown.Item>
+                                        <Dropdown.Item eventKey='light_blueprint'>Светлый чертёж</Dropdown.Item>
+                                        <Dropdown.Item eventKey='dark_blueprint'>Тёмный чертёж</Dropdown.Item>
+                                    </Dropdown.Menu>
+                                </Dropdown>
                             </Nav.Item>
                             <Nav.Item>
                                 <ToggleButtonGroup id={"lang"} type="radio" name="lang" defaultValue="ru">

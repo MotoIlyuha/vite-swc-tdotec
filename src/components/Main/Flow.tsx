@@ -1,40 +1,20 @@
 import React, {useCallback, useMemo, useRef, useState} from 'react';
-import ReactFlow, {
-    addEdge,
-    applyEdgeChanges,
-    applyNodeChanges,
-    Background,
-    Controls,
-    Panel,
-    BackgroundVariant,
-    ConnectionLineType,
-    ConnectionMode,
-    DefaultEdgeOptions,
-    Edge,
-    EdgeTypes,
-    FitViewOptions,
-    Node,
-    NodeTypes,
-    OnEdgesChange,
-    OnNodesChange,
-    ReactFlowInstance,
-    Connection, OnSelectionChangeParams,
-} from 'reactflow';
-
+import ReactFlow, {addEdge, applyEdgeChanges, applyNodeChanges, Background, Controls, Panel, BackgroundVariant,
+    ConnectionLineType, ConnectionMode, DefaultEdgeOptions, Edge, EdgeTypes, FitViewOptions, Node,
+    NodeTypes, OnEdgesChange, OnNodesChange, ReactFlowInstance, Connection, OnSelectionChangeParams} from 'reactflow';
+// import {ThemeProvider} from "styled-components";
 import 'reactflow/dist/style.css';
 
-import {BulbNode, PowerSourceNode, ResistorNode, SwitchNode} from '../Nodes/NodeTypes/NodeTypes';
+import {
+    AmmeterNode, BulbNode, CapacitorNode, DiodeNode, GalvanometerNode, OhmmeterNode,
+    PolarCapacitorNode, PowerSourceNode, ResistorNode, SwitchNode, VoltMeterNode
+} from '../Nodes/NodeTypes/NodeTypes';
 import WireEdge from '../Nodes/EdgeTypes/WireEdge.tsx';
 import ContextMenu from "../Nodes/ContextMenu/ContextMenu.tsx";
 import AddElementMenu from "./AddElementMenu.tsx";
 import ElementsManager from "./ElementsManager.tsx";
-import {
-    CircuitNode,
-    NodeDataProps,
-    NodeProps,
-    NodeType,
-} from "../types";
-import {DefaultByType, elements, useInitialSetup} from "../defaults.ts";
+import {CircuitNode, NodeDataProps, NodeProps, NodeType, theme,} from "../types";
+import {DefaultValues, elements, useInitialSetup} from "../defaults.ts";
 import SimulationPanel from "../Simulation/SimulationPanel.tsx";
 import Header from "../Header/Header.tsx";
 
@@ -59,7 +39,28 @@ const nodeTypes: NodeTypes = {
     bulb: BulbNode,
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    switch: SwitchNode
+    switch: SwitchNode,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    capacitor: CapacitorNode,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    polarCapacitor: PolarCapacitorNode,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    diode: DiodeNode,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    ammeter: AmmeterNode,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    voltmeter: VoltMeterNode,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    ohmmeter: OhmmeterNode,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    galvanometer: GalvanometerNode
 };
 
 const edgeTypes: EdgeTypes = {
@@ -87,13 +88,14 @@ interface MenuProps {
     bottom?: number;
 }
 
-function Flow() {
+export default function Flow() {
     const [nodes, setNodes] = useState<Node[]>([]);
     const [edges, setEdges] = useState<Edge[]>([]);
     const [animateEdges, setAnimateEdges] = useState(false);
     const [selectedNodes, setSelectedNodes] = useState<Node[]>([]);
     const [erroredNodes, setErroredNodes] = useState<Node[]>([]);
     const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
+    const [themeMode, setThemeMode] = useState<theme>('light');
     const [menu, setMenu] = useState<MenuProps | null>(null);
     const ref = useRef<HTMLDivElement>(null);
 
@@ -195,7 +197,7 @@ function Flow() {
             const newNode: CircuitNode<NodeProps> = {
                 id: getId(type as NodeType),
                 data: {
-                    values: DefaultByType(type as NodeType),
+                    values: DefaultValues[type as NodeType],
                     orientation: 'hor',
                     polar: 'pos',
                     onDataChange: onDataChange as NodeDataProps<NodeProps>['onDataChange'],
@@ -282,7 +284,7 @@ function Flow() {
 
             <Panel position='top-left'>
 
-                <Header setMarginTop={setElementsManagerMarginTop}/>
+                <Header setMarginTop={setElementsManagerMarginTop} setThemeMode={setThemeMode}/>
                 <ElementsManager nodes={nodes as CircuitNode<NodeProps>[]} elements={elements}
                                  erroredNodes={erroredNodes as CircuitNode<NodeProps>[]}
                                  selectedNodes={selectedNodes as CircuitNode<NodeProps>[]}
@@ -321,5 +323,3 @@ function Flow() {
         </ReactFlow>
     );
 }
-
-export default Flow;

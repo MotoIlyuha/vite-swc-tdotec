@@ -58,12 +58,12 @@ function BulbContextMenu ({id, values: {power, voltage}, onValuesChange}: Circui
     </>;
 }
 
-function PowerSourceContextMenu({id, values: {power}, onValuesChange}: CircuitElementContextMenuProps<PowerSourceNodeProps>) {
+function PowerSourceContextMenu({id, values: {voltage}, onValuesChange}: CircuitElementContextMenuProps<PowerSourceNodeProps>) {
     return <InputGroup>
         <InputGroup.Text>Мощность</InputGroup.Text>
-        <Form.Control className='power' aria-label="Power" type='number' defaultValue={power} step='0.1'
+        <Form.Control className='power' aria-label="Power" type='number' defaultValue={voltage} step='0.1'
                       min='0' style={{width: '72px'}} onChange={(e) => onValuesChange ? onValuesChange(id,
-            {power: Number(e.target.value)}) : null}/>
+            {voltage: Number(e.target.value)}) : null}/>
         <InputGroup.Text>Вт</InputGroup.Text>
     </InputGroup>;
 }

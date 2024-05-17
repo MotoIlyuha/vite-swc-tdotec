@@ -1,20 +1,27 @@
 import {useEffect} from "react";
 import {
-    NodeType,
+    BulbNodeProps,
     CircuitElementType,
     CircuitNode,
     NodeProps,
+    NodeType,
     PowerSourceNodeProps,
-    SwitchNodeProps, BulbNodeProps, ResistorNodeProps
+    ResistorNodeProps,
+    SwitchNodeProps
 } from "./types";
 
 
 import resistor_img from "../assets/Icons/resistor_icon.svg";
 import battery_img from "../assets/Icons/battery_icon.svg";
-import lamb_on_img from "../assets/Icons/lamb_on_icon.svg";
 import lamb_off_img from "../assets/Icons/lamb_off_icon.svg";
-import switcher_on_img from "../assets/Icons/switcher_on_icon.svg";
 import switcher_off_img from "../assets/Icons/switcher_off_icon.svg";
+import capacitor_img from "../assets/Icons/capacitor_icon.svg";
+import polar_capacitor_img from "../assets/Icons/polar_capacitor_icon.svg";
+import diode_img from "../assets/Icons/diode_icon.svg"
+import ammeter_img from "../assets/Icons/ammeter_icon.svg"
+import ohmmeter_img from "../assets/Icons/ohmmeter_icon.svg"
+import voltmeter_img from "../assets/Icons/voltmeter_icon.svg"
+import galvanometer_img from "../assets/Icons/galvanometer_icon.svg"
 import {Edge} from "reactflow";
 
 export const elements: CircuitElementType = {
@@ -25,24 +32,47 @@ export const elements: CircuitElementType = {
     bulb: {
         'name': 'Лампа',
         'icon': lamb_off_img,
-        'on_img': lamb_on_img,
-        'off_img': lamb_off_img,
     },
     switch: {
         'name': 'Переключатель',
         'icon': switcher_off_img,
-        'on_img': switcher_on_img,
-        'off_img': switcher_off_img
     },
     powerSource: {
         'name': 'Аккумулятор',
         'icon': battery_img,
     },
+    capacitor: {
+        'name': 'Конденсатор',
+        'icon': capacitor_img,
+    },
+    polarCapacitor: {
+        'name': 'Полярный конденсатор',
+        'icon': polar_capacitor_img
+    },
+    diode: {
+        'name': 'Светодиод',
+        'icon': diode_img
+    },
+    voltmeter: {
+        'name': 'Вольтметр',
+        'icon': voltmeter_img
+    },
+    ammeter: {
+        'name': 'Амперметр',
+        'icon': ammeter_img
+    },
+    ohmmeter: {
+        'name': 'Омметр',
+        'icon': ohmmeter_img
+    },
+    galvanometer: {
+        'name': 'Гальванометр',
+        'icon': galvanometer_img
+    }
 }
 
 export const DefaultValues = {
     bulb: {
-        brightness: 0,
         power: 0.03,
         voltage: 1.5
     },
@@ -50,37 +80,36 @@ export const DefaultValues = {
         resistance: 3
     },
     powerSource: {
-        power: 6
+        voltage: 6
+    },
+    capacitor: {
+        capacitance: 1
+    },
+    polarCapacitor: {
+        capacitance: 1
+    },
+    diode: {
+        waveLength: 530,
+        voltage: 2,
+        current: 0.02
     },
     switch: {
         switchState: false
+    },
+    ammeter: {
+        current: 0
+    },
+    voltmeter: {
+        voltage: 0
+    },
+    ohmmeter: {
+        resistance: 0
+    },
+    galvanometer: {
+        voltage: 0,
+        current: 0,
+        resistance: 0
     }
-}
-
-// TODO: Реализовать функцию генерации id
-
-export const DefaultByType = (
-    type: NodeType
-) => {
-    let defaultValues;
-
-    switch (type) {
-        case NodeType.PowerSource:
-            defaultValues = DefaultValues.powerSource;
-            break;
-        case NodeType.Resistor:
-            defaultValues = DefaultValues.resistor;
-            break;
-        case NodeType.Bulb:
-            defaultValues = DefaultValues.bulb;
-            break;
-        case NodeType.Switch:
-            defaultValues = DefaultValues.switch;
-            break;
-        default:
-            throw new Error(`Invalid NodeType: ${type}`);
-    }
-    return defaultValues;
 }
 
 export const useInitialSetup = (
@@ -93,7 +122,7 @@ export const useInitialSetup = (
             {
                 id: 'powerSource-1',
                 data: {
-                    values: DefaultByType(NodeType.PowerSource),
+                    values: DefaultValues.powerSource,
                     orientation: 'hor',
                     polar: 'pos',
                     onDataChange: (id, values, orientation, polar) => onChange(id, values as PowerSourceNodeProps, orientation, polar)
@@ -104,7 +133,7 @@ export const useInitialSetup = (
             {
                 id: 'switch-1',
                 data: {
-                    values: DefaultByType(NodeType.Switch),
+                    values: DefaultValues.switch,
                     orientation: 'ver',
                     onDataChange: (id, values, orientation, polar) => onChange(id, values as SwitchNodeProps, orientation, polar)
                 },
@@ -114,7 +143,7 @@ export const useInitialSetup = (
             {
                 id: 'bulb-1',
                 data: {
-                    values: DefaultByType(NodeType.Bulb),
+                    values: DefaultValues.bulb,
                     orientation: 'hor',
                     onDataChange: (id, values, orientation, polar) => onChange(id, values as BulbNodeProps, orientation, polar)
                 },
@@ -124,7 +153,7 @@ export const useInitialSetup = (
             {
                 id: 'resistor-1',
                 data: {
-                    values: DefaultByType(NodeType.Resistor),
+                    values: DefaultValues.resistor,
                     orientation: 'ver',
                     onDataChange: (id, values, orientation, polar) => onChange(id, values as ResistorNodeProps, orientation, polar)
                 },
