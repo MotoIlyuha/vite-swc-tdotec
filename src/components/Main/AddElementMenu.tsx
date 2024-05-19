@@ -2,7 +2,6 @@ import Image from "react-bootstrap/Image";
 import {DragEvent, useState} from "react";
 import './style.css';
 import {CircuitElementType, NodeType} from "../types.ts";
-import HideButton from "../HideButton/HideButton.tsx";
 
 
 const onDragStart = (event: DragEvent, nodeType: NodeType) => {
@@ -12,29 +11,29 @@ const onDragStart = (event: DragEvent, nodeType: NodeType) => {
     }
 };
 
-export default function AddElementMenu({elements}: { elements: CircuitElementType }) {
+export default function AddElementMenu({elements, uniquePS}: { elements: CircuitElementType, uniquePS: () => boolean }) {
 
-    const [showMenu, setShowMenu] = useState(true);
-    const [hoveredElement, setHoveredElement] = useState('Наведите курсор на элемент');
+    const [hoveredElement, setHoveredElement] = useState('');
+
+    const isEnabled = (node_type: NodeType) => {
+        if (node_type === NodeType.PowerSource)
+            return uniquePS();
+        else return true;
+    }
 
     return (
-        <div className='add-element-menu' style={{
-            width: 340,
-            maxHeight: 180,
-            position: 'absolute',
-            top: showMenu ? '-180px' : '0',
-            transition: 'all 0.3s ease',
-        }}>
+        <div className='add-element-menu'>
             <div>
                 <span>Основные элементы</span>
-                <div className='add-menu main-elements'>
+                <div className='add-menu main-elements' draggable={false}>
                     {Object.values(NodeType).map((node_type: NodeType) => (
                         !node_type.includes('meter') ?
-                        <div key={elements[node_type].name} className={'add-menu-element'}
+                        <div key={elements[node_type].name} className={'add-menu-element ' + (isEnabled(node_type) ? '' : 'disabled')}
                              onDragStart={(event) => onDragStart(event, node_type)}
                              onMouseEnter={() => setHoveredElement(elements[node_type].name)}
-                             onMouseLeave={() => setHoveredElement('Наведите курсор на элемент')} draggable>
-                            <Image src={elements[node_type].icon}/>
+                             onMouseLeave={() => setHoveredElement('')}
+                             draggable={isEnabled(node_type)}>
+                            <Image src={elements[node_type].icon} draggable={false}/>
                         </div> : null
                     ))}
                 </div>
@@ -45,14 +44,17 @@ export default function AddElementMenu({elements}: { elements: CircuitElementTyp
                         <div key={elements[node_type].name} className={'add-menu-element'}
                              onDragStart={(event) => onDragStart(event, node_type)}
                              onMouseEnter={() => setHoveredElement(elements[node_type].name)}
-                             onMouseLeave={() => setHoveredElement('Наведите курсор на элемент')} draggable>
+                             onMouseLeave={() => setHoveredElement('')} draggable>
                             <Image src={elements[node_type].icon}/>
                         </div> : null
                     ))}
                 </div>
+                <div className='element-tooltip' style={{
+                    display: hoveredElement ? 'block' : 'none',
+                }}>
+                    {hoveredElement}
+                </div>
             </div>
-            <div className='name'>{hoveredElement}</div>
-            <HideButton orientation='top' position={{x: 32, y: -16}} handleClick={() => setShowMenu(!showMenu)}/>
         </div>
     )
 }

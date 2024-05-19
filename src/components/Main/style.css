@@ -48,13 +48,18 @@ body {
 
 .add-menu {
     display: flex;
+    flex-wrap: wrap;
     flex-direction: row;
     justify-content: center;
-    padding: 8px;
+    padding: 4px 8px;
 }
 
 .add-menu-element {
-    padding: 2px 8px;
+    padding: 4px;
+}
+
+.add-menu-element.disabled img{
+    background-color: rgba(46, 42, 42, 0.19);
 }
 
 .add-menu-element img {
@@ -62,34 +67,52 @@ body {
     height: 48px;
     padding: 4px;
     border-radius: 8px;
-    background: rgba(90, 228, 255, 0.2);
+    background-color: rgb(242 240 240);
+    box-shadow: 0 0 16px 3px rgba(80 44 34 / 19%);
 }
 
 .add-element-menu {
-    background: aliceblue;
     padding: 8px;
-    margin: 8px;
-    border-radius: 16px;
-    box-shadow: 0 0 36px 6px rgba(34, 60, 80, 0.25);
+    text-align: left;
 }
 
-.description {
-    font-family: monospace;
-    text-align: left;
-    margin: 2px 24px 8px;
+.add-element-menu span {
+    color: dimgray;
+    font-size: small;
+    margin: 0 16px;
+}
+
+.element-tooltip {
+    position: absolute;
+    bottom: 16px;
+    left: 280px;
+    background-color: white;
+    border-radius: 8px;
+    padding: 8px;
+    box-shadow: 0 0 16px 3px rgba(80 44 34 / 19%);
+}
+
+.left-panel {
+    width: 270px;
+    height: 86vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: absolute;
+    padding: 8px 0;
+    margin: 15px;
+    background: aliceblue;
+    border-radius: 16px;
+    box-shadow: 0 0 36px 6px rgba(34, 60, 80, 0.25);
+    transition: all 0.5s ease-in-out;
 }
 
 .elements-manager {
-    min-height: 104px;
     display: flex;
     flex-direction: column;
-    background: aliceblue;
     padding: 12px 8px;
-    border-radius: 16px;
     user-select: none;
-    box-shadow: 0 0 36px 6px rgba(34, 60, 80, 0.25);
     overflow-y: auto;
-    max-height: 536px;
     scrollbar-width: var(--scrollbarWidth);
     scrollbar-color: var(--scrollbarThumb) var(--scrollbarBg);
 }

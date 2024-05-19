@@ -8,13 +8,13 @@ import {
     NodeType,
     PowerSourceNodeProps,
     ResistorNodeProps,
-    SwitchNodeProps
+    CapacitorNodeProps,
+    DiodeNodeProps
 } from "../../types.ts";
 import {elements} from "../../defaults.ts";
 
 import delete_icon from '../../../assets/Icons/delete_icon.png'
-import {ButtonGroup, Form, InputGroup} from "react-bootstrap";
-import ToggleButton from "react-bootstrap/ToggleButton";
+import {Form, InputGroup} from "react-bootstrap";
 
 
 interface CircuitElementContextMenuProps<T> {
@@ -40,8 +40,7 @@ function BulbContextMenu ({id, values: {power, voltage}, onValuesChange}: Circui
             <Form.Control className='power' aria-label="Power" type='number' defaultValue={power} step='0.1'
                           min='0' style={{width: '72px'}} onChange={(e) => onValuesChange ? onValuesChange(id, {
                 power: Number(e.target.value),
-                voltage: voltage,
-                brightness: 0
+                voltage: voltage
             }) : null} />
             <InputGroup.Text style={{width: '40px'}}>Вт</InputGroup.Text>
         </InputGroup>
@@ -50,8 +49,7 @@ function BulbContextMenu ({id, values: {power, voltage}, onValuesChange}: Circui
             <Form.Control className='voltage' aria-label="Voltage" type='number' defaultValue={voltage} step='0.1'
                           min='0' style={{width: '72px'}} onChange={(e) => onValuesChange ? onValuesChange(id, {
                 power: power,
-                voltage: Number(e.target.value),
-                brightness: 0
+                voltage: Number(e.target.value)
             }) : null}/>
             <InputGroup.Text style={{width: '40px'}}>В</InputGroup.Text>
         </InputGroup>
@@ -68,22 +66,51 @@ function PowerSourceContextMenu({id, values: {voltage}, onValuesChange}: Circuit
     </InputGroup>;
 }
 
-function SwitchContextMenu({id, values: {switchState}, onValuesChange}: CircuitElementContextMenuProps<SwitchNodeProps>) {
-    const [checked, setChecked] = useState(switchState);
+function CapacitorContextMenu({id, values: {capacitance}, onValuesChange}: CircuitElementContextMenuProps<CapacitorNodeProps>) {
+    return <InputGroup>
+        <InputGroup.Text>Конденсатор</InputGroup.Text>
+        <Form.Control className='capacitance' aria-label="Capacitance" type='number' defaultValue={capacitance} step='0.1'
+                      min='0' style={{width: 60}} onChange={(e) => onValuesChange ? onValuesChange(id, {capacitance: Number(e.target.value)}) : null}/>
+        <InputGroup.Text>Ф</InputGroup.Text>
+    </InputGroup>;
+}
 
-    return <ButtonGroup>
-        <ToggleButton id={'text'} value={-1} type="radio" disabled variant="secondary">Состояние</ToggleButton>
-        <ToggleButton id={'on'} value={1} checked={checked} type="checkbox" variant="outline-success"
-                      onChange={() => {
-                          onValuesChange ? onValuesChange(id, {switchState: true}) : null
-                          setChecked(true)
-                      }}>Вкл</ToggleButton>
-        <ToggleButton id={'off'} value={0} checked={!checked} type="checkbox" variant="outline-danger"
-                      onChange={() => {
-                          onValuesChange ? onValuesChange(id, {switchState: false}) : null
-                          setChecked(false)
-                      }}>Выкл</ToggleButton>
-    </ButtonGroup>;
+function DiodeContextMenu({id, values: {voltage, current, waveLength}, onValuesChange}: CircuitElementContextMenuProps<DiodeNodeProps>) {
+    const [waveLengthValue, setWaveLengthValue] = useState<number>(waveLength);
+
+    const handleValueChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, value_name: "voltage" | "current" | "waveLength") => {
+        if (value_name === 'waveLength') {
+            setWaveLengthValue(Number(event.target.value));
+        }
+        return onValuesChange(id, {
+            current: value_name === 'current' ? Number(event.target.value) : current,
+            voltage: value_name === 'voltage' ? Number(event.target.value) : voltage,
+            waveLength: value_name === 'waveLength' ? Number(event.target.value) : waveLength,
+        })
+    }
+
+    return <>
+        <InputGroup>
+        <InputGroup.Text>Напряжение</InputGroup.Text>
+        <Form.Control className='voltage' aria-label="Voltage" type='number' defaultValue={voltage} step='0.1'
+                      min='0' style={{width: 60}} onChange={(e) => handleValueChange(e, 'voltage')}/>
+        <InputGroup.Text>В</InputGroup.Text>
+        </InputGroup>
+        <InputGroup>
+        <InputGroup.Text>Рабочий ток</InputGroup.Text>
+        <Form.Control className='current' aria-label="Current" type='number' defaultValue={voltage} step='0.1'
+                      min='0' style={{width: 60}} onChange={(e) => handleValueChange(e, 'current')}/>
+        <InputGroup.Text>А</InputGroup.Text>
+        </InputGroup>
+        <InputGroup>
+        <InputGroup.Text>Длина волны</InputGroup.Text>
+        <Form.Control className='waveLength' aria-label="WaveLength" type='number' value={waveLengthValue} step='1'
+                      min='400' max='760' style={{width: 60}} onChange={(e) => handleValueChange(e, 'waveLength')}/>
+        <InputGroup.Text>нМ</InputGroup.Text>
+        </InputGroup>
+        <input className='wave_length_slider' type='range' min={400} max={760} step={1}
+               value={waveLengthValue} onChange={(e) => handleValueChange(e, 'waveLength')}/>
+    </>;
 }
 
 export const CircuitElementContextMenu = memo(({ id, data: {values, onDataChange}, type}: CircuitNode<NodeProps>) => {
@@ -93,10 +120,12 @@ export const CircuitElementContextMenu = memo(({ id, data: {values, onDataChange
         contextMenuComponent = <ResistorContextMenu id={id} values={values} onValuesChange={onDataChange} />;
     } else if (type === NodeType.Bulb && 'power' in values && 'voltage' in values) {
         contextMenuComponent = <BulbContextMenu id={id} values={values} onValuesChange={onDataChange}/>;
-    } else if (type === NodeType.PowerSource && 'power' in values) {
+    } else if (type === NodeType.PowerSource && 'voltage' in values) {
         contextMenuComponent = <PowerSourceContextMenu id={id} values={values} onValuesChange={onDataChange}/>;
-    } else if (type === NodeType.Switch && 'switchState' in values) {
-        contextMenuComponent = <SwitchContextMenu id={id} values={values} onValuesChange={onDataChange}/>;
+    } else if ((type === NodeType.Capacitor || type === NodeType.PolarCapacitor) && 'capacitance' in values) {
+        contextMenuComponent = <CapacitorContextMenu id={id} values={values} onValuesChange={onDataChange}/>;
+    } else if (type === NodeType.Diode && 'voltage' in values && 'current' in values && 'waveLength' in values) {
+        contextMenuComponent = <DiodeContextMenu id={id} values={values} onValuesChange={onDataChange}/>;
     }
 
     return contextMenuComponent;
@@ -131,13 +160,13 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
 
     return (
         <div
-            style={{top, left, right, bottom}}
+            style={{top, left, right, bottom, width: 260}}
             className="context-menu"
             {...props}
         >
             <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px', userSelect: 'none'}}>
-                <img src={elements[node.type].icon} alt={node.type} style={{padding: '4px', width: '40px', height: '40px'}}/>
-                <small>{elements[node.type].name}</small>
+                <img src={elements[node.type as NodeType].icon} alt={node.type} style={{padding: '4px', width: '40px', height: '40px'}}/>
+                <small>{elements[node.type as NodeType].name}</small>
                 <img src={delete_icon} alt="delete" style={{padding: '8px', width: '40px', height: '40px'}} onClick={handleDeleteClick}/>
             </div>
             <CircuitElementContextMenu id={node.id} data={node.data} type={node.type} position={node.position}/>

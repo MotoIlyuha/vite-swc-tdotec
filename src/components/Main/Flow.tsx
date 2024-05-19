@@ -11,7 +11,6 @@ import {
 } from '../Nodes/NodeTypes/NodeTypes';
 import WireEdge from '../Nodes/EdgeTypes/WireEdge.tsx';
 import ContextMenu from "../Nodes/ContextMenu/ContextMenu.tsx";
-import AddElementMenu from "./AddElementMenu.tsx";
 import ElementsManager from "./ElementsManager.tsx";
 import {CircuitNode, NodeDataProps, NodeProps, NodeType, theme,} from "../types";
 import {DefaultValues, elements, useInitialSetup} from "../defaults.ts";
@@ -220,7 +219,13 @@ export default function Flow() {
             const pane = ref.current?.getBoundingClientRect();
             if (!pane) return;
 
-            setSelectedNodes([node]);
+            // Выделение элемента при нажатии правой кнопки мыши
+            setNodes(nodes => nodes.map(nd => {
+                return {
+                    ...nd,
+                    selected: node.id === nd.id
+                };
+            }))
 
             setMenu({
                 node: node as CircuitNode<NodeProps>,
@@ -248,6 +253,10 @@ export default function Flow() {
         setMenu(null);
         setSelectedNodes([]);
     }, [setMenu, setSelectedNodes]);
+
+    const uniquePowerSource = useCallback((): boolean => {
+        return nodes.filter(node => node.type === NodeType.PowerSource).length === 0;
+    }, [nodes]);
 
     useInitialSetup(setNodes, setEdges, onDataChange);
 
@@ -289,11 +298,8 @@ export default function Flow() {
                                  erroredNodes={erroredNodes as CircuitNode<NodeProps>[]}
                                  selectedNodes={selectedNodes as CircuitNode<NodeProps>[]}
                                  setSelectedNodes={setSelectedNodes} onNodeDelete={onNodeDelete}
+                                 uniquePS={uniquePowerSource}
                                  marginTop={ElementsManagerMarginTop}/>
-            </Panel>
-
-            <Panel position='bottom-left'>
-                <AddElementMenu elements={elements}/>
             </Panel>
 
             <Panel position='bottom-right'>

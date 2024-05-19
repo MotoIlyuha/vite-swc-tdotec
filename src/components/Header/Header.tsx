@@ -5,8 +5,6 @@ import Button from 'react-bootstrap/Button';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Container from 'react-bootstrap/Container';
 import SplitButton from 'react-bootstrap/SplitButton';
-import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
-import ToggleButton from "react-bootstrap/ToggleButton";
 import Image from "react-bootstrap/Image";
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
@@ -16,19 +14,12 @@ import {toPng} from 'html-to-image';
 
 import {theme} from "../types.ts";
 import logo from './icons/logo.png'
-import ru_icon from './icons/russia.png'
-import usa_icon from './icons/usa.png'
 import './Header.css';
 
 function Header({setMarginTop, setThemeMode}: { setMarginTop: (marginTop: number) => void, setThemeMode: (themeMode: theme) => void }) {
     const rfInstance = useReactFlow();
     const [topValue, setTopValue] = useState(0);
     const [fileName, setFileName] = useState('Новая схема');
-    const [radioValue, setRadioValue] = useState('ru');
-    const languages = [
-        {name: 'ru', img: ru_icon},
-        {name: 'en', img: usa_icon},
-    ];
 
     const imageWidth = 1024;
     const imageHeight = 768;
@@ -169,19 +160,6 @@ function Header({setMarginTop, setThemeMode}: { setMarginTop: (marginTop: number
                                         <Dropdown.Item eventKey='dark_blueprint'>Тёмный чертёж</Dropdown.Item>
                                     </Dropdown.Menu>
                                 </Dropdown>
-                            </Nav.Item>
-                            <Nav.Item>
-                                <ToggleButtonGroup id={"lang"} type="radio" name="lang" defaultValue="ru">
-                                    {languages.map((lang) => (
-                                        <ToggleButton id={lang.name} key={lang.name} value={lang.name} variant="link"
-                                                      checked={radioValue === lang.name}
-                                                      onChange={(e) => setRadioValue(e.currentTarget.value)}>
-                                            <div>
-                                                <Image src={lang.img} alt={lang.name} rounded/>
-                                            </div>
-                                        </ToggleButton>
-                                    ))}
-                                </ToggleButtonGroup>
                             </Nav.Item>
                         </Nav>
                     </Navbar.Collapse>
