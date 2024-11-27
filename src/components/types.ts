@@ -89,9 +89,4 @@ export type GalvanometerNodeProps = {
     resistance: number;
 }
 
-export type CircuitErrorsType = {
-    name: string;
-    proposal_solution: string;
-    button_text: string;
-    solution_func: () => void;
-}
+export enum ErrorType {None, NoPowerSource, EmptyCircuit, ExtraElements, CircuitNotClosed}

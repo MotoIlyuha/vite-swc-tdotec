@@ -1,5 +1,5 @@
 import Image from "react-bootstrap/Image";
-import {CircuitNode, CircuitElementType, NodeProps, NodeType} from "../types";
+import {CircuitNode, NodeProps, NodeType} from "../types";
 
 import delete_icon from "../../assets/Icons/delete_icon.png";
 import arrow_icon from "../../assets/Icons/arrow_icon.png";
@@ -7,21 +7,13 @@ import {useCallback, useEffect, useState} from "react";
 import {CircuitElementContextMenu} from "../Nodes/ContextMenu/ContextMenu.tsx";
 import HideButton from "../HideButton/HideButton.tsx";
 import AddElementMenu from "./AddElementMenu.tsx";
+import {useReactFlow} from "./ReactFlowContext";
+import {elements} from "../defaults.ts";
 
 
-interface ElementsManagerProps {
-    nodes: CircuitNode<NodeProps>[];
-    selectedNodes: CircuitNode<NodeProps>[];
-    setSelectedNodes: (node: CircuitNode<NodeProps>[]) => void;
-    erroredNodes: CircuitNode<NodeProps>[]
-    elements: CircuitElementType;
-    onNodeDelete: (arg0: string) => void;
-    uniquePS: () => boolean;
-    marginTop?: number;
-}
+export default function ElementsManager() {
 
-export default function ElementsManager({nodes, selectedNodes, setSelectedNodes, erroredNodes, elements, onNodeDelete, uniquePS,marginTop}: ElementsManagerProps) {
-
+    const {selectedNodes, nodes, onNodeDelete, setSelectedNodes, erroredNodes} = useReactFlow();
     const [showValues, setShowValues] = useState<boolean[]>(nodes.map(() => false));
     const [rotateValues, setRotateValues] = useState<boolean[]>(nodes.map(() => false));
     const [marginRight, setMarginRight] = useState<number>(-300);
@@ -73,19 +65,19 @@ export default function ElementsManager({nodes, selectedNodes, setSelectedNodes,
 
     return (
         <div className='left-panel' style={{
-            top: marginTop,
+            top: 86,
             right: marginRight,
         }}>
         <div className="elements-manager">
             {nodes.length === 0 ? <span>Добавьте хотя бы один элемент на рабочее пространство</span> :
             nodes.map((node, index) => (
-                <div className={'element ' + (isSelected(node) ? 'selected ' : '') + (erroredNodes.includes(node) ? 'errored ' : '')} key={node.id}
-                     onClick={() => handleNodeClick(node)}>
+                <div className={'element ' + (isSelected(node as CircuitNode<NodeProps>) ? 'selected ' : '') + (erroredNodes.includes(node) ? 'errored ' : '')} key={node.id}
+                     onClick={() => handleNodeClick(node as CircuitNode<NodeProps>)}>
                     <div className='element-header'>
                     <Image src={elements[node.type as NodeType].icon}/>
                     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                         <div>{elements[node.type as NodeType]?.name}</div>
-                        {node.type !== NodeType.Switch && !node.type.includes('meter') &&
+                        {node.type !== NodeType.Switch && !(node as CircuitNode<NodeProps>).type.includes('meter') &&
                             <Image className='show_values' src={arrow_icon} onClick={(e) => {
                             e.stopPropagation();
                             toggleShowValues(index);
@@ -110,11 +102,11 @@ export default function ElementsManager({nodes, selectedNodes, setSelectedNodes,
                         }}/>
                     </button>
                 </div>
-                {showValues[index] && <CircuitElementContextMenu id={node.id} data={node.data} type={node.type} position={node.position}/>}
+                {showValues[index] && <CircuitElementContextMenu id={node.id} data={node.data} type={node.type as NodeType} position={node.position}/>}
                 </div>
             ))}
         </div>
-            <AddElementMenu elements={elements} uniquePS={uniquePS}/>
+            <AddElementMenu/>
             <HideButton orientation='right' position={{x: -35, y: 45}} handleClick={handleHide} />
         </div>
     );

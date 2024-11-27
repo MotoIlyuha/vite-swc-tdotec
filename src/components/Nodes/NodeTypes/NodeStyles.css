@@ -24,13 +24,13 @@
 }
 
 .react-flow__handle {
-    width: 4px;
-    height: 4px;
+    width: 6px;
+    height: 6px;
 }
 
 .rotate-button, .reflect-button {
     position: absolute;
-    top: 0;
+    bottom: 0;
     right: 0;
     width: 12px;
     height: 12px;
@@ -40,7 +40,7 @@
 }
 
 .reflect-button {
-    margin-right: 12px;
+    margin-right: 16px;
 }
 
 .rotate-button img, .reflect-button img {

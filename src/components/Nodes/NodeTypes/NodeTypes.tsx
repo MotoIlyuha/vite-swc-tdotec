@@ -224,8 +224,10 @@ export const CircuitElementNode = memo((
                 <div>Мощность: {values.voltage}Вт</div>}
             {type === NodeType.Bulb && 'voltage' in values &&
                 <div>Напряжение: {values.voltage}В</div>}
-            {type === NodeType.PowerSource && 'power' in values &&
+            {type === NodeType.PowerSource && 'voltage' in values &&
                 <div>Мощность: {values.voltage}Вт</div>}
+            {type === NodeType.Diode && 'voltage' in values && 'current' in values &&
+                <div>Напряжение: {values.voltage}В<br/>Рабочий ток: {values.current}А</div>}
         </NodeToolbar>
         <div id={id} className={`node ${type} ${orientation} ${selected ? 'selected' : ''}`}
              style={{

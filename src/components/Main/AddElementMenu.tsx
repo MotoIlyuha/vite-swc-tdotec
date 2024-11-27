@@ -1,7 +1,9 @@
 import Image from "react-bootstrap/Image";
 import {DragEvent, useState} from "react";
 import './style.css';
-import {CircuitElementType, NodeType} from "../types.ts";
+import {NodeType} from "../types.ts";
+import {useReactFlow} from "./ReactFlowContext";
+import {elements} from "../defaults.ts";
 
 
 const onDragStart = (event: DragEvent, nodeType: NodeType) => {
@@ -11,9 +13,10 @@ const onDragStart = (event: DragEvent, nodeType: NodeType) => {
     }
 };
 
-export default function AddElementMenu({elements, uniquePS}: { elements: CircuitElementType, uniquePS: () => boolean }) {
+export default function AddElementMenu() {
 
     const [hoveredElement, setHoveredElement] = useState('');
+    const {uniquePowerSource: uniquePS} = useReactFlow();
 
     const isEnabled = (node_type: NodeType) => {
         if (node_type === NodeType.PowerSource)

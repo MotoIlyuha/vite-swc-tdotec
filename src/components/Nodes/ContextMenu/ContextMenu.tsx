@@ -15,6 +15,7 @@ import {elements} from "../../defaults.ts";
 
 import delete_icon from '../../../assets/Icons/delete_icon.png'
 import {Form, InputGroup} from "react-bootstrap";
+import {useReactFlow} from "../../Main/ReactFlowContext";
 
 
 interface CircuitElementContextMenuProps<T> {
@@ -138,8 +139,6 @@ interface ContextMenuProps {
     left?: number,
     right?: number,
     bottom?: number,
-    onClick: () => void,
-    onNodeDelete: (NodeId: string) => void
 }
 
 const ContextMenu: React.FC<ContextMenuProps> = ({
@@ -148,14 +147,14 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
      left,
      right,
      bottom,
-     onClick,
-     onNodeDelete,
      ...props
      }) => {
 
+    const {onNodeDelete, setMenu} = useReactFlow();
+
      const handleDeleteClick = () => {
-        onClick();
-        onNodeDelete(node.id);
+         setMenu(null);
+         onNodeDelete(node.id);
     };
 
     return (

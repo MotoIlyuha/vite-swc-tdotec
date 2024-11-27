@@ -1,6 +1,7 @@
 import './App.css';
 import Main from './components/Main/Flow'
-import {ReactFlowProvider} from "reactflow";
+import {ReactFlowProvider} from "./components/Main/ReactFlowContextProvider.tsx";
+
 
 function App() {
 

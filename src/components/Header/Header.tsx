@@ -5,21 +5,20 @@ import Button from 'react-bootstrap/Button';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Container from 'react-bootstrap/Container';
 import SplitButton from 'react-bootstrap/SplitButton';
-import Image from "react-bootstrap/Image";
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import HideButton from "../HideButton/HideButton.tsx";
 import {getNodesBounds, getViewportForBounds, useReactFlow} from "reactflow";
 import {toPng} from 'html-to-image';
 
-import {theme} from "../types.ts";
-import logo from './icons/logo.png'
+// import {theme} from "../types.ts";
 import './Header.css';
 
-function Header({setMarginTop, setThemeMode}: { setMarginTop: (marginTop: number) => void, setThemeMode: (themeMode: theme) => void }) {
+function Header() {
     const rfInstance = useReactFlow();
     const [topValue, setTopValue] = useState(0);
     const [fileName, setFileName] = useState('Новая схема');
+    // const {setThemeMode, themeMode} = useReactFlow();
 
     const imageWidth = 1024;
     const imageHeight = 768;
@@ -97,7 +96,6 @@ function Header({setMarginTop, setThemeMode}: { setMarginTop: (marginTop: number
 
     const handleHideHeader = () => {
         setTopValue(topValue === 0 ? -86 : 0);
-        setMarginTop(topValue === 0 ? 0 : 86);
     }
 
     return (
@@ -115,10 +113,10 @@ function Header({setMarginTop, setThemeMode}: { setMarginTop: (marginTop: number
                         position: 'relative',
                     }}>
                 <Container className="gap-3" fluid>
-                    <Navbar.Brand>
-                        <Image src={logo} alt="logo" className="d-inline-block align-top logo"/>
-                    </Navbar.Brand>
-                    <Navbar.Text>
+                    {/*<Navbar.Brand>*/}
+                    {/*    <Image src={logo} alt="logo" className="d-inline-block align-top logo"/>*/}
+                    {/*</Navbar.Brand>*/}
+                    <Navbar.Text style={{marginLeft: 36}}>
                         <OverlayTrigger
                             placement="bottom"
                             delay={{show: 250, hide: 400}}
@@ -147,20 +145,20 @@ function Header({setMarginTop, setThemeMode}: { setMarginTop: (marginTop: number
                                 <Button className="text-nowrap" variant="primary" onClick={onRestore}>Загрузить
                                     файл</Button>
                             </Nav.Item>
-                            <Nav.Item>
-                                <Dropdown onSelect={(e) => e && setThemeMode(e as theme)}>
-                                    <Dropdown.Toggle variant="success" id="dropdown-basic">
-                                        Выберите тему
-                                    </Dropdown.Toggle>
+                            {/*<Nav.Item>*/}
+                            {/*    <Dropdown onSelect={(e) => e && setThemeMode(e as theme)}>*/}
+                            {/*        <Dropdown.Toggle variant="success" id="dropdown-basic">*/}
+                            {/*            Выберите тему*/}
+                            {/*        </Dropdown.Toggle>*/}
 
-                                    <Dropdown.Menu>
-                                        <Dropdown.Item eventKey='light'>Светлая</Dropdown.Item>
-                                        <Dropdown.Item eventKey='dark'>Тёмная</Dropdown.Item>
-                                        <Dropdown.Item eventKey='light_blueprint'>Светлый чертёж</Dropdown.Item>
-                                        <Dropdown.Item eventKey='dark_blueprint'>Тёмный чертёж</Dropdown.Item>
-                                    </Dropdown.Menu>
-                                </Dropdown>
-                            </Nav.Item>
+                            {/*        <Dropdown.Menu>*/}
+                            {/*            <Dropdown.Item eventKey='light'>Светлая</Dropdown.Item>*/}
+                            {/*            <Dropdown.Item eventKey='dark'>Тёмная</Dropdown.Item>*/}
+                            {/*            <Dropdown.Item eventKey='light_blueprint'>Светлый чертёж</Dropdown.Item>*/}
+                            {/*            <Dropdown.Item eventKey='dark_blueprint'>Тёмный чертёж</Dropdown.Item>*/}
+                            {/*        </Dropdown.Menu>*/}
+                            {/*    </Dropdown>*/}
+                            {/*</Nav.Item>*/}
                         </Nav>
                     </Navbar.Collapse>
                 </Container>
